@@ -1,0 +1,32 @@
+BUFFERS=15
+; Improves disk read/write speed without excessive memory use.
+; Each buffer is ~528 bytes.
+; Default is lower, but 10-20 is recommended for hard drive-equipped XTs.
+
+FILES=20
+; Allows more simultaneous open files, useful for complex programs or games.
+; Default of 8 is often too low.
+; Each extra file uses ~48 bytes.
+
+STACKS=0,0
+; Matches the PC XT default, saving ~1KB+ of memory
+; by disabling extra interrupt stacks.
+; Most XT software runs fine without them,
+; but if you encounter stack overflow errors,
+; increase to STACKS=9,128.
+
+DEVICE=C:\DOS\ANSI.SYS
+; Loads the ANSI driver for better screen control,
+; e.g. in batch files or programs.
+; Omit if not needed to save ~3KB.
+
+LASTDRIVE=J
+; For more drives.
+; Use higher letter if you have additional logical drives.
+
+BREAK=ON
+; Enable easier program interruption with Ctrl+Break.
+
+; DEVICE=C:\DOS\VDISK.SYS 64
+; If you want a small RAM disk for temporary files.
+; Uses conventional memory.
