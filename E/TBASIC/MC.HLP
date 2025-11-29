@@ -1,0 +1,148 @@
+                    	 INTRODUCTION 	
+
+MicroCalc is a tiny spreadsheet program "a la MultiPlan". It is provided
+with the Turbo Basic system as an example program.
+
+Since MicroCalc is only a demonstration program, it has its limitations
+(which you may have fun eliminating) :
+
+  * You can not copy formulas from one cell to others.
+  * You can not insert and delete lines or columns.
+
+In spite of its limitations MicroCalc does provide some interesting
+features among which are:
+
+  *  Full set of mathematical functions (SIN,COS,LN,EXP, etc...)
+  *  Built in line editor for text and formula editing.
+  *  Text can be entered across cells.
+  *  Once entered a formula is protected from accidental erasure.
+  *  DOS acces
+  *  Color cells
+.PA
+
+In addition to this, MicroCalc offers all the usual features of a
+spreadsheet program:
+
+  *  Load a spreadsheet from the disk.
+  *  Save a spreadsheet on the disk.
+  *  Print the spreadsheet on the printer (or to a file)
+  *  Automatic recalculation after each entry (May be disabled).
+  *  Init (Clears) the current spreadsheet.
+
+Note :
+
+The spreadsheet is like an electronic piece of paper on which you can
+enter text, numbers and formulas and have MicroCalc to do calculations
+automatically. The cells are the intersections between lines and columns.
+
+             ( The next page shows the Spread Sheet ... )
+.PA
+This is the electronic spreadsheet :
+
+	          A         B         C         D         E        F        G    	
+	 1	    22.45
+	 2	     1.00
+	 3	     2.00
+	 4	     3.00
+	 5	 	   28.45	
+	 .	
+	 .	
+	21	
+[A5,Formula]       type / for Commands,   F2 For Edit    AutoCalc is ON
+(A1+A2+A3+A4)
+	                                                                         	
+
+Cells are denoted A1 through G21 giving a total of 147 cells.
+
+In the example the next last line shows that the active cell is cell A5,
+and that A5 contains a Formula : (A1+A2+A3+A4) which means that the
+numbers in A1,A2,A3 and A4 should be added and placed in A5.
+
+The formula can be abbreviated to : (A1>A4) (add all cells from A1 to A4).
+.PA
+You move the cursor around just like you do with the Turbo Basic editor :
+
+                             (Up)
+                            Ctrl-E
+                (Left) Ctrl-S     Ctrl-G (Right)
+                            Ctrl-X
+                            (Down)
+
+        ( On the IBM-PC you may also use the arrow keys. )
+
+A cell may contain a number, a formula or some text. The type of the cell
+and its coordinates are shown in the bottom left corner of the screen:
+
+[A5,Formula]          Means that the current cell is A5 and that it
+                      contains a formula.
+
+[A1,Text]             Cell A1 contains text.
+
+[A2,Numeric]          Cell A2 contains a number.
+
+.PA
+                     	 Summary of MicroCalc functions 	
+
+
+Summary of standard functions and operators:
+ABS, SQRT, SQR, SIN, COS, ARCTAN, LN, LOG, EXP, INT, SGN, FACT (factorial)
++,-,*,/ and ^ to raise to any power : e.g. 2^3 = 8
+Furthermore the operator '>' can be used to denote a range of cells to add.
+
+Entering data
+To enter data in any field move the cursor to the cell and enter the
+data. MicroCalc automatically determines if the cell is numeric or a
+a text cell. Cell beginning with + - ( . 0 1 2 3 4 5 6 7 8 9 is numeric.
+
+When moving between cells:
+^S,^D,^E,^X move left, right, up, and down.
+
+When editing a cell
+Tab Left,Tab Right moves left and right. ^A,^F moves to begin/end of line
+^G or DEL deletes left or right character.
+^V or Ins changes between insert/overwrite mode.
+F2 to edit an existing cell. ESC makes it possible to regret changes
+.PA
+                    	 COMMANDS OF MicroCalc 	
+The commands are available when you strike the / character :
+
+   A  switches Autocalc ON and OFF
+   B  switches Border ON and OFF
+   C  to change cell Color
+   D  acces to Dos (or execute a DOS commands)
+   F  to change the output Format for numbers
+      Note: to use scientific notation enter -1 for the number of decimals
+   G  to Goto a specified cell
+   H  the Help screens
+   I  to Init (clear) the SpreadSheet
+   L  to Load a spreadsheet from the disk
+   P  to Print the spreadsheet to the printer (or a file)
+   Q  to Quit MicroCalc
+   R  to Recalculate the Spread Sheet
+   S  to Save a Spread Sheet on the disk.
+   U  to Update (to restore) the screen
+
+To edit a cell content : Simply move to the cell and press F2 key,
+make your changes and press RETURN key (or press ESC to cancel).
+.PA
+
+                             	 EXAMPLES 	
+
+The following are examples of valid cell formulas:
+
+(A1+(B2-C7))  subtract cell C7 from B2 and add the result to cell A1
+(A1>A21)      the sum of cells  A1,A2,A3..A21
+(A1>B2)       the sum of cells  A1,A2, B1,B2
+
+The formulas may be as complicated as you want :
+
+(SIN(A1)*COS(A2)/((1.2*A8)+LN(FACT(A8)+8.9E-3))+(C1>C5))
+
+
+To try MicroCalc, now use the L command to Load the file MCDEMO
+
+
+Note : If you run MicroCalc with a FileName parameter, this File will be
+       loaded automatically : (e.g.  MC mcdemo).
+
+

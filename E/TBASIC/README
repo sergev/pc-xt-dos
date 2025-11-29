@@ -1,0 +1,377 @@
+
+   You own the "OEM" version, or "bundled" version of Turbo Basic.
+   The software included is exactly the same software you can buy
+   in a retail store. The only difference in the product you own 
+   is that you have a subset of the full documentation normally 
+   provided with the retail product.
+   
+
+
+                       WELCOME TO TURBO BASIC
+                       ----------------------
+
+    This README file contains information that will be useful
+    and of interest to you.  Please read it in its entirety,
+    referring to it when you encounter problems not addressed
+    in the Owner's Handbook.
+
+
+
+    TABLE OF CONTENTS
+    -----------------
+
+    1.  How to Get Help
+    2.  New IBM Graphics Mode Support
+    3.  New Hercules Graphics Mode Support
+    4.  The Message Window
+    5.  Prompt for Include Files
+    6.  Corrections/Additions to the Handbook
+    7.  Important Tips
+    8.  Files on the Disk
+
+
+
+    1.  HOW TO GET HELP
+    -------------------
+
+    If you have any problems, please read this file and the
+    Owner's Handbook first.  If you still have a question and need
+    assistance, help is available from the following sources:
+
+       1.  Type GO BORLAND on the CompuServe bulletin board system.
+       2.  Check with your local software dealer or users' group.
+       3.  Write to us at the following address:
+
+              Borland International
+              Turbo Basic Technical Support
+              4585 Scotts Valley Drive
+              Scotts Valley, CA  95066
+
+       4.  If you have an urgent problem that cannot wait and you
+           have sent in the license agreement from the front of
+           your manual, then call the Borland Technical Support
+           Department.  The phone number is (408)438-5300.  Please
+           have the following information ready before calling:
+
+           a)  Product name and serial number on your original
+               distribution disk.
+
+           b)  Product version number.  The version number for Turbo
+               Basic is displayed when you first load the program
+               and before you press any keys.
+
+           c)  Computer brand, model, and the brands and model
+               numbers of any additional hardware.
+
+           d)  Operating system and version number.  (The version
+               number can be determined by typing VER at the DOS
+               prompt.)
+
+           e)  Contents of your AUTOEXEC.BAT file.
+
+           f)  Contents of your CONFIG.SYS file.
+
+
+
+    2.  NEW GRAPHICS MODE SUPPORT FOR IBM PS/2
+    ------------------------------------------
+
+    Turbo Basic supports the new enhanced graphics modes
+    available on the new IBM Personal System/2 computers.
+
+    You'll use the SCREEN statement to switch graphics modes.
+    The following table describes the new modes the SCREEN
+    statement supports:
+
+
+       SCREEN     MODE
+       -------------------------------------------------------
+       11         640 X 480  Black and White (all PS/2 models)
+       12         640 X 480  16 Color (models 50,60,80 only)
+
+
+
+    3.  NEW HERCULES GRAPHICS MODE SUPPORT
+    --------------------------------------
+
+    Turbo Basic now supports the Hercules Graphics Card and
+    Hercules Graphics Card Plus.  In order to activate this
+    graphics mode you use the screen statement:
+
+        SCREEN 2
+
+    On the Hercules adapter, this will put your program in 720 x
+    348 graphics mode.  RamFont is not supported in the Hercules
+    Graphics Card Plus.
+
+
+
+    4.  THE MESSAGE WINDOW
+    ----------------------
+
+    While you are compiling a program, the message window
+    now displays the time the compiler has taken to compile
+    your program in addition to the memory currently available
+    for compilation.
+
+
+    5.  PROMPT FOR INCLUDE FILES
+    ----------------------------
+
+    The compiler will now prompt the programmer to insert another
+    floppy disk if a program attempts to include a file that
+    cannot be found on the default drive.  This allows
+    compilation of large programs on single or dual floppy disk
+    systems, in particular, when the program's source code won't
+    fit on one or two floppy disks.
+
+    The following steps show one way to compile large programs
+    on floppy disk systems:
+
+      1.  Load Turbo Basic from drive A: and remove the Turbo Basic
+          disk.
+      2.  Insert a disk in drive A: with the main source file for
+          your Turbo Basic program on it.
+      3.  Set the Main file in the File pulldown menu to the name
+          of your Turbo Basic program.
+      4.  Set the Executable directory in the Setup\Directories
+          menu to A: so the .EXE file will be written to A:
+      5.  Put the first floppy disk with your include files on it
+          into drive B:
+      6.  Change the default drive to drive B: with the Change dir
+          selection in the File pulldown menu.
+      7.  Set Compile to .EXE in the Options\Compile to menu.
+      8.  Compile the program.
+      9.  If Turbo Basic cannot find an include file, it will
+          prompt you to insert a disk with the file on it. When
+          you insert this disk, put it in drive B:
+
+    The resulting .EXE file will be on drive A.
+
+
+    6.  CORRECTIONS/ADDITIONS TO THE HANDBOOK
+    -----------------------------------------
+
+    The following lists the corrections and additions to the
+    Turbo Basic handbook.  They are arranged by page number so you
+    can easily update your handbook while you read through them.
+
+    Page 185 - The syntax of the DIM statement should include
+    brackets, like so:
+
+         DIM [{STATIC|DYNAMIC}] var (subscripts)...
+
+    Page 274 - The first sentence in the Remarks section should be:
+
+       n is the trapped key, and integer expression from 1-25,
+       30, or 31, according to the following:
+
+    Page 287 - In the example section, change the following from
+
+       IF LOF(1) > 0 THEN
+
+       to
+
+       IF LOC(1) > 0 THEN
+
+       and change
+
+       ComPortInput$(0) = INPUT$(LOF(1), #1)
+
+       to
+
+       ComPortInput$(0) = INPUT$(LOC(1), #1)
+
+    Page 333 - In the Remarks section, mode is an integer
+    expression ranging from 0 to 12, not 10.
+
+    Page 355 - In the sixth paragraph, a procedure definition
+    must be terminated with an END SUB, not an END DEF.
+
+    Page 401 - The original assembly language source code for the
+    INLINE procedure on this page follows:
+
+       program segment ; begin program segment
+         assume cs:program
+
+         push BP         ; save the Base Pointer
+         mov  BP,SP      ; move stack pointer to BP
+         les  DI,[BP+6]  ; offset address of parameter
+         mov  AX, 64h    ; constant to fill
+         mov  CX, C8h    ; length of fill
+         cld             ; clear the direction flag
+         rep             ; fill the words
+         stosw
+         pop  BP         ; restore Base Pointer
+
+       program ends  ; end program segment
+       ends          ; end compilation
+
+
+    Note that there is no RET at the end of the routine.  You may
+    run this code through The MicroSoft Assembler to generate the
+    code listed in the handbook.
+
+    Page 415 - Under runtime errors, #74 should not include
+    renaming across directories.
+
+    Page 416 - Add this error message:
+
+       201  You have run out of stack space.  You can either
+       increase the stack space available with the $STACK
+       metastatement or reduce the amount of recursion being done
+       by recursive procedures and functions.
+
+    Page 425 - Add to the compiler errors:
+
+       500 CLEAR not allowed here. CLEAR is illegal within a
+       procedure or defined function.
+
+
+
+    7.  IMPORTANT TIPS
+    ------------------
+
+    CTRL-BREAK - If you want to be able to use CTRL-BREAK when
+    running a program, toggle ON the Keyboard break option in the
+    Options pulldown menu before compiling/running your program.
+    Note that CTRL-BREAK will only interrupt your program if the
+    Keyboard break option is turned ON and your program is doing
+    screen I/O or you have turned the Trace option ON in the
+    Debug menu.  This is important to note because many public
+    domain programs written for BASICA do not provide any way
+    for the user to terminate execution other than pressing
+    CTRL-BREAK.
+
+    PRINT USING - When using the PRINT USING statement to display
+    real numbers (single and double precision), you may find that
+    the format strings for your BASICA programs do not format the
+    numeric values correctly.  One symptom may be that your
+    numbers are displayed with a preceding % character followed
+    by the number.  This is because Turbo Basic provides 80 bits
+    of numeric precision compared to BASICA's 24 bits.  In other
+    words, you have proportionately more-significant digits for
+    all of your numbers.  Consequently, you may have to make more
+    room for your numbers when you output them.
+
+    We have also found that some versions of GW BASIC
+    automatically remove the last character of a number when
+    there isn't enough room in the format string to display a
+    negative sign.  BASICA does not do this, nor does Turbo Basic.
+    If you need to display a negative sign, you must allow for it
+    in the PRINT USING statement's format string.
+
+
+
+    8.  FILES ON THE DISK
+    ---------------------
+
+    Disk 1
+    --------------------------------------------------------------
+    README   COM - The program to use the README file
+
+    TB       EXE - The Turbo Basic compiler
+
+    TBINST   COM - The Turbo Basic installation program
+
+    TBHELP   TBH - The help file for Turbo Basic
+
+    HANOI    BAS - An example Turbo Basic program that plays the
+                   famous Towers of Hanoi game.
+
+    README       - This file!
+
+
+
+    Disk 2
+    --------------------------------------------------------------
+    REGNAMES INC - The named constants representing the registers
+                   used by the CALL INTERRUPT statement
+
+    ACKERMAN BAS - An example program demonstrating the Ackerman
+                   algorithm
+
+    BALL     BAS - An example graphics program
+
+    HANOI    BAS - An example Turbo Basic program that plays the
+                   famous Towers of Hanoi game.
+
+    HILBD    BAS - An example program demonstrating the precision
+                   of the 8087 math package
+
+    KBDIO    BAS - Turbo Basic example program demonstrating how to
+                   read different types of input
+
+    KBDIO    INC - Include file for KBDIO.BAS
+
+    MUSIC    BAS - An example sound program
+
+    QUIKSORT BAS - An example program implementing the Quick Sort
+                   algorithm
+
+    RECQUICK BAS - An example program implementing the Quick Sort
+                   algorithm using recursion
+
+    SIEVE    BAS - An example program implementing the Sieve
+                   algorithm
+
+    WHEREIS  BAS - The Main file for the WHEREIS program
+    WHEREIS  INC - The Include file for the WHEREIS program
+    GETDIR   ASM - The Assembly language source for Turbo Basic
+                   Inline procedure; gets the current directory
+    GETDRIVE ASM - The Assembly language source for Turbo Basic
+                   Inline procedure; gets the current drive
+    GETDTA   ASM - The Assembly language source for Turbo Basic
+                   Inline procedure; gets the current DTA
+    SETDTA   ASM - The Assembly language source for Turbo Basic
+                   Inline procedure; sets the DTA to a new location
+    GETDIR   BIN - The Assembled version of GETDIR.ASM; ready to be
+                   used by WHEREIS.BAS
+    GETDRIVE BIN - The Assembled version of GETDRIVE.ASM; ready to
+                   be used by WHEREIS.BAS
+    GETDTA   BIN - The Assembled version of GETDTA.ASM; ready to
+                   be used by WHEREIS.BAS
+    SETDTA   BIN - The Assembled version of SETDTA.ASM; ready to
+                   be used by WHEREIS.BAS
+
+    MC       BAS - The Main file for the MicroCalc example program
+    MC0      INC - An Include file for MicroCalc
+    MC1      INC - An Include file for MicroCalc
+    MC2      INC - An Include file for MicroCalc
+    MC3      INC - An Include file for MicroCalc
+    MC4      INC - An Include file for MicroCalc
+    MC5      INC - An Include file for MicroCalc
+    MC6      INC - An Include file for MicroCalc
+    MC7      INC - An Include file for MicroCalc
+    MC8      INC - An Include file for MicroCalc
+    MC       HLP - The help file for MicroCalc
+    MCDEMO       - The Demonstration worksheet for MicroCalc
+
+
+    TBDEMO30 BAS - An example program demonstrating super fast
+                   text windowing and menu routines.
+    TBMENU   INC - Include file for TBDEMO30 that implements the
+                   menu routines.
+    TBWINDO  INC - Include file for TBDEMO30 that implements the
+                   windowing routines.
+    QPRINT   BIN - Quick print inline subroutine
+    QPRINTC  BIN - Quick print between columns
+    QATTR    BIN - Re-attribute an area of the screen
+    QFILL    BIN - Fill an area of the screen with a
+                   specified character and attribute
+    QSAVE    BIN - Save portion of screen
+    QREST    BIN - Restore portion of screen
+    RECOLOR  BIN - Screen area recoloring
+
+    QPRINT   ASM - Assembler source for Quick print inline
+                   subroutine
+    QPRINTC  ASM - Assembler source for Quick print between
+                   columns
+    QATTR    ASM - Assembler source for Re-attribute an area of
+                   the screen
+    QFILL    ASM - Assembler source for Fill an area of the
+                   screen with a specified character and
+                   attribute
+    QSAVE    ASM - Assembler source for Save portion of screen
+    QREST    ASM - Assembler source for Restore portion of screen
+    RECOLOR  ASM - Assembler source for Screen area recoloring

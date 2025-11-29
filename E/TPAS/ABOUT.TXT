@@ -1,0 +1,19 @@
+Turbo Pascal 3.01A
+Released by Borland in 1985
+For DOS
+
+Image quality: used/reconfigured
+
+Turbo Pascal was a popular programming language for IBM PCs in the 
+1980s. This version is for IBM PCs and compatibles running MS/PC-DOS. 
+There was also a version of 3.01A for CP/M.
+
+This software was sold in four different "flavors":
+- Turbo Pascal 3.x 
+- Turbo Pascal 3.x with BCD 
+- Turbo Pascal 3.x with 8087 
+- Turbo Pascal 3.x with 8087 & BCD
+
+This package contains only the standard compiler.
+
+This archive contains one 360k disk image.
