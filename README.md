@@ -12,6 +12,19 @@ It includes:
 
 The goal of this project is to provide **a clean, organized, and historically informed snapshot** of what a functional Turbo XT system of the era might contain—useful for restoration, emulation, research, and retro-computing exploration.
 
+The collection is split into disks:
+
+* [C](C) - Operating system, shells and utliities
+* [D](D) - Games
+* [E](E) - Development tools
+* [F](F) - Other
+
+Sources:
+
+* [WinWorld](https://winworldpc.com/home)
+* [My Abandonware](https://www.myabandonware.com)
+* [DOSGames.com](https://dosgames.com)
+
 ## **Licensing**
 
 The **selection, arrangement, and organization** of the files in this repository are released under the
