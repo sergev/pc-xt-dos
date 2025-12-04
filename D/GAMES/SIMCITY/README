@@ -1,0 +1,22 @@
+                    SimCity V1.07 NOTICES:
+Installing new version (if this is an upgrade):
+	You must rerun the install program in order to update the version of
+SimCity that you are using.
+
+CURSOR CONTROL:
+   With the PS/2 & BUS type mouse interfaces, the keyboard mouse-emulation
+has been disabled.
+
+COVOX CARD and the PS/2 MOUSE:
+   If you are using a PS/2 type mouse interface, you cannot use the COVOX card
+with SimCity.
+
+TERRAIN EDITOR:
+   If you order the TERRAIN EDITOR, please make sure you specify which size
+disk you require.
+
+NEW:
+   Now available is a hi-res 640 x 480 monochrome MCGA/VGA display mode and
+a low-res 320 x 200 256 color MCGA/VGA display mode. Also, you now can exit
+from the introduction screen (the city sign) by pressing <ctrl><X>.
+
