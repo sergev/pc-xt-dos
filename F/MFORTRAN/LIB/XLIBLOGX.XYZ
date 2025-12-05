@@ -1,0 +1,20 @@
+***SETUP LIB LOG FILE***
+
+This file contains the output of the LIB utility
+
+
+Microsoft (R) Library Manager  Version 3.18
+Copyright (C) Microsoft Corp 1983-1991.  All rights reserved.
+
+Library name: F:\FORTRAN\LIB\LLIBFORE.LIB
+Library does not exist.  Create? (y/n) Y
+Operations: +F:\FORTRAN\LIB\LIBH.LIB  &
+Operations: +F:\FORTRAN\LIB\LLIBFOR.LIB  &
+Operations: +F:\FORTRAN\LIB\LLIBFP.LIB  &
+Operations: +F:\FORTRAN\LIB\EM.LIB  &
+Operations: +F:\FORTRAN\LIB\MGRAPHFP.LIB  &
+Operations: +F:\FORTRAN\LIB\LLIBFOR1.LIB  &
+Operations: +F:\FORTRAN\LIB\GRAPHICS.LIB;
+LIB : warning U4150: qcwindow : module redefinition ignored
+LIB : warning U4150: grfpinit : module redefinition ignored
+LIB : warning U4150: grwindow : module redefinition ignored

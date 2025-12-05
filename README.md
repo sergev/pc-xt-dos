@@ -16,8 +16,9 @@ The collection is split into disks:
 
 * [C](C) - Operating system, shells and utliities
 * [D](D) - Games
-* [E](E) - Development tools
-* [F](F) - Other
+* [E](E) - Development tools from Borland
+* [F](F) - Development tools from Microsoft
+* [G](G) - Development tools from others
 
 Sources:
 
