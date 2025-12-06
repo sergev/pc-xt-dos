@@ -1,0 +1,52 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1VEROP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?VEROP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?VEROP: mov     di,sp
+        inc     di
+        inc     di
+        mov     si,di
+        mov     cl,al
+        sub     ch,ch
+        add     si,cx
+        lodsw
+        sub     ah,ah
+        mov     dx,ax
+        mov     bp,si
+        add     bp,dx
+@j1:    sub     bx,bx
+        or      dx,dx
+        jz      @j4
+        inc     bx
+        jcxz    @j4
+        mov     bx,dx
+@j2:    push    cx
+        push    di
+        lodsb
+        repnz   scasb
+        pop     di
+        pop     cx
+        jnz     @j3
+        dec     dx
+        jnz     @j2
+        jmps    @j1
+@j3:    sub     bl,dl
+        inc     bx
+@j4:    pop     dx
+        mov     sp,bp
+        jmp     dx
+
+
+        END
+
+

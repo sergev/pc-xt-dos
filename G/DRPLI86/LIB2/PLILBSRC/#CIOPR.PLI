@@ -1,0 +1,8 @@
+ ?ciopr: proc(arg);
+ dcl arg           fixed bin(15);
+ dcl ?close  entry(fixed bin(15)) returns(bit(1));
+ if ^(?close(arg)) then;
+
+ return;
+ end ?ciopr;
+

@@ -1,0 +1,134 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DMUOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DOVER:NEAR
+
+        PUBLIC          ?DMUOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DMUOP: mov     bx,sp
+        inc     bx
+        inc     bx
+        call    @j10
+        mov     bx,000Ah
+        add     bx,sp
+        push    dx
+        push    cx
+        call    @j10
+        pop     ax
+        add     ax,cx
+        cmp     ax,0011h
+        jc      @j2
+@j1:    jmp     ?DOVER
+@j2:    pop     ax
+        xor     ah,dh
+        pop     cx
+        mov     bx,0000h
+        push    bx
+        push    bx
+        push    bx
+        push    bx
+        push    cx
+        pushf
+        mov     bx,0010h
+@j3:    dec     bx
+        js      @j8
+        mov     ax,bx
+        shr     ax,1
+        pushf
+        push    ax
+        mov     di,0008h
+        add     di,sp
+        sub     dh,dh
+        mov     ch,08h
+@j4:    mov     dl,[di]
+        mov     al,dl
+        and     al,0Fh
+        or      al,dh
+        mov     cl,04h
+        ror     al,cl
+        stosb
+        and     dl,0F0h
+        mov     dh,dl
+        dec     ch
+        jnz     @j4
+        pop     ax
+        mov     si,0016h
+        add     si,sp
+        add     si,ax
+        popf
+        lodsb
+        jnc     @j5
+        mov     cl,04h
+        ror     al,cl
+@j5:    and     al,0Fh
+@j6:    jz      @j3
+        push    ax
+        mov     cx,0008h
+        mov     di,0006h
+        add     di,sp
+        mov     si,di
+        add     si,cx
+@j7:    lodsb
+        adc     al,[di]
+        daa
+        stosb
+
+        loop    @j7
+        pop     ax
+        dec     al
+        jmps    @j6
+@j8:    mov     si,0004h
+        add     si,sp
+        mov     di,0010h
+        add     di,si
+        mov     cx,0004h
+        push    di
+        repz    movsw
+        pop     di
+        test    byte ptr [si]-001h,0F0h
+        jnz     @j1
+        popf
+        jns     @j9
+        call    @j14                      ; Large jump translated into short
+@j9:    ret     0010h
+@j10:   mov     di,bx
+        add     bx,+007h
+        mov     dh,[bx]
+        or      dh,dh
+        jns     @j13
+        call    @j14                      ; Large jump translated into short
+        mov     cx,0010h
+@j11:   mov     al,[bx]
+        dec     bx
+        or      al,al
+        jnz     @j12
+        dec     cx
+        dec     cx
+        jnz     @j11
+        ret
+@j12:   and     al,0F0h
+        jnz     @j13
+        dec     cx
+@j13:   ret
+
+@j14:   mov     cx,0008h
+        clc
+@j15:   mov     al,00h
+        sbb     al,[di]
+        das
+        stosb
+        loop    @j15
+        ret
+
+
+        END
+
+

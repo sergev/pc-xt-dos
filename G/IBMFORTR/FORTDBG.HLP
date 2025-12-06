@@ -1,0 +1,783 @@
+IBM FORTRAN/2 Interactive Symbolic Debug: Help Panels
+Version 1.00
+(C)Copyright IBM Corp 1984, 1987
+(C)Copyright Ryan-McFarland Corp 1984, 1987
+////USEHELP
+To request information about a Debug command, enter HELP (or H) followed by the
+name of the command (or its abbreviation).  The following lists the commands.
+The letters in brackets should be omitted for the abbreviation.
+
+  A[T]         G[O]         L[IST]B[RKS]   Q[UALIFY]     SO[URCE]     W[HERE]
+  D[ISPLAY]    H[ELP]       LOG            RE[GISTERS]   S[TEP]
+  END          I[NPUT]      M[ACHINE]      R[UN]         T[RACE]
+  E[NTRY]      L[IST]       N[EXT]         SET           W[HE]N
+
+To request information about a Debug message, enter HELP (or H) followed by
+DBxxxx where xxxx is the message number with leading zeros.
+
+Examples:
+
+  HELP DB0003           HELP QUALIFY          H LIST
+  HELP DB0046           HELP A                H I
+////A,AT
+The AT command sets and removes breakpoints for statements and subprogram
+entry/exits.
+
+A[T] {{statements | subprograms | /S[UBALL]} [OFF] | * OFF}
+
+statements is
+   {statement reference | (statement reference[, statement reference]...)}
+
+subprograms is
+   {subprogram reference | (subprogram reference[, subprogram reference]...)}
+
+S[UBALL] specifies breakpoints at entries and exits from all subprogram units.
+
+OFF removes the specified breakpoints.
+
+AT * OFF removes all statement breakpoints (not entry/exit breakpoints) from
+   the Qualified Program Unit.
+////D,DISPLAY
+The DISPLAY command displays memory in hexadecimal and character format.
+
+D[ISPLAY] [memory reference[,offset] | memory reference[,L len] | L len]
+
+memory reference is [DS:|ES:|SS:|CS:|hex:]offset
+          offset is {reg|hex}[{+|-}hex]
+             len is {reg|hex}
+             reg is {AX|BX|CX|DX|SP|BP|SI|DI|IP}
+             hex is 1 to four hexadecimal digits (0-9, A-F)
+
+If a memory reference is not given, the display continues from the ending
+address of the previous DISPLAY command (or DS:0000, if there was no previous
+DISPLAY command).  If a segment register is not given, SS: is used if reg is
+SP or BP, CS: is used if reg is IP, and DS: is used otherwise..
+
+If neither an ending offset or length is given, a length equal to the number of
+bytes to fill a line is used.
+
+After entering the DISPLAY command, you may display more memory by pressing the
+Enter key.  When you enter a different Debug command, the display process
+stops.
+////END
+The END command closes all files and returns control to DOS.  At this point,
+the Debug session is over.
+
+END
+////E,ENTRY
+The ENTRY command causes entries to and exits from all functions and
+subroutines to be traced.
+
+E[NTRY] [PARM | OFF]
+
+PARM causes the values of all dummy arguments in a subprogram unit to be
+   listed when that subprogram unit is entered.
+
+OFF stops subprogram entry and exit tracing.
+////G,GO
+The GO command resumes execution of your program under Debug control.  Another
+Debug command will be accepted when the next breakpoint or STOP statement
+is reached, a WHEN condition is satisfied, an error condition occurs, or an
+attention interrupt occurs.
+
+G[O] [statement reference]
+
+statement reference is the line number or label of a statement where execution
+   is to resume.  When the statement reference is omitted, execution resumes
+   from the point at which it was suspended.
+
+To execute without Debug control, use the RUN command.  See also the NEXT and
+STEP commands for other ways to execute under Debug control.
+////H,HELP
+The HELP command displays information on various topics as requested.
+
+H[ELP] [topic]
+
+topic is one of the following command names or abbreviations.  The letters in
+   brackets should be omitted for the abbreviation.
+
+  A[T]         G[O]         L[IST]B[RKS]   Q[UALIFY]     SO[URCE]     W[HERE]
+  D[ISPLAY]    H[ELP]       LOG            RE[GISTERS]   S[TEP]
+  END          I[NPUT]      M[ACHINE]      R[UN]         T[RACE]
+  E[NTRY]      L[IST]       N[EXT]         SET           W[HE]N
+
+or topic is DBxxxx where xxxx is a Debug message number with leading zeros.
+
+If topic is omitted, information about how to use help is displayed.
+////I,INPUT
+The INPUT command switches the Debug command input from the console keyboard to
+a file, from a file to another file, or from a file to the console keyboard.
+
+I[NPUT] [filename]
+
+filename is an optional drive, path, file name and extension.  There is no
+   default extension.
+
+If a filename is specified, input is read from the designated file.
+
+If a filename is not specified and input is currently being read from a file,
+input switches back to the console keyboard.
+
+If a filename is not specified and input is currently being read from the
+console keyboard, input switches back to the current input file.  If there is
+no current input file, the INPUT command is ignored.
+////L,LIST
+The LIST command displays the values of program variables.
+
+L[IST] {variables | *}
+
+variables is
+   variable reference | (variable reference[, variable reference]...)
+
+variable reference is a scalar variable, array element, or array.
+
+* lists all variables in the current qualified program unit.
+////LB,LISTBRKS,LISTB,LBRKS
+The LISTBRKS command displays all the current breakpoints and WHEN conditions.
+
+LISTBRKS | LB
+////LOG
+The LOG command starts and stops the logging of the Debug session (both
+commands and responses).  The log is written to the file named DEBUGLOG.
+
+LOG [OFF]
+
+OFF stops writing information to the file.  If you enter another LOG command
+   during the same session, the file is extended with a log of the subsequent
+   commands and responses.
+
+Note:  The Debug log file is emptied before writing the first log record of the
+       session.
+////M,MACHINE
+The MACHINE command displays the source and object for an executable statement.
+
+M[ACHINE] [statement reference]
+
+statement reference is any reference technique (line, label, or offset).
+
+If statement reference is omitted, the source and object for the next statement
+to be executed is displayed.
+
+After entering the MACHINE command, you may display subsequent executable
+statements of the program unit by pressing the Enter key.  When you enter a
+different Debug command (or the end of the program unit is reached), the
+display stops.
+////N,NEXT
+The NEXT command advances the program by one statement and then stops as if it
+had encountered a breakpoint.
+
+N[EXT]
+
+The NEXT command is similar to the STEP command except that the NEXT command
+performs subprogram units without stopping at each statement of the subprogram,
+unless a breakpoint has been set there.
+
+After entering the NEXT command, you may step through the program by pressing
+the Enter key.  When you enter a different Debug command, the stepping process
+stops.
+
+To execute under Debug control without stepping, use the GO command.  To
+execute without Debug control, use the RUN command.
+////Q,QUALIFY
+The QUALIFY command sets the current Qualified Program Unit to the specified
+program unit.  Unqualified line numbers, labels, variables are considered to be
+in this program unit for subsequent Debug commands.
+
+Q[UALIFY] [program unit]
+
+program unit is a name defined within the program by a PROGRAM, SUBROUTINE, or
+   FUNCTION statement; or for an unnamed main program, the special name MAIN.
+   This program unit must have been compiled with the /T compiler option.
+
+If program unit is omitted, the currently qualified program unit name is
+displayed.
+
+The last qualified program unit remains in effect until you enter another
+QUALIFY command or a GO, NEXT, RUN, or STEP command.
+
+You may qualify individual variable names, line numbers, and labels without
+using the QUALIFY command.  To do this, begin the reference with the program
+unit name and separate the two items with a period (.).
+
+If the QUALIFY command is not used, the executing program unit is always the
+qualified program unit.
+////RE,REGISTERS
+The REGISTERS command displays the values of the 8086/80286 registers and
+flags.
+
+RE[GISTERS]
+
+Register values are given in hexadecimal.
+
+The following are the definitions of the flag settings:
+
+       OV - overflow            NV - no overflow
+       DN - decrement           UP - increment
+       EI - enable              DI - disable
+       NG - negative            PL - positive
+       ZR - zero                NZ - not zero
+       AC - auxiliary carry     NA - no auxiliary carry
+       PE - even parity         PO - odd parity
+       CY - carry               NC - no carry
+////R,RUN
+The RUN command causes the program to run to the end without any Debug action.
+
+R[UN]
+
+When the program ends, Debug regains control and you may enter Debug commands
+to inspect the final values of program variables.
+
+Attention interrupts may be used to re-establish Debug control.
+
+The RUN command suspends checking of breakpoints, WHEN conditions, and tracing.
+It does not erase this information, and when Debug regains control after a RUN,
+these conditions are once again in effect.
+
+If you want the program to execute under Debug control, use the GO command.
+See also the NEXT and STEP commands for other ways to execute under Debug
+control.
+////SET
+The SET command assigns a value to a scalar variable or array element, or
+assigns a set of values to an entire array or part of an array.
+
+SET {variable | array name} = value [,value]...
+
+variable cannot be explicitly qualified (that is, it must be in the currently
+   qualified program unit).  It may be a scalar variable or array element.
+
+array is the unqualified name of an array, without subscripts.
+
+value is a constant or variable, optionally preceded by a replication count
+   and/or sign.  A variable may be explicitly qualified.
+
+replication count is an unsigned integer followed by an asterisk (*).
+
+Values are assigned to an array in storage sequence, starting at the beginning
+and varying the leftmost subscripts most rapidly.  The entire array does not
+have to be filled.  To leave a set of sequential array elements unchanged, use
+a replication count without a value.
+////SO,SOURCE
+The SOURCE command displays lines of the source file (or files).
+
+SO[URCE] [statement reference[:statement reference]]
+
+statement reference is any reference technique (line, label, or offset).
+
+When a statement reference is not given, the next statement to be executed is
+displayed.
+
+When a single statement reference is given, the line(s) of the specified
+statement or comment line are displayed.
+
+When a range is given, all the lines corresponding to the statements and
+comments in the specified range are displayed.  The two statement references
+must be in the same program unit.
+
+After entering the SOURCE command, you may display subsequent statements and
+comments of the program unit by pressing the Enter key.  When you enter a
+different Debug command (or the end of the program unit is reached), the
+display process stops.
+////S,STEP
+The STEP command advances the program by one statement and then stops as if it
+had encountered a breakpoint.
+
+S[TEP]
+
+The STEP command is similar to the NEXT command except that the STEP command
+steps through each statement of a called subprogram.
+
+After entering the STEP command, you may step through the program by pressing
+the Enter key.  When you enter a different Debug command, the stepping process
+stops.
+
+To execute under Debug control without stepping, use the GO command.  To
+execute without Debug control, use the RUN command.
+////T,TRACE
+The TRACE command starts and stops statement tracing.
+
+T[RACE] [statement reference[:statement reference] | OFF]
+
+statement reference is any reference technique (line, label, or offset).
+
+When you do not specify options, all statements in your qualified program unit
+are traced.
+
+When you specify a single statement reference, only that statement is traced.
+
+When you specify a range, the statements in that range are traced.  The two
+statement references must be in the same program unit.
+
+OFF stops statement tracing.
+
+A TRACE command cancels the tracing of statements established by a previous
+TRACE command.
+
+The TRACE command does not resume execution; use a GO, NEXT, or STEP command to
+resume execution.  If you use the RUN command, tracing is suspended until Debug
+regains control.
+////WN,WHEN
+The WHEN command defines conditions to be monitored, and starts, stops, and
+restarts the monitoring of conditions.
+
+W[HE]N {{condition number [(condition) | @variable | OFF]} | * [OFF]}
+
+condition number is a digit (1 through 9) that identifies a WHEN conditon.
+
+variable is a variable to be monitored for any change in its value.
+
+condition is either a relation or a logical variable optionally preceded by a
+  logical .NOT. (separated from the variable by at least one space).
+
+relation is {operand relop operand}
+
+operand is {[+|-]{variable | constant}}
+
+relop is a relational operator (preceded and followed by at least one space)
+  stated as either a mnemonic or special symbol:  .EQ. or =, .GT. or >, .LT. or
+  <, .GE. or >= or =>, .LE. or <= or =<, or .NE. or <> or ><.
+
+A condition number (or * meaning all conditions) without OFF turns on the
+   condition(s).  OFF turns off testing for the specified condition (or for all
+   conditions when * is specified).
+////W,WHERE
+The WHERE command displays the location of the next statement to be executed
+and optionally displays a trackback of the program units.
+
+W[HERE] [TRACK | TK]
+
+If TRACK or TK is specified, a "trackback" of all the program units that led to
+the current one (the chain of calls) is displayed.  The statement references of
+all subprogram calls (CALL statements or function references) leading to the
+executing program unit are displayed in the reverse order of their occurrence.
+////DB0001
+E DB0001  CANNOT INITIALIZE DEBUGIN
+
+Debug cannot initialize the Debug input device.  The console is used for input
+instead.
+
+This message occurs when DEBUGIN is set by a DOS or OS/2 SET command and the
+file designated by the value of DEBUGIN cannot be opened for input (for
+example, the file cannot be found or doesn't exist).
+
+Use the DOS or OS/2 SET command to display and change the setting for DEBUGIN.
+////DB0002
+T DB0002  CANNOT INITIALIZE DEBUGLOG
+
+Debug cannot initialize the Debug log device.  Debug returns control to DOS or
+OS/2.
+
+Make sure the DEBUGLOG file is accessible and can be written (for example, it
+is not being used by some other process).  Also, make sure that there is enough
+disk space for the file.
+
+To direct the log to a file other than DEBUGLOG in the current directory, use
+the DOS or OS/2 SET command.
+////DB0003
+E DB0003  CANNOT USE DUMMY ARGUMENTS WITH WHEN
+
+Dummy variables cannot be used with the WHEN command.
+
+Reenter the WHEN command using variables that are not dummy variables.
+////DB0004
+E DB0004  CANNOT REFERENCE SYMBOL
+
+This symbol does not exist in the currently executing program unit.
+
+For example, this message occurs when attempting to list a dummy variable
+which doesn't exist in the currently executing program unit.
+
+Reenter the command using variables that exist in the currently executing
+program unit.
+////DB0005
+T DB0005  CANNOT INITIALIZE DEBUGOUT
+
+Debug cannot initialize the Debug output device.  Debug returns control to DOS
+or OS/2.
+
+This message occurs when DEBUGOUT is set by a DOS or OS/2 SET command and the
+file designated by the value of DEBUGOUT cannot be opened for output.  For
+example, the specified directory doesn't exist or there is not enough disk
+space to create the file.
+
+Use the DOS or OS/2 SET command to display and change the setting for DEBUGOUT.
+////DB0006
+E DB0006  INCORRECT VALUE
+
+A value given in the command is invalid.  For example, the segment, offset or
+length given in a DISPLAY command is greater than Z'FFFF' (65535).
+
+Reenter the DISPLAY command with a valid value.
+////DB0008
+E DB0008  COMPLEX RELATION USAGE ERROR
+
+Only EQ. and .NE. may be used with complex values.
+
+Reenter the WHEN command specifying a valid condition.
+////DB0009
+E DB0009  CONDITION DOES NOT EXIST
+
+The WHEN condition does not exist.  Issue the LISTBRKS (LB) command for a list
+of the current WHEN conditions.
+
+Reenter the WHEN command specifying a condition number for an existing
+condition or specify a condition with the condition number.
+////DB0010
+E DB0010  CONSTANT EXCEEDS LIMIT OF MACHINE
+
+A numeric constant is too large or too small.
+
+Reenter the command specifying a valid value.
+////DB0011
+E DB0011  DEBUG MEMORY OVERFLOW
+
+There is no more internal memory to work with, or there are too many program
+units compiled for Debug, or the program calls assembly language routines that
+have incorrect trackback information.
+
+Reduce the number of WHEN conditions or the number of program units compiled
+for Debug, or make sure the trackback information is correct in all assembly
+language routines called by the program.
+
+You may continue to debug your program; however, the currently executing
+program unit is now the currently qualified program unit and you may not change
+a condition corresponding to a WHEN condition number (you may turn them off and
+on).
+
+If this message occurs frequently, restart the debug session with a reduced
+number of program units compiled for Debug or, during the Debug session,
+reduce the number of times WHEN conditions are changed.
+////DB0012
+E DB0012  INCORRECT CHARACTER IN VARIABLE NAME
+
+Debug found an invalid character in a variable name.
+
+Reenter the command specifying a valid variable name.
+////DB0013
+E DB0013  INCORRECT COMMAND
+
+The command entered does not exist.
+
+Enter one of the valid commands or its abbreviation.  The letters in brackets
+should be omitted for the abbreviation.
+
+  A[T]         G[O]         L[IST]B[RKS]   Q[UALIFY]     SO[URCE]     W[HERE]
+  D[ISPLAY]    H[ELP]       LOG            RE[GISTERS]   S[TEP]
+  END          I[NPUT]      M[ACHINE]      R[UN]         T[RACE]
+  E[NTRY]      L[IST]       N[EXT]         SET           W[HE]N
+
+To request information about a Debug command, enter HELP (or H) followed by
+the name of the command (or its abbreviation).
+////DB0014
+E DB0014  INCORRECT HEXADECIMAL CONSTANT
+
+Debug found an invalid character in a hexadecimal number or the closing
+apostrophe (') is missing.  Hexadecimal numbers have the format:
+
+   Z'hhhh'
+
+where h is a hexadecimal digit (that is, 0 through 9 and A through F).
+
+Reenter the command specifying a valid hexadecimal constant or other valid
+value.
+////DB0015
+E DB0015  INCORRECT OPERAND TYPES
+
+The mixed mode types cannot be used together.
+
+Reenter the command specifying operands of the same type.
+////DB0016
+E DB0016  INCORRECT RANGE SPECIFICATION
+
+The statement reference range values are incorrect.
+
+Reenter the command specifying a valid statement reference range.
+////DB0017
+E DB0017  INCORRECT SUBSCRIPT
+
+The subscript is not a valid constant or variable.
+
+Reenter the command specifying a valid constant or variable for the subscript.
+////DB0018
+E DB0018  INCORRECT USE OF SIGN
+
+A signed scalar cannot be used as a subscript and a logical value cannot have a
+sign.
+
+Reenter the command specifying an unsigned scalar for a subscript or specify
+an unsigned logical value.
+////DB0019
+E DB0019  INCORRECT RIGHT-HAND SIDE
+
+An equal sign is missing from the SET command.
+
+Reenter the SET command with an equal sign between the variable and the value.
+////DB0020
+E DB0020  INVALID COMPLEX CONSTANT
+
+The syntax of the complex constant is incorrect.
+
+Reenter the command with a valid complex constant.
+////DB0021
+E DB0021  INVALID CONDITION ID
+
+The syntax of a WHEN condition number is incorrect.
+
+Reenter the command with a valid condition number (that is, a digit between 1
+and 9, inclusive).
+////DB0022
+E DB0022  INVALID LOGICAL CONSTANT
+
+The syntax of the logical constant is incorrect.
+
+Reenter the command with a valid logical constant.
+////DB0023
+E DB0023  INVALID LINE DISPLACEMENT
+
+The line displacement caused Debug to access a line number that does not exist.
+
+Reenter the command with a valid line displacement or use one of the other
+forms of statement references.
+////DB0024
+E DB0024  INVALID LINE OR LABEL NUMBER
+
+The line or label statement reference is incorrect.
+
+Reenter the command with a valid statement reference.
+////DB0025
+E DB0025  INVALID CHARACTER CONSTANT
+
+The syntax of the character constant is incorrect.  That is, the character
+constant is empty or the closing apostrophe (') is missing.
+
+Reenter the command with a valid character constant.
+////DB0026
+E DB0026  INVALID OPERAND FOR COMMAND
+
+The operand used in a command is incorrect.
+
+Reenter the command with a valid operand.
+////DB0027
+E DB0027  INVALID PROGRAM UNIT
+
+The program unit does not exist.
+
+Reenter the command with the name of an existing program unit that was compiled
+with the /T compiler option.
+////DB0028
+E DB0028  INVALID PROGRAM UNIT NAME
+
+The syntax of the program unit name is incorrect.
+
+Reenter the command with a valid program unit name.  The program unit name must
+be the name of an existing program unit that was compiled with the /T compiler
+option.
+////DB0029
+E DB0029  INVALID RELATION
+
+The specified relation is not valid.
+
+Reenter the WHEN command with a valid relation.
+////DB0030
+E DB0030  INVALID SEPARATOR
+
+An invalid separator was used.
+
+Reenter the command with a valid separator.
+////DB0031
+E DB0031  MUST BE A SUBSCRIPTED ARRAY
+
+A nonsubscripted array cannot be used as a value in a SET command.
+
+Reenter the SET command with a valid value.
+////DB0032
+E DB0032  NO ENDING PARENTHESIS
+
+A closing parenthesis is missing.
+
+Reenter the command with a closing right parenthesis.
+////DB0033
+E DB0033  CONVERSION OVERFLOW/UNDERFLOW
+
+Converting the numeric value to the appropriate type caused an overflow or an
+underflow.
+
+Reenter the command with a value that is appropriate for the type.
+////DB0034
+E DB0034  NOT ENOUGH OPERANDS
+
+There were not enough operands to finish processing a Debug command.  For
+example, a list ends with a comma or OFF was not specified after AT *.
+
+Reenter the command with the proper number of operands.
+////DB0035
+E DB0035  OPERAND NOT SCALAR
+
+The operand must be a scalar variable.
+
+Reenter the command using a scalar variable.
+////DB0036
+E DB0036  OPERAND NOT LOGICAL
+
+The operand for a logical test must be a logical variable.
+
+Reenter the WHEN command using a logical variable or specify some other valid
+condition.
+////DB0037
+E DB0037  BOTH OPERANDS CONSTANT
+
+Both operands are constant.
+
+Reenter the command such that the operands are not both constant.
+////DB0038
+E DB0038  REPEAT COUNT IS NOT POSITIVE
+
+The repeat count for the SET command must be greater than zero.
+
+Reenter the SET command using an unsigned number for the repeat count.
+////DB0039
+E DB0039  SUBSCRIPT VALUE OUT OF RANGE
+
+The value of the subscript is not within the upper and lower bounds of the
+array.
+
+Reenter the command using a valid subscript.
+////DB0040
+E DB0040  TOO MANY VALUES FOR ARRAY
+
+There are too many values on the right-hand side of the equal sign of the SET
+command.
+
+Reenter the SET command using a number of values that is equal to or smaller
+than the number of elements in the array.
+////DB0041
+E DB0041  TOO MANY SUBSCRIPTS
+
+There are too many subscripts for the array.
+
+Reenter the command using the correct number of subscripts.
+////DB0042
+E DB0042  VALUE MUST BE INTEGER
+
+The value must be type integer.
+
+Reenter the command using a value that has integer type.
+////DB0043
+E DB0043  VARIABLE DOES NOT EXIST
+
+A reference was made to a symbolic name that does not exist.  This could be due
+to a misspelling in the name or an improperly qualified name.
+
+If the variable is not in the currently qualified program unit, the name
+must be prefixed with the name of the program unit in which it occurs
+(separated from the variable name by a colon).
+
+Reenter the command using the name of an existing variable and qualify as
+needed.
+////DB0044
+E DB0044  NOT ENOUGH SUBSCRIPTS
+
+There are not enough subscripts for the array.
+
+Reenter the command using the correct number of subscripts.
+////DB0045
+E DB0045  CANNOT USE VARIABLE SUBSCRIPTED ARRAY ELEMENT
+
+For an array element in a WHEN command, the subscript cannot be a variable.
+
+Reenter the WHEN command using constant subscripts for array elements.
+////DB0046
+E DB0046  CANNOT REFERENCE ADJUSTABLE ARRAYS
+
+Adjustable dummy arrays may not be referenced.
+
+Reenter the command using operands which are not adjustable dummy arrays.
+////DB0047
+E DB0047  LOGICAL RELATION USAGE ERROR
+
+Only equal and not equal binary operators can be used with logical scalars.
+
+Reenter the WHEN command using a relational operator that is compatible with
+the types of the operands or enter some other valid condition.
+////DB0048
+E DB0048  DEBUG INPUT LINE IS TOO LONG
+
+Command line exceeds the maximum of 75 characters.
+
+Reenter the command using 75 or less characters.
+////DB0049
+E DB0049  VARIABLE SPANS SEGMENT
+
+The variable or array element to be listed spans a segment boundary.  This
+error should not occur and represents an internal error in the compiler.
+
+If this occurs, inform your supplier and provide a copy of your source code.
+////DB0050
+E DB0050  CANNOT OPEN INPUT FILE
+
+The file specified for the INPUT command does not exist, cannot be found, or is
+unavailable.
+
+Make sure the name of the file was specified correctly, that the file exists
+and is accessible, and then reenter the INPUT command.
+////DB0051
+E DB0051  CANNOT LOCATE HELP PANEL
+
+The help panel for the requested topic was not found.
+
+Reenter the HELP command with a valid topic or enter the HELP command by itself
+for information about how to use help and a list of available topics.
+////DB0052
+E DB0052  CANNOT OPEN HELP FILE
+
+The file PROFDBG.HLP (that contains HELP information) does not exist, cannot be
+found, or is unavailable.
+
+Make sure that the file PROFDBG.HLP is installed and is accessible.
+PROFDBG.HLP should be in the current directory or accessible in some other
+directory (for example, by using the DOS or OS/2 SET command).
+////DB0053
+E DB0053  UNEXPECTED CHARACTERS AFTER COMMAND
+
+The command appears correct except that excess characters appear after the
+command.
+
+Reenter the command with the correct operands and syntax.
+////DB0054
+E DB0054  CANNOT OPEN SOURCE FILE
+
+The source file for the requested statements does not exist, cannot be found,
+or is unavailable.
+
+Make sure that the source file used for the compilation of the program unit is
+accessible with the same name used for the compilation.
+
+Do not change the source file without recompiling and relinking if you are
+going to use the SOURCE or MACHINE commands during a Debug session.
+////DB0055
+E DB0055  SOURCE FILE TOO SHORT
+
+The source file for the requested statements was found but the records for the
+statements do not appear in the file.  This message indicates that the source
+file no longer corresponds to the program unit being debugged.
+
+Make sure that the source file used for the compilation of the program unit is
+accessible with the same name used for the compilation.
+
+Do not change the source file without recompiling and relinking if you are
+going to use the SOURCE or MACHINE commands during a Debug session.
+////DB0056
+E DB0056  NON-EXISTENT MEMORY REFERENCED
+
+The specified starting address (segment selector and offset) given in the
+DISPLAY command is invalid and addresses non-existent memory.  Addresses in
+80286 protect mode will be checked for validity for the process.  Addresses
+in 80286 real mode or on 8086/8088 machines are checked for real memory
+validity only (that is, between 0 and 1M).
+
+Reenter the DISPLAY command with a valid starting address.
+
+Note that if the starting address is valid and the ending address is not, the
+ending address will be adjusted to be the highest valid address in the
+segment in protect mode or to the highest real address in real mode.
+////
+

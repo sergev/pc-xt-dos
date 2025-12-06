@@ -1,0 +1,218 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PCINTRF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+CGROUP  GROUP   CODE
+
+DGROUP  GROUP   DATA
+
+
+
+        PUBLIC          ?JTABLE                 ; Located at 1:0000h Type = 4
+        PUBLIC          ?PCDOS                  ; Located at 2:0000h Type = 1
+
+
+DATA    DSEG
+
+
+?JTABLE dw      reset_system       ;00    00x system reset
+        dw      rd_con             ;01    01x console read
+        dw      wr_con             ;02    02x console write
+        dw      rd_reader          ;03    03x reader read
+        dw      wr_punch           ;04    04x punch write
+        dw      wr_list            ;05    05x list write
+        dw      dir_conio          ;06    06x direct console i/o
+        dw      @unused_entry      ;07    07x get iobyte
+        dw      @unused_entry             ;08    08x set iobyte
+        dw      print_string              ;09    09x print string
+        dw      rd_conbuff                ;10    0ax read console buffer
+        dw      get_const                 ;11    0bx get console status
+        dw      get_vernbr                ;12    0cx get version number
+        dw      reset_disksys             ;13    0dx reset disk system
+        dw      sel_disk                  ;14    0ex select disk
+        dw      open_file                 ;15    0fx open file
+        dw      close_file                ;16    10x close file
+        dw      srch_frst                 ;17    11x search for first
+        dw      srch_next                 ;18    12x search for next
+        dw      delete_file               ;19    13x delete file
+        dw      rd_seq                    ;20    14x read sequential
+        dw      wr_seq                    ;21    15x write sequential
+        dw      make_file                 ;22    16x make file
+        dw      rename_file               ;23    17x rename file
+
+        dw      @unused_entry             ;24    18x return login vector
+        dw      get_currdisk              ;25    19x return current disk
+        dw      set_dmaaddr               ;26    1ax set dma addr
+        dw      get_addralloc             ;27    1bx get addr(alloc)
+        dw      @unused_entry             ;28    1cx write protect disk
+        dw      @unused_entry             ;29    1dx get r/o vector
+        dw      @unused_entry             ;30    1ex set file attributes
+        dw      @unused_entry             ;31    1fx get addr(disk parms)
+        dw      @unused_entry             ;32    20x get/set user code
+        dw      rd_ran                    ;33    21x read random
+        dw      wr_ran                    ;34    22x write random
+        dw      comp_flsz                 ;35    23x compute file size
+        dw      set_ranrec                ;36    24x set random record
+        dw      reset_drive               ;37    25x reset drive
+        dw      @unused_entry             ;38    26x unk
+        dw      rd_ranblk                 ;39    27x unk
+        dw      wr_ranblk                 ;40    28x write random with zero fill
+        dw      @unused_entry             ;41    29x unk
+        dw      @unused_entry             ;42    2ax unk
+        dw      @unused_entry             ;43    2bx unk
+        dw      @unused_entry             ;44    2cx unk
+        dw      @unused_entry             ;45    2dx unk
+        dw      @unused_entry             ;46    2ex unk
+        dw      @unused_entry             ;47    2fx unk
+
+        dw      @unused_entry             ;48    30x unk
+        dw      @unused_entry             ;49    31x get addr(sysdat)
+        dw      @unused_entry             ;50    32x direct bios call
+        dw      set_dmabase               ;51    33x set dma base
+        dw      get_dmabase               ;52    34x get dma base
+        dw      @unused_entry             ;53    35x unk
+        dw      @unused_entry             ;54    36x unk
+        dw      @unused_entry             ;55    37x unk
+        dw      @unused_entry             ;56    38x unk
+        dw      @unused_entry             ;57    39x unk
+        dw      @unused_entry             ;58    3ax unk
+        dw      @unused_entry             ;59    3bx unk
+@d1     db      000h
+@d2     db      'Undefined Function!',00Dh,00Ah,'$'
+@d3     dw      00000h
+@d4     dw      00080h
+@d5     dw      00000h
+
+
+CODE    CSEG
+
+
+?PCDOS: push    es
+        int     21h
+        pop     es
+        ret
+@unused_entry: mov ah,09h
+        mov     dx,offset @d2
+        jmp     ?PCDOS                    ; Large jump translated into short
+reset_system: mov word ptr .3eh,0000h
+        jmpf    dword ptr .3eh
+rd_con: mov     ah,01h
+        jmp     ?PCDOS                    ; Large jump translated into short
+wr_con: mov     ah,02h
+        jmp     ?PCDOS                    ; Large jump translated into short
+rd_reader: mov  ah,03h
+        jmp     ?PCDOS                    ; Large jump translated into short
+wr_punch: mov   ah,04h
+        jmp     ?PCDOS                    ; Large jump translated into short
+wr_list: mov    ah,05h
+        jmp     ?PCDOS                    ; Large jump translated into short
+dir_conio: mov  ah,06h
+        cmp     dl,0FEh
+        jnz     @L38
+        inc     dl
+        call    ?PCDOS                    ; Large jump translated into short
+        jz      @L39
+        mov      @d1,al
+        mov     al,0FFh
+        ret
+@L39:   xor     al,al
+        ret
+@L38:   cmp     dl,0FFh
+        jnz     @L41
+        mov     al, @d1
+        or      al,al
+        jz      @L42
+        mov     byte ptr @d1,00h
+        ret
+@L42:   call    ?PCDOS                    ; Large jump translated into short
+        jz      @L42
+        ret
+@L41:   call    ?PCDOS                    ; Large jump translated into short
+        ret
+print_string: mov ah,09h
+        jmp     ?PCDOS                    ; Large jump translated into short
+rd_conbuff: mov ah,0Ah
+        jmp     ?PCDOS                    ; Large jump translated into short
+get_const: mov  ah,0Bh
+        call    ?PCDOS                    ; Large jump translated into short
+        cmp     al,00h
+        jz      @L43
+        mov     al,01h
+@L43:   ret
+get_vernbr: mov bx,0022h
+
+        mov     ax,bx
+        ret
+reset_disksys: mov ah,0Dh
+        jmp     ?PCDOS
+sel_disk: push  ax
+        mov     ah,0Eh
+        call    ?PCDOS
+        pop     ax
+        ret
+open_file: mov  ah,0Fh
+        jmp     ?PCDOS
+close_file: mov ah,10h
+        jmp     ?PCDOS
+srch_frst: mov  ah,11h
+        jmp     ?PCDOS
+srch_next: mov  ah,12h
+        jmp     ?PCDOS
+delete_file: mov ah,13h
+        jmp     ?PCDOS
+rd_seq: mov     ah,14h
+        jmp     ?PCDOS
+wr_seq: mov     ah,15h
+        jmp     ?PCDOS
+make_file: mov  ah,16h
+        jmp     ?PCDOS
+rename_file: mov ah,17h
+        jmp     ?PCDOS
+get_currdisk: mov ah,19h
+        jmp     ?PCDOS
+set_dmaaddr: push ds
+        mov     @d4,dx
+        cmp     word ptr @d5,00FFh
+        jnz     @L46
+        mov     ds,word ptr @d3
+@L46:   mov     ah,1Ah
+        call    ?PCDOS
+        pop     ds
+        ret
+get_addralloc: mov ah,1Bh
+        jmp     ?PCDOS
+rd_ran: mov     ah,21h
+        jmp     ?PCDOS
+wr_ran: mov     ah,22h
+        jmp     ?PCDOS
+comp_flsz: mov  ah,23h
+        jmp     ?PCDOS
+set_ranrec: mov ah,24h
+        jmp     ?PCDOS
+reset_drive: mov ah,25h
+        jmp     ?PCDOS
+rd_ranblk: mov  ah,27h
+
+        jmp     ?PCDOS
+wr_ranblk: mov ah,28h
+        jmp     ?PCDOS
+set_dmabase: push ds
+        push    dx
+        mov     word ptr @d5,00FFh
+        mov     @d3,dx
+        mov     dx,@d4
+        pop     ds
+        mov     ah,1Ah
+        call    ?PCDOS
+        pop     ds
+        ret
+get_dmabase: mov bx,@d4
+        mov     es,word ptr @d3
+        ret
+
+        END
+
+

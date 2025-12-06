@@ -1,0 +1,45 @@
+ ?keypr: proc(get, arg);
+ dcl get           bit(1);
+ dcl arg(3)        fixed bin(7);
+ dcl ?signal  entry(fixed bin(15), bit(8), ptr, ptr);
+ dcl ?getky   entry(ptr, (3)fixed bin(7)) returns(bit(1));
+ dcl ?setky   entry(ptr, (3)fixed bin(7)) returns(bit(1));
+ dcl 1 ?fpb   external,
+       2 fill1(2)  bit(16),
+       2 line_pos  fixed bin(15),
+       2 oopos     fixed bin(15),
+       2 olpos     fixed bin(15),
+       2 fill2     fixed bin(15),
+       2 mark1     bit(1),
+       2 fill4(10) bit(8),
+       2 mark2     fixed bin(15),
+       2 fill5(21) bit(8);
+ dcl 1 ?fpbstk static external,
+       2 something ptr,
+       2 fill1     ptr init(null),
+       2 fill2(15) bit(8);
+ 
+ dcl err_msg char(11) var static init('Invalid Key');
+
+ if get then do;
+     if ^(?setky(addr(?fpb), arg)) then
+         call err('01'b4);
+     end;
+ else do;
+     if ^(?getky(addr(?fpb), arg)) then
+         call err('02'b4);
+     else if arg(3) ^= 0 then
+         call ?signal(5,'06'b4,something,null);
+     end;
+
+ return;
+ 
+ err: proc(err_num);
+ dcl err_num      bit(8);
+ call ?signal(7, err_num, something, addr(err_msg));
+ return;
+
+ end err;
+
+ end ?keypr;
+

@@ -1,0 +1,7 @@
+ log: proc(arg) returns(float bin(24));
+ dcl arg                float bin(24);
+ dcl ?log               entry(float bin(24)) returns(float bin(24));
+
+ return(?log(arg));
+ end log;
+

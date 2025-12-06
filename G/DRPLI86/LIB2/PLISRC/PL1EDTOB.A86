@@ -1,0 +1,110 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1EDTOB'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?CNVER:NEAR
+        EXTRN           ?GNFMT:ABS
+        EXTRN           ?PNC:NEAR
+        EXTRN           ?BADFM:NEAR
+        EXTRN           ?OUTFM:NEAR
+
+        PUBLIC          ?EDTOB                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rw      1
+
+
+CODE    CSEG
+
+
+?EDTOB: lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        call    ?OUTFM
+        pop     dx
+        pop     bx
+        mov     @d1,bx
+        sub     al,04h
+        jnc     @j2
+        jmp     ?BADFM
+@j2:    dec     al
+        jns     @j3
+        inc     al
+@j3:    cmp     al,04h
+        jc      @j4
+        jmp     ?BADFM
+@j4:    inc     al
+        mov     dl,al
+        mov     bx,0000h
+        add     bx,sp
+        mov     al,dh
+        mov     cl,00h
+@j5:    sub     al,dl
+        jc      @j6
+        inc     cl
+        jmps    @j5
+@j6:    add     al,dl
+        jz      @j8
+        inc     cl
+@j7:    dec     bx
+        mov     sp,bx
+        mov     byte ptr [bx],30h
+        inc     dh
+        inc     al
+        cmp     al,dl
+        jc      @j7
+@j8:    mov     al,ch
+        inc     al
+        jnz     @j9
+        mov     ch,cl
+@j9:    mov     al,ch
+        sub     al,cl
+        jnc     @j10
+        jmp     ?CNVER
+@j10:   inc     cl
+@j11:   or      al,al
+        jz      @j12
+        dec     al
+        lahf
+        xchg    al,ah
+        push    ax
+        mov     al,20h
+        call    ?PNC
+        pop     ax
+        xchg    al,ah
+        jmps    @j11
+@j12:   dec     cl
+        jz      @j16
+        mov     ch,dl
+        mov     dh,00h
+
+@j13:   mov     al,[bx]
+        sub     al,30h
+        inc     bx
+        or      al,dh
+        dec     ch
+        jz      @j14
+        add     al,al
+        mov     dh,al
+        jmps    @j13
+@j14:   cmp     al,0Ah
+        jc      @j15
+        add     al,07h
+@j15:   add     al,30h
+        call    ?PNC
+        jmps    @j12
+@j16:   mov     sp,bx
+        mov     bx,@d1
+        jmp     bx
+
+
+        END
+
+

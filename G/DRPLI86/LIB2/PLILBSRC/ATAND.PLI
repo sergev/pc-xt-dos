@@ -1,0 +1,5 @@
+ atand: proc(arg) returns(float bin(24));
+ dcl arg         float bin(24);
+ return(atan(arg)*57.29578);
+ end atand;
+

@@ -1,0 +1,487 @@
++-------------------------------------------------------+
+|          WATCOM GKS Graphics Cover Functions          |
++-------------------------------------------------------+
+
+The file GKSCOVER.PAS provides a library of routines to support
+drawing of graphic images with colour.  This library is written
+using WATCOM GKS and is meant to provide an introduction to GKS.
+This document describes the library and its use.  The graphics
+libraries are accompanied by a number of example programs
+illustrating how to use the routines in the library.
+
+
+Graphics Modes and Initialization
+=================================
+
+On the IBM PC, graphics can be drawn in a variety of modes, depending on
+the hardware available.  WATCOM GKS supports the IBM Colour Graphics
+Adapter (CGA), the IBM PCjr, the IBM Enhanced Graphics Adapter (EGA),
+the IBM Video Graphics Array (VGA), the Hercules Graphics Adapter, and
+the IBM Graphics Printer.  Each of these devices can operate in one or
+more modes.  Each mode has a "resolution" (i.e., the number of dots it
+can display both horizontally and vertically) and a number of colours
+which can be displayed simultaneously on the screen.
+
+To initialize the graphics system, a program must first call the
+"INIT" procedure.  This routine takes a parameter which describes the
+type of graphics device and the desired mode.  The following table
+describes the available graphics modes.  The first column is the
+parameter to the INIT routine and the remaining columns describe the
+hardware mode, the resolution in terms of the number of horizontal and
+vertical dots, the range of colour indices which can be specified in
+this mode, and the corresponding actual colours.  The colour numbers
+are defined in a subsequent table (see Fig. 5).  In the table below,
+"mono" means that the graphics adapter is connected to a monochrome
+display.  In the "actual colours" column, "BG" means the current
+background colour and "definable" means that the mapping of actual
+colours onto indices is programmable.
+
++------------------------------------------------------------------+
+| Choice      Graphics         Resolution  Colour   Actual colours |
+|          Hardware / Mode                 indices   (see below)   |
+| ====== ==================== ============ =======  ============== |
+|   1    CGA/PCjr/EGA mode 4    320x200     0..3    BG, 7, 6, 8    |
+|   2    CGA/PCjr/EGA mode 6    640x200     0..1    BG, 8          |
+|   3    IBM PCjr mode 8        160x200     0..15   definable      |
+|   4    IBM PCjr mode 9        320x200     0..15   definable      |
+|   5    IBM PCjr mode 10       640x200     0..3    definable      |
+|   6    EGA mode 13            320x200     0..15   definable      |
+|   7    EGA mode 14            640x200     0..15   definable      |
+|   8    EGA mode 15 (mono)     640x350     0..3    1, normal,     |
+|                                                   blink, bright  |
+|   9    EGA mode 16            640x350     0..3    definable      |
+|         (with extra memory)               0..15   definable      |
+|  10    Hercules (mono)        720x350     0..1    BG, 8          |
+|  11    IBM Graphics Printer   480x720     0..1    BG, 1          |
+|  12    VGA mode 17            640x480     0..1    definable      |
+|  13    VGA mode 18            640x480     0..15   definable      |
+|  14    VGA mode 19            320x200     0..255  definable      |
++------------------------------------------------------------------+
+ Fig 1.  Graphics Selections
+
+                          - 1 -
+
+Graphics Modes and Colour
+=========================
+
+Most of the routines which are described in this document permit
+you to specify the "colour" in which an object is to be drawn.  The
+colours are actually just numbers or indices ranging from 0 and
+upwards.  For example, a line can be drawn using colour "1" and a
+circle using colour "2".  However, what colour is colour 1 or
+colour 2?  Some devices, like the EGA and VGA, actually permit you to
+define what they are.  For example, you might decide that colour 1
+should be RED and then anytime an object is drawn in colour 1, it
+will appear RED.  Later on, you can change your mind and decide
+that all objects that were drawn in colour 1 should appear BLUE.
+
+Unfortunately some devices, such as the CGA, do not permit you to
+define this "mapping" between colour indices and actual colours.
+With the exception of colour index 0 (the background colour), CGA
+colour 1 is CYAN, colour 2 is MAGENTA, and colour 3 is WHITE and
+you cannot alter this selection.  When using the IBM Graphics
+Printer, the choices are limited to two - the colour of the ink in
+the ribbon and the colour of the paper itself (the "background"
+colour).
+
+The following figures list the default mapping between colour
+indices and actual colours. The numbers in parentheses are the
+colour numbers shown in the colour table (Fig. 5).  If your machine
+is an IBM PCjr or is equipped with an EGA or VGA, each of the
+available colour indices can be redefined to any one of the 16
+colours shown in Fig. 5 using the COLOURMAP routine described below.
+
++-----------------------------+  +-----------------------------+
+|   index     CGA             |  |   index   Hercules          |
+|        +-------------+      |  |        +-------------+      |
+|     0  | definable   |      |  |     0  | background  |      |
+|     1  | CYAN (7)    |      |  |     1  | WHITE (8)   |      |
+|     2  | MAGENTA (6) |      |  |        +-------------+      |
+|     3  | WHITE (8)   |      |  |                             |
+|        +-------------+      |  |                             |
++-----------------------------+  +-----------------------------+
+ Fig 2.  CGA Colour Indices       Fig 3.  Hercules Colour Indices
+
++---------------------------------------------------------------+
+|  index   EGA / VGA / PCjr      index   EGA / VGA / PCjr       |
+|       +--------------------+        +--------------------+    |
+|    0  | BLACK (1)          |     8  | GRAY (9)           |    |
+|    1  | BLUE (5)           |     9  | Light BLUE (13)    |    |
+|    2  | GREEN (3)          |    10  | Light GREEN (11)   |    |
+|    3  | CYAN (7)           |    11  | Light CYAN (15)    |    |
+|    4  | RED (2)            |    12  | Light RED (10)     |    |
+|    5  | MAGENTA (6)        |    13  | Light MAGENTA (14) |    |
+|    6  | YELLOW (4)         |    14  | Light YELLOW (12)  |    |
+|    7  | WHITE (8)          |    15  | Light WHITE (16)   |    |
+|       +--------------------+        +--------------------+    |
++---------------------------------------------------------------+
+ Fig 4.  EGA / VGA / PCjr Default Colour Mapping
+
+                          - 2 -
+
++-------------------------------------------------------+
+|       1 - black        9 - gray                       |
+|       2 - red         10 - light red                  |
+|       3 - green       11 - light green                |
+|       4 - yellow      12 - light yellow               |
+|       5 - blue        13 - light blue                 |
+|       6 - magenta     14 - light magenta              |
+|       7 - cyan        15 - light cyan                 |
+|       8 - white       16 - bright white               |
++-------------------------------------------------------+
+ Fig 5.  Colour Table
+
+
+Screen Coordinates
+==================
+
+Any position on the screen can be referenced by two coordinates.
+The first coordinate is called the x-coordinate, while the second
+is called the y-coordinate.  The left side of the screen has an
+x-coordinate of 0, and the right side has an x-coordinate of 1.
+Similarly, the bottom of the screen has a y-coordinate of 0 and
+the top has a y-coordinate of 1.  Thus any point on the screen can
+be referenced as (x,y) where each of the x and y values are
+between 0 and 1.  The point (0,0) is the bottom left corner of the
+screen, and the point (1,1) is the top right corner.
+
+
++-------------------------------------------------------+
+|       (0,1)                               (1,1)       |
+|               +-----------------------+               |
+|               |                       |               |
+|               |                       |               |
+|               |                       |               |
+|               |                       |               |
+|       y-axis  |        Screen         |               |
+|               |                       |               |
+|               |                       |               |
+|               |                       |               |
+|               |                       |               |
+|               +-----------------------+               |
+|       (0,0)            x-axis             (1,0)       |
++-------------------------------------------------------+
+  Fig 6.  Screen Coordinate System
+
+
+Graphics Routines
+=================
+
+The graphics library consists of routines for generating colour
+graphics including lines, boxes, circles and text.  The following
+sections describe the available routines.
+
+                          - 3 -
+
+Many of the routines require an parameter called COLOUR_INDEX.  If
+the graphics adapter being used can display 4 colours, then the
+values for COLOUR_INDEX will be 0, 1, 2 and 3.  If only 2 colours
+can be displayed, the valid choices are 0 and 1.  If 16 colours can
+be displayed, the valid colours are any number from 0 to 15.
+
+The routines GETPIC, PUTPIC and PUTPIC_ACTION require a string
+parameter. In Pascal, this must be a variable of the type picture.
+The type is declared in the graphics library. The following program
+fragment illustrates how to call the procedure GETPIC.
+    var
+        pic : picture;
+    begin
+        getpic( 0.5, 0.5, 0.6, 0.4, pic );
+    end;
+
+
+Procedures
+==========
+
+block( x1, y1, x2, y2, colour_index )
+
+    Draws a rectangular box with coordinates of opposite corners
+    specified by the first two pairs of parameters.  The box and
+    area inside it are painted solid using the specified colour
+    index.
+
+box( x1, y1, x2, y2, colour_index )
+
+    Draws a rectangular box with coordinates of opposite corners
+    specified by the first two pairs of parameters.  The box is
+    drawn using the specified colour index.
+
+circle( x, y, radius, colour_index )
+
+    Draws a circle with centre at coordinates (x,y) using the
+    specified colour index.  The radius specifies the distance from
+    the edge of the circle to the centre along the horizontal
+    axis.
+
+circ_arc( x, y, radius, colour, start, end )
+
+    Draws a circular arc with centre at coordinates (x,y) using
+    the specified colour index.  The radius specifies the distance
+    from the edge of the circle to the centre along the horizontal
+    axis.  The start and end angles of the arc are expressed in
+    degrees between 0 and 360.  A start angle of 0 represents the
+    point (x+radius,y).  The arc is drawn in the counter-clockwise
+    direction.
+
+clearscreen
+
+    Clears the screen.
+
+                          - 4 -
+
+colourmap( colour_index, colour )
+
+    Associates one of the sixteen available colours to
+    COLOUR_INDEX.  COLOUR_INDEX can be one of the two, four or
+    sixteen colour indices supported by the graphics adapter being
+    used.  COLOUR is one of the sixteen colours described in
+    "Colour Table" above.
+
+ellipse( x, y, x_axis, y_axis, colour_index )
+
+    Draws an ellipse with centre at coordinates (x,y) using the
+    specified colour index.  The x_axis is the distance from the
+    edge of the ellipse to the centre along the horizontal axis
+    and the y_axis is the distance along the vertical axis.
+
+ell_arc( x, y, x_axis, y_axis, colour, start, end )
+
+    Draws an elliptical arc with centre at coordinates (x,y) using
+    the specified colour index.  The x_axis is the distance from
+    the edge of the ellipse to the centre along the horizontal
+    axis and the y_axis is the distance along the vertical axis.
+    The start and end angles of the arc are expressed in degrees
+    between 0 and 360.  A start angle of 0 represents the point
+    (x+x_axis,y).  The arc is drawn in the counter-clockwise
+    direction.
+
+finish
+
+    Closes the graphics system.  This routine should be called when
+    a program is finished generating graphics.
+
+getpic( x1, y1, x2, y2, str )
+
+    An image on the screen is stored in the string variable STR.  The
+    coordinates (x1,y1) and (x2,y2) define the opposite corners of a
+    rectangle which surrounds the object.  The colour indices
+    corresponding to each point within this rectangle are stored in
+    the string variable STR.  The size of the array required is
+    determined by the size of the rectangle and the number of bits
+    per dot required by the current mode setting.  The graphics
+    library declares that the arrays have a maximum size specified by
+    the constant PIC_SIZE.  If an error is diagnosed that the array is
+    not sufficiently large, the constant PIC_SIZE can be adjusted.
+
+init( choice )
+
+    Initializes the graphics system to the requested mode. CHOICE is
+    one of the 11 available modes described in Fig. 1. or it may be
+    0, in which case an attempt is made to determine which type of
+    adapter is present in the computer. This routine must be called
+    before any graphics images can be drawn.
+
+
+                          - 5 -
+
+line( x1, y1, x2, y2, colour_index )
+
+    Draws a line from the point with coordinates (x1,y1) to the
+    point with coordinates (x2,y2) using the specified colour
+    index.
+
+paint( x, y, colour_index )
+
+    Solidly fills an area of the screen using the specified colour
+    index.  Starting at the point (x,y), surrounding points are
+    coloured within an area bounded by the edges of the screen or
+    a figure of colour different than the original colour of point
+    (x,y).
+
+paint_boundary( x, y, colour_index, boundary )
+
+    Solidly fills an area of the screen using the specified colour
+    index.  Starting at the point (x,y), surrounding points are
+    coloured within an area bounded by the edges of the screen or
+    a figure of the colour index specified by boundary.
+
+putdot( x, y, colour_index )
+
+    Places a dot using the specified colour index at the point
+    with coordinates (x,y).
+
+putpic( x, y, str )
+
+    Displays the graphic image previously stored in the character
+    variable STR with routine GETPIC.  The picture is positioned with
+    coordinates (x,y) designating the top left corner of the
+    rectangle.
+
+putpic_action( x, y, str, action )
+
+    Displays the graphic image previously stored in the character
+    variable STR with routine GETPIC.  The picture is positioned with
+    coordinates (x,y) designating the top left corner of the
+    rectangle.  The parameter ACTION is a numeric value representing
+    how the new picture blends with what is currently in the
+    rectangular area of the screen.
+
+    Action 0: Replace the current picture. This is equivalent to
+              putpic.
+    Action 1: The resulting picture corresponds to the exclusive-or
+              (XOR) of the current and stored picture.  An image can
+              be superimposed on an existing picture with one XOR
+              invocation of PUTPIC_ACTION, and the existing picture
+              restored with a second identical invocation of
+              PUTPIC_ACTION.  This is useful for animation.
+    Action 2: The resulting picture corresponds to the logical AND
+              of the current and stored picture.
+    Action 3: The resulting picture corresponds to the logical OR
+              of the current and stored picture.
+
+                          - 6 -
+
+slice( x, y, radius, colour_index, start, end )
+
+    Draws a wedge of a pie chart with centre at the coordinates
+    (x,y) using the specified colour index.  This routine is
+    similar to CIRC_ARC, except that the ends of the arc are
+    joined to the centre point and the interior is filled with the
+    specified colour.
+
+text( x, y, str, colour_index )
+
+    Displays the string STR at the point with coordinates (x,y)
+    using the specified colour index.
+
+
+Functions
+=========
+
+getdot( x, y )
+
+    Returns a numeric value representing the colour index of the
+    point specified by coordinates (x,y).
+
+
+Example Programs
+================
+
+    The graphics library is accompanied by a number of example
+    programs illustrating how to use the routines in the library.
+    The example programs are:
+
+line.pas
+    illustrates the line routine by drawing several lines in
+    different colours
+
+box.pas
+    illustrates the box routine by drawing several boxes in
+    different colours
+
+block.pas
+    is similar to the previous example, except that blocks are
+    drawn instead of boxes
+
+colourma.pas
+    illustrates the colourmap procedure by redefining the colours
+    associated with colour indices 0, 1, 2 and 3. This program only
+    works on adapters that support colour mapping such as the EGA
+    and VGA adapters or the IBM PCjr.
+
+text.pas
+    illustrates the text procedure by drawing several text
+    strings positioned around the screen
+
+circle.pas
+    illustrates the circle procedure by drawing circles with
+    different radii
+
+                          - 7 -
+
+ellipse.pas
+    is similar to the previous example except that ellipses are
+    drawn instead of circles
+
+circarc.pas
+    is similar to the circle example program, except that only
+    partial circles are drawn
+
+ellarc.pas
+    is similar to the ellipse example program, except that only
+    partial ellipses are drawn
+
+paint.pas
+    illustrates and describes the differences between the paint
+    and paint_boundary routines by filling the interior of two
+    boxes
+
+slice.pas
+    illustrates the slice procedure by drawing a pie chart
+
+picture.pas
+    illustrates the getpic and putpic procedures
+
+dog.pas
+    is a larger program using many of the graphics routines to
+    create an animated cartoon
+
+
+Running the Example Programs
+============================
+
+If you have a Hercules Graphics Adapter, you will have to run the
+HERCBIOS.COM program before running the example programs. HERCBIOS
+is a terminate and stay-resident program that is required by WATCOM
+GKS to support graphical output and program output on the screen
+at the same time. Enter the following command to run HERCBIOS.COM:
+
+        C>hercbios
+
+If you did not select the GRAPHICS feature when configuring WATCOM Pascal
+you will have to do it now before continuing with the example programs.
+Refer to Chapter 9, "Configuring WATCOM Pascal", of the WATCOM Pascal
+User's Guide for instructions on how to configure the software. Go into
+the directory containing the example programs and start WATCOM Pascal
+by entering the command:
+
+        C>wpas
+
+                          - 8 -
+
+The graphics library can be brought into the workspace by entering the
+following command:
+
+        edit gkscover.pas
+
+To bring the first program, line.pas, into the workspace, enter the following
+command:
+
+        edit line.pas
+
+The graphics library must also be merged in with this program. To do this,
+enter the following command. (This will insert the graphics library after
+line 3 of the example program.)
+
+        3 paste gkscover.pas
+
+To run the program, enter the command:
+
+        run
+
+After the program has completed, press the ENTER key to return to the editor.
+At this point, changes can be made to the program and the program run again.
+To get the next program into the workspace, enter the following commands:
+
+        *d
+        edit box.pas
+
+Continue in the same manner to run all of the example programs.
+
+
+
+
+
+
+
+                          - 9 -

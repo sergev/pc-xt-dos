@@ -1,0 +1,42 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1BOOLF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?BOOLF                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?BOOLF: mov     cl,10h
+@j1:    shl     bx,1
+        rcl     al,1
+        and     al,01h
+        xchg    bx,dx
+        shl     bx,1
+        xchg    bx,dx
+        adc     al,al
+        inc     al
+        push    cx
+        mov     cl,al
+        mov     al,ch
+@j2:    rcl     al,1
+        dec     cl
+        jnz     @j2
+        mov     al,00h
+        adc     al,bl
+        mov     bl,al
+        pop     cx
+        dec     cl
+        jnz     @j1
+        mov     al,bh
+        ret
+
+
+        END
+
+

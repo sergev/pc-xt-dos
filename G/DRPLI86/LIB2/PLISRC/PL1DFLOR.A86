@@ -1,0 +1,58 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DFLOR'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DNGOP:NEAR
+
+        PUBLIC          ?DFLOR                  ; Located at 2:0000h Type = 1
+        PUBLIC          ?DCEIL                  ; Located at 2:002Dh Type = 1
+
+DATA    DSEG
+
+
+@d1     rb      1
+@d2     rw      1
+
+
+CODE    CSEG
+
+
+?DFLOR: push    ax
+        mov     bp,000Bh
+        add     bp,sp
+        mov     dl,[bp]
+        mov     cl,04h
+        shl     dl,cl
+        mov     ch,08h
+@j1:    mov     al,[bp]
+        mov     cl,04h
+        ror     al,cl
+        push    ax
+        and     al,0Fh
+        or      al,dl
+        mov     [bp],al
+        pop     dx
+        and     dl,0F0h
+        dec     bp
+        dec     ch
+        jnz     @j1
+        pop     ax
+        dec     al
+        jnz     ?DFLOR
+        ret
+?DCEIL: mov      @d1,al
+        pop     @d2
+        call    ?DNGOP
+        mov     al, @d1
+        call    ?DFLOR                    ; Large jump translated into short
+        call    ?DNGOP
+        jmp     @d2
+
+
+        END
+
+

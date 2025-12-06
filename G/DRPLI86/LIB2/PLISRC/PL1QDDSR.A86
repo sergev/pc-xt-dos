@@ -1,0 +1,88 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QDDSR'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DNGOP:NEAR
+
+        PUBLIC          ?QDDSR                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?QDDSR: mov     cl,al
+        pop     dx
+        mov     bx,0007h
+        add     bx,sp
+        mov     ch,[bx]
+        mov     al,ch
+        or      al,al
+        jns     @j1
+        call    ?DNGOP
+@j1:    push    dx
+        push    cx
+        mov     al,cl
+        or      al,al
+        rcr     al,1
+        push    ax
+        jnc     @j3
+        mov     bx,000Dh
+        add     bx,sp
+        mov     cx,0800h
+@j2:    mov     al,[bx]
+        rol     al,1
+        rol     al,1
+        rol     al,1
+        rol     al,1
+        mov     dh,al
+        and     al,0Fh
+        or      al,cl
+        mov     [bx],al
+        mov     al,dh
+        and     al,0F0h
+        mov     cl,al
+        dec     bx
+        dec     ch
+        jnz     @j2
+@j3:    pop     ax
+        or      al,al
+        jz      @j6
+        mov     dl,al
+        mov     dh,00h
+        sub     al,09h
+        not     al
+        mov     bx,0004h
+        add     bx,sp
+        push    bx
+        add     bx,dx
+        pop     dx
+        mov     ch,08h
+@j4:    push    ax
+        mov     al,[bx]
+        mov     si,dx
+        mov     [si],al
+        inc     bx
+        inc     dx
+        dec     ch
+        pop     ax
+        dec     al
+        jnz     @j4
+@j5:    mov     si,dx
+        mov     [si],al
+        inc     dx
+        dec     ch
+        jnz     @j5
+@j6:    pop     ax
+        or      ah,ah
+        jns     @j7
+        jmp     ?DNGOP
+
+@j7:    ret
+
+
+        END
+
+

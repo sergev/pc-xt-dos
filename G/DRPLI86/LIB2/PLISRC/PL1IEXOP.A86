@@ -1,0 +1,28 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1IEXOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?IEXOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?IEXOP: cbw
+        mov     cx,ax
+        mov     ax,0001h
+        or      cx,cx
+        jz      @j2
+@j1:    mul     bx
+        loop    @j1
+@j2:    mov     bx,ax
+        ret
+
+
+        END
+
+

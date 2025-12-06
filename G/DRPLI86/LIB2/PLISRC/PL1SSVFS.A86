@@ -1,0 +1,36 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1SSVFS'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SMCCM:NEAR
+
+        PUBLIC          ?SSVFS                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?SSVFS: cmp     cl,al
+        jnc     @j1
+        mov     al,cl
+@j1:    push    cx
+        push    di
+        inc     di
+        mov     si,0006h
+        add     si,sp
+        call    ?SMCCM
+        pop     di
+        stosb
+        pop     ax
+        sub     ah,ah
+        pop     bx
+        add     sp,ax
+        jmp     bx
+
+
+        END
+
+

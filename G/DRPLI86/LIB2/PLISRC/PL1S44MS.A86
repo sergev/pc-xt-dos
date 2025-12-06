@@ -1,0 +1,33 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1S44MS'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?S44MS                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?S44MS: pop     di
+        mov     dx,bx
+        mov     bx,sp
+        inc     bx
+        inc     bx
+        mov     ax,offset @j1
+        push    ax
+        jmp     cs: word ptr [di]
+@j1:    pop     bx
+        pop     ax
+        pop     ax
+        push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

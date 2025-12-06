@@ -1,0 +1,5 @@
+ log2: proc(arg) returns(float bin(24));
+ dcl arg         float bin(24);
+ return(log(arg)*1.442695);
+ end log2;
+

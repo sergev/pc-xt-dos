@@ -1,0 +1,66 @@
+
+IBM FORTRAN/2 Packing List
+Version 1.00
+(C)Copyright IBM Corp 1984, 1987
+(C)Copyright Ryan-McFarland Corp 1984, 1987
+
+
+DISKETTES
+---------
+
+  FORTRAN/2 "INSTALL" Master Diskette (360KB, 1 of 4)
+
+    DEMO     DCM
+    DEMO     FOR
+    FORTRAN  CER
+    FORTRAN  EXE
+    INSTALL  EXE
+    PACKING  LST
+    QFORT    BAT
+    QFORTLNK BAT
+    QFORTRUN BAT
+    README
+
+  FORTRAN/2 "LINK_RUN" Master Diskette (360KB, 2 of 4)
+
+    COPYMEM  ASM
+    FORTDBG  HLP
+    FORTILC  ASM
+    FORTRAN  DER
+    FORTRAN  ERR
+    FORTRAN  PIF
+    FORTRUE  DLL
+    FORTRUN  DLL
+    LIB      PIF
+    LINK     EXE
+    LINK     PIF
+
+  FORTRAN/2 "NP_LIBRARY" Master Diskette (360KB, 3 of 4)
+
+    FORTPIP  LIB
+    FORTRAN  PIP
+    FORTRDN  LIB
+    FORTRIN  LIB
+    FORTRRN  LIB
+    LIB      EXE
+    PCDOS    LIB
+
+  FORTRAN/2 "EM_LIBRARY" Master Diskette (360KB, 4 of 4)
+
+    FORTRDE  LIB
+    FORTRIE  LIB
+    FORTRRE  LIB
+    LIB      EXE
+    PCDOS    LIB
+
+  FORTRAN/2 "INSTALL" Master Diskette (720KB, 1 of 2)
+
+    The contents of this diskette is the same as the contents of
+    360KB "INSTALL" and "LINK_RUN" master diskettes combined.
+
+  FORTRAN/2 "LIBRARY" Master Diskette (720KB, 2 of 2)
+
+    The contents of this diskette is the same as the contents of
+    360KB "NP_LIBRARY" and "EM_LIBRARY" master diskettes
+    combined.
+

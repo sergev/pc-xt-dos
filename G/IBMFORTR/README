@@ -1,0 +1,25 @@
+
+IBM FORTRAN/2 Compiler
+Version 1.00
+(C)Copyright IBM Corp 1984, 1987
+(C)Copyright Ryan-McFarland Corp 1984, 1987
+
+To install IBM FORTRAN/2, place the FORTRAN "INSTALL" Master Diskette in a
+diskette drive and enter:
+
+   n:INSTALL
+
+where n is the letter of the drive containing the diskette.
+
+Respond to the questions that follow in order to complete the installation.
+
+Make sure your "PATH" statement includes the location of "LINK.EXE", and that
+"APPEND" does not point to any existing directories containing IBM FORTRAN/2
+files.	To disable "APPEND", type "APPEND=;".
+
+If you get the message "Link : warning L4051: FORTRAN.LIB : cannot find
+library" and select only the emulation library during installation, you must
+use the /N option for compilation. For more information, see "Choice of
+Libraries" under "Installation Prompts" in the "Compile, Link and Run" manual.
+
+

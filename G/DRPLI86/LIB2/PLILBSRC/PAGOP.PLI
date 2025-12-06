@@ -1,0 +1,10 @@
+ ?pagop: proc;
+ dcl ?pncpr entry(bit(8));
+ dcl 1 ?filat external,
+       2 filler        char(8),
+       2 do_page       bit(1);
+ if do_page then
+     call ?pncpr('0c'b4);
+ return;
+ end ?pagop;
+

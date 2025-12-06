@@ -1,0 +1,111 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FA44'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+        EXTRN           ?FP40:NEAR
+
+        PUBLIC          ?FS44                   ; Located at 2:0000h Type = 1
+        PUBLIC          ?FA44                   ; Located at 2:0004h Type = 1
+
+DATA    DSEG
+
+
+@d1     rb      1
+@d2     rb      1
+
+
+CODE    CSEG
+
+
+?FS44:  mov     al,80h         ; float subtract
+        jmps    @j3
+?FA44:  sub     al,al          ; float add
+@j3:    mov      @d2,al
+        mov     si,dx
+        mov     ax,[si]+002h
+        shl     ax,1
+        mov     dx,[bx]+002h
+        shl     dx,1
+        sub     ah,dh
+        mov     al,ah
+        mov      @d1,al
+        jc      @j4
+        xchg    bx,si
+        shr     byte ptr @d2,1
+        jmps    @j5
+@j4:    neg     @d1
+@j5:    push    si
+        call    ?FU40
+        inc     bx
+        inc     bx
+        pop     si
+        push    bx
+        mov     bx,si
+        shr     cx,1
+        rcr     dx,1
+        shr     cx,1
+        rcr     dx,1
+        xor     al,@d2
+        jns     @j6
+        call    @j15                      ; Large jump translated into short
+@j6:    shl     byte ptr @d2,1
+        push    cx
+        push    dx
+        call    ?FU40
+        push    ax
+        mov     al, @d1
+        cmp     al,18h
+        jnc     @j14
+        add     al,02h
+@j7:    cmp     al,08h
+        jc      @j8
+        mov     dl,dh
+        mov     dh,cl
+        mov     cl,ch
+        sub     ch,ch
+        sub     al,08h
+        jmps    @j7
+@j8:    or      al,al
+        jz      @j10
+@j9:    shr     cx,1
+        rcr     dx,1
+        dec     al
+        jnz     @j9
+@j10:   pop     ax
+        xor     al,@d2
+        jns     @j11
+
+        call    @j15                      ; Large jump translated into short
+@j11:   pop     bx
+        add     dx,bx
+        pop     ax
+        jnc     @j12
+        inc     cx
+@j12:   add     cx,ax
+        mov     al,ch
+        and     al,80h
+        jns     @j13
+        call    @j15                      ; Large jump translated into short
+@j13:   mov     bx,dx
+        mov     dx,cx
+        pop     cx
+        jmp     ?FP40
+@j14:   sub     cx,cx
+        sub     dx,dx
+        jmp     @j10                      ; Large jump translated into short
+@j15:   not     dx
+        not     cx
+        inc     dx
+        jnz     @j16
+        inc     cx
+@j16:   ret
+
+
+        END
+
+

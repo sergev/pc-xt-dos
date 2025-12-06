@@ -1,0 +1,35 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QIFOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FP40:NEAR
+
+        PUBLIC          ?QI07F                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?QI15F                  ; Located at 1:0002h Type = 1
+
+CODE    CSEG
+
+
+?QI07F: cbw
+        xchg    ax,bx
+?QI15F: mov     al,bh
+        and     al,80h
+        mov     dx,bx
+        mov     cx,0010h
+        jns     @j1
+        neg     dx
+@j1:    xor     bx,bx
+        call    ?FP40
+        pop     bx
+        push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

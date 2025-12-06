@@ -1,0 +1,105 @@
+!
+! INVENTION No. 8  Johann Sebastian Bach
+! programmed by John Dahms, 13-mar-1985
+!               WATCOM Systems Inc.
+!
+r k-b mt120 mb j-2
+!
+v1 s5 o4 l8 ms
+        s+1:3:8         faf>c<f                         s:
+        ml >f l16 w2    e^dcdc<babag
+        l8 ms           n0a>c<s+a>fc
+v2 s3 o3 l8 ms z2
+        s+1:3:8         faf>c<f>f                       s:
+        l16 ml          e^dcdc<bas+bag
+v1 l16 ml
+                        a^>c<b>c<a>c<b>c<a>c<b>c
+                        <f^agafagafaga
+        s-1:4:16        d^fefdfefdfef                   s:
+v2 l8 ms
+        s+1:3:8         fa>c<a>fc                       s:
+        l16 ml          a^>c<b>c<a>c<b>c<a>c<b>c
+        s-1:4:16        <f^agafagafaga                  s:
+v1 l8 ms
+        s+1:3:8         <b%g>d<b%>fd                    s:
+        l16 ml          gagfefedcdc<b%
+        s+1:6:8         a8^>dc<b%>c<b%agagf
+v2
+        s+1:6:16        d^fefdfefdfef                   s:
+        l8 ms           <b%g>c<g>ec
+        s+1:6:8 l16 ml  fgfededc<b%>c<b%a
+v1
+                        efedc8                          s:
+                        >c<b% l8 ms >c<e
+                        f>c<e>c<d w3 b%
+                        >c4                             z1
+v2
+                        g8^>c<b%                        s:
+                        ab%agfgfe
+                        dedcgfef l8 ms g<g s5 >e<cecgc> s3
+v3 o3 s6 z3
+                        f8
+v1 s5
+        s+1:3:8         cecgc                           s:
+        ml l16          >c8^ <b%agagfefed
+                        c<b>caca<b>aca<a>a
+v2
+                        c^,
+        s+1:6:16 w1 l16 <b%agagfefed                    s:
+        s+2 l8 ms       cege>c<g                        s-2
+                        >e-<f#>e-<f#>e-<f#
+v1
+        l8 ms s+1:5:16  <bgbg>d<g                       s:
+        l16 ml          >g8^fe-de-dc<b>c<ba
+        s+2 l8 ms       n0b>d<b>gd                      s-2
+v2
+        g,l16 s+1:5:16  f^e-de-dc<b>c<bc                s+2
+        l8 ms           g>gbg>d<g >g
+        s-2 l16 ml      f^e-de-dc<b>c<ba
+v1
+                        bc#bc#bc#
+                        d<a>fdaf                        s-2
+        s+1:6:16 l16 ml gfgbcbdbebcb                    s:
+v2
+                        gfg>e<g>e<f>e<g>e<e>e
+                        <fef>d<f>d<e>d<f>d<d>d
+        s-2 s+1:6:16 l8 ms      <b^gegce                s:
+v1
+                        fefa<b%>ac#ada<b%>a
+                        edeg<a>g<b%>gc#g<a>g
+s-1:8:16 l8 ms          f^d<b>d<g>f
+v2
+                        a^fdf<b%>d
+                        g^ec#e<a>c#
+s-1:8:16 ml l16         <d>dcd<a>d<b>dcd<a>d
+v1
+                        ec<a>c<f>e-
+        s+1:5:16 l16 ml d^fe-fdfe-fdfe-f                s:
+                        <b^>dcd<b>dcd<b>dcd
+v2
+                        <c>c<b>c<f>c<g>c<a>c<f>c
+        s+1:5:16 l8 ms  <b>dfdbf
+        s+2 l16 ml      >d^fe-fdfe-fdfe-f               s-2
+v1
+        s-1:5:16        <g^babgbabgbab
+        s+1:5:16 l8 ms  ecgebg                          s:
+        l16 ml          >c^dc<babagfgfe-
+v2
+        s-1:5:16        <b^>dcd<b>dcd<b>dcd
+        s+1:5:16        <g^babgbabgbab
+        s+2 l8 ms       ecfcaf                          s-2
+v1
+                        d8gfefedcdc<b
+                        abagf8>fef8
+v2
+        l16 ml          b^>c<bagagfefed
+                        c8fededc<b>c
+v1
+        l8 ms t-5:2:8 w3<ab>f<a>f<g>e                   t: q
+        ml s12 s-1:1:16l16      fffffffffff             s:
+v2
+        l16   t-5:2:8   <bagagf>c<bab l8 ms >c<c        t: q
+        ml s12 s-1:1:16 l16     fffffffffff             s:
+v3
+        o2 z3 t-5:2:8   p8p8p8p8p8p8 g8                 t: q
+        ml s12 s-1:1:16 l16     aaaaaaaaaaa             s:

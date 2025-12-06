@@ -1,0 +1,175 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1OUTFM'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPB
+
+
+        EXTRN           ?GNFMT:NEAR
+        EXTRN           ?PAGOP:NEAR
+        EXTRN           ?SKPPR:NEAR
+        EXTRN           ?PNCPR:NEAR
+
+        PUBLIC          ?OUTFM                  ; Located at 3:0000h Type = 1
+        PUBLIC          ?PNC                    ; Located at 3:00CEh Type = 1
+
+?FPB    DSEG    common
+
+
+@f1     rd      1
+@f2     rb      1
+@f3     rb      1
+@f4     rs      0000Fh
+@f5     rb      1
+@f6     rb      1
+@f7     rs      00017h
+
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+
+@d2     rb      1
+@d3     dw      offset @d4
+
+@d4     rb      1
+
+
+CODE    CSEG
+
+
+?OUTFM: call    ?GNFMT
+        cmp     al,09h
+        jnz     @j2
+        mov     al,ch
+        dec     al
+        js      @j1
+        add     al,al
+        add     al,al
+        add     al,al
+        add     al,08h
+        mov     ch,al
+@j1:    call    @j14                      ; Large jump translated into short
+        jmps    ?OUTFM
+@j2:    cmp     al,0Ah
+        jnz     @j5
+        mov     al, @f7
+        or      al,al
+        jz      @j3
+        sub     al,ch
+        jc      @j4
+@j3:    mov     bx,offset @f4
+        mov     al,ch
+        sub     al,[bx]
+        jz      ?OUTFM
+        jc      @j4
+        call    @j19
+        jmps    ?OUTFM
+@j4:    call    ?PAGOP
+        jmps    ?OUTFM
+@j5:    cmp     al,0Bh
+        jnz     @j7
+        inc     ch
+@j6:    dec     ch
+        jz      ?OUTFM
+        push    cx
+        mov     al,20h
+        call    ?PNC                      ; Large jump translated into short
+        pop     cx
+        jmps    @j6
+@j7:    cmp     al,0Ch
+        jnz     @j9
+        mov     al,ch
+        inc     ch
+        jnz     @j8
+        mov     al,01h
+@j8:    call    @j19                      ; Large jump translated into short
+        jmp     ?OUTFM                    ; Large jump translated into short
+@j9:    cmp     al,0Dh
+        jnz     @j10
+        call    @j14                      ; Large jump translated into short
+        jmp     ?OUTFM                    ; Large jump translated into short
+@j10:   cmp     al,0Fh
+        jz      @j11
+        ret
+@j11:   mov     al,ch
+        inc     ch
+        jnz     @j12
+
+        mov     al,01h
+@j12:   or      al,al
+        jnz     @j13
+        jmp     ?OUTFM
+@j13:   dec     al
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        call    ?PAGOP
+        pop     ax
+        xchg    al,ah
+        jmps    @j12
+@j14:   inc     ch
+        dec     ch
+        jz      @j18
+        mov     al,ch
+        mov     bx,offset @f2
+        sub     al,[bx]
+        jnc     @j15
+        push    cx
+        call    @j18                      ; Large jump translated into short
+        pop     cx
+        jmps    @j14
+@j15:   mov     al, @f5
+        or      al,al
+        jz      @j16
+        cmp     al,ch
+        jc      @j18
+@j16:   mov     al, @f2
+        cmp     al,ch
+        jnz     @j17
+        ret
+@j17:   mov     al,20h
+        call    ?PNC                      ; Large jump translated into short
+        jmps    @j15
+@j18:   mov     al,01h
+@j19:   mov      @d4,al
+        mov     bx,offset @d3
+        jmp     ?SKPPR
+?PNC:   push    cx
+        push    dx
+        push    bx
+        lahf
+        xchg    al,ah
+        push    ax
+        mov     al, @f5
+        or      al,al
+        jz      @j20
+        mov     bx,offset @f2
+        cmp     al,[bx]
+        jnc     @j20
+        mov     al,0Dh
+        call    @j21                      ; Large jump translated into short
+        mov     al,0Ah
+        call    @j21                      ; Large jump translated into short
+@j20:   pop     ax
+        xchg    al,ah
+        sahf
+        call    @j21                      ; Large jump translated into short
+
+        pop     bx
+        pop     dx
+        pop     cx
+        ret
+@j21:   mov      @d2,al
+        mov     bx,offset @d1
+        jmp     ?PNCPR
+
+
+        END
+
+

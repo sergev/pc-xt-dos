@@ -1,0 +1,76 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1GNVOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?GNVPR:NEAR
+
+        PUBLIC          ?GNVOP                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rw      1
+
+
+CODE    CSEG
+
+
+?GNVOP: pop     dx
+        mov     bx,0FF00h
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     @d1,bx
+        mov     sp,bx
+        push    dx
+        mov     bx,offset @d1
+        call    ?GNVPR
+        pop     dx
+        mov     bx,0000h
+        add     bx,sp
+        inc     bh
+        or      al,al
+        mov     al,00h
+        jns     @j3
+        dec     bh
+        mov     al,[bx]
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        push    dx
+        mov     dh,bh
+        mov     dl,bl
+        inc     dh
+        mov     cl,al
+        mov     ch,00h
+        inc     cx
+        add     bx,cx
+@j1:    dec     cl
+        jz      @j2
+        dec     bx
+        dec     dx
+        mov     al,[bx]
+        mov     si,dx
+        mov     [si],al
+        jmps    @j1
+@j2:    xchg    bx,dx
+        pop     dx
+        pop     cx
+        mov     al,80h
+        or      al,al
+        mov     al,ch
+@j3:    mov     sp,bx
+        xchg    bx,dx
+        jmp     bx
+
+
+        END
+
+

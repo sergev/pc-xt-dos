@@ -1,0 +1,39 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1CXSTS'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?CXCCM:NEAR
+
+        PUBLIC          ?CXSTS                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?CXSTS: mov     di,sp
+        inc     di
+        inc     di
+        mov     si,di
+        sub     ah,ah
+        add     si,ax
+        mov     cl,[si]
+        inc     si
+        inc     si
+        mov     bx,si
+        sub     ch,ch
+        add     bx,cx
+        push    bx
+        xchg    al,cl
+        call    ?CXCCM
+        pop     ax
+        pop     cx
+        mov     sp,ax
+        jmp     cx
+
+
+        END
+
+

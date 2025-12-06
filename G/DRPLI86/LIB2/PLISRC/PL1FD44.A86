@@ -1,0 +1,122 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FD44'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+        EXTRN           ?FP40:NEAR
+        EXTRN           ?ZEROD:NEAR
+
+        PUBLIC          ?FD44                   ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rb      1
+@d2     rw      1
+@d3     rw      1
+@d4     rw      1
+@d5     rw      1
+@d6     rw      1
+
+
+CODE    CSEG
+
+
+?FD44:  push    dx
+        call    ?FU40
+        mov      @d1,al
+        or      ch,ch
+        jnz     @j7
+        mov     al,02h
+        jmp     ?ZEROD
+@j7:    neg     bx
+        inc     bx
+        mov     @d2,bx
+        mov     @d6,dx
+        mov     @d5,cx
+        pop     bx
+        call    ?FU40
+        add     @d2,bx
+        mov     @d3,cx
+        xor     @d1,al
+        shr     dx,1
+        shr     dx,1
+        shr     dx,1
+        mov     @d4,dx
+        mov     dx,@d3
+        mov     bx,@d5
+        call    @j13                      ; Large jump translated into short
+        mov     @d3,bx
+        shr     dx,1
+        shr     dx,1
+        push    dx
+        mov     ax,bx
+        mul     word ptr @d6
+        shr     dx,1
+        shr     dx,1
+        pop     ax
+        sub     ax,dx
+        mov     dx,ax
+        add     dx,@d4
+        jns     @j8
+        neg     dx
+        mov     bx,@d5
+        call    @j13                      ; Large jump translated into short
+        neg     bx
+        mov     dx,@d3
+        jns     @j10
+        shl     bx,1
+        shl     bx,1
+        dec     dx
+        shl     bx,1
+
+        jc      @j10
+        dec     dx
+        jmps    @j10
+@j8:    mov     bx,@d5
+        call    @j13                      ; Large jump translated into short
+        mov     dx,@d3
+        shl     bx,1
+        shl     bx,1
+        jnc     @j9
+        inc     dx
+        inc     dx
+@j9:    shl     bx,1
+        jnc     @j10
+        inc     dx
+@j10:   mov     cx,@d2
+        or      ax,dx
+        jz      @j12
+@j11:   or      dh,dh
+        js      @j12
+        dec     cx
+        shl     bx,1
+        rcl     dx,1
+        jmps    @j11
+@j12:   mov     al, @d1
+        jmp     ?FP40
+@j13:   neg     bx
+        mov     cx,bx
+        mov     al,10h
+        sub     bx,bx
+        xchg    bx,dx
+@j14:   xchg    bx,dx
+        dec     al
+        jz      @j16
+        shl     bx,1
+        xchg    bx,dx
+        shl     bx,1
+@j15:   jnc     @j14
+        inc     dx
+        add     bx,cx
+        jmps    @j15
+@j16:   ret
+
+
+        END
+
+

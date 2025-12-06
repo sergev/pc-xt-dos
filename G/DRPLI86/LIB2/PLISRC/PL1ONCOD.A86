@@ -1,0 +1,135 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1ONCOD'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPB, ?ONCOD
+
+
+
+        PUBLIC          ONCODE                  ; Located at 2:0000h Type = 1
+        PUBLIC          ONFILE                  ; Located at 2:0007h Type = 1
+        PUBLIC          ONKEY                   ; Located at 2:004Eh Type = 1
+        PUBLIC          PAGENO                  ; Located at 2:007Eh Type = 1
+        PUBLIC          LINENO                  ; Located at 2:0083h Type = 1
+
+?FPB    DSEG common
+
+@f1     rs      0002Eh
+
+
+CODE    CSEG
+
+
+ONCODE: mov     bx,@o1
+        mov     bh,00h
+        ret
+ONFILE: mov     bx,@o1 + 00001h
+        mov     al,bl
+        or      al,al
+        jnz     @j1
+        ret
+@j1:    mov     dx,001Fh
+        add     bx,dx
+        pop     cx
+        xor     al,al
+        mov     dh,al
+        sub     al,[bx]
+        mov     dl,al
+        jz      @j2
+        mov     dh,0FFh
+@j2:    xchg    bx,dx
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     sp,bx
+        push    cx
+        xchg    bx,dx
+        mov     cl,[bx]
+        mov     ch,[bx]
+        inc     cl
+@j3:    dec     cl
+        jz      @j4
+        lahf
+        inc     bx
+        sahf
+        mov     al,[bx]
+        mov     si,dx
+        mov     [si],al
+        lahf
+        inc     dx
+        sahf
+        jmps    @j3
+@j4:    mov     al,ch
+        ret
+ONKEY:  mov     bx,@o1 + 00001h
+        mov     al,bh
+        or      al,bl
+        jnz     @j5
+        ret
+@j5:    mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     al,bh
+        or      al,al
+        jnz     @j6
+        mov     bl,00h
+        ret
+@j6:    mov     dx,0022h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+
+        xchg    bx,dx
+        ret
+PAGENO: mov     cx,0008h
+        jmps    @j7
+LINENO: mov     cx,0006h
+@j7:    mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        xchg    bx,dx
+        lahf
+        add     bx,cx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        xchg    bx,dx
+        ret
+
+
+?ONCOD  DSEG    common
+
+
+@o1     dw      00000h
+@o2     db      000h
+
+
+        END
+
+

@@ -1,0 +1,69 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DROUN'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DNGOP:NEAR
+        EXTRN           ?QDDSL:NEAR
+        EXTRN           ?DADOP:NEAR
+
+        PUBLIC          ?DROUN                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rb      1
+@d2     rb      1
+@d3     rw      1
+
+
+CODE    CSEG
+
+
+?DROUN: mov      @d1,al
+        dec     al
+        jns     @j4
+        ret
+@j4:    pop     @d3
+        mov     bp,sp
+        mov     al,[bp]+007h
+        mov      @d2,al
+        or      al,al
+        jns     @j5
+        call    ?DNGOP
+@j5:    sub     bx,bx
+        push    bx
+        push    bx
+        push    bx
+        mov     bl,05h
+        push    bx
+        mov     al, @d1
+        dec     al
+        jz      @j6
+        call    ?QDDSL
+@j6:    call    ?DADOP
+        mov     al, @d1
+        cmp     al,10h
+        jnc     @j9
+        shr     al,1
+        mov     bp,sp
+@j7:    dec     al
+        js      @j8
+        mov     byte ptr [bp],00h
+        inc     bp
+        jmps    @j7
+@j8:    jnc     @j9
+        and     byte ptr [bp],0F0h
+@j9:    mov     al, @d2
+        or      al,al
+        jns     @j10
+        call    ?DNGOP
+@j10:   jmp     @d3
+
+
+        END
+
+

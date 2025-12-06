@@ -1,0 +1,34 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DSIOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?DSIOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DSIOP: mov     bx,0002h
+        add     bx,sp
+        mov     cx,0008h
+        xor     al,al
+@j1:    or      al,[bx]
+        inc     bx
+        loop    @j1
+        or      al,al
+        jz      @j2
+        mov     al,[bx]-001h
+        add     al,al
+        sbb     al,al
+        js      @j2
+        inc     ax
+@j2:    ret     0008h
+
+
+        END
+
+

@@ -1,0 +1,391 @@
+/* fortran.pip */
+/* this is the program installation profile for INSTAID */
+
+
+SET MaxReq=2000000
+SET Loga=nul
+SET Logb=nul
+SET Target=C
+SET Base=C:\FORTRAN
+SET MainDir=\FORTRAN
+SET CFLAG=0
+
+set TD=C:
+LIBRARY %SD%\FORTPIP.LIB
+
+HINDEX index.pan
+
+:Logo
+DISPLAY IbmLogo ENTER ESC
+SELECT %RETURN%
+  WHEN ESC LIBRARY /d %SD%\FORTPIP.LIB 1>%loga% 2>%logb%
+       EXIT 1
+ESELECT
+
+VF %SD%\FORTRRE.LIB
+SELECT %RC%
+  WHEN 0 SET Size=2
+  OTHERWISE SET Size=1    /* 5¬" */
+ESELECT
+
+:Intro
+DISPLAY Intro ENTER F3
+SELECT %RETURN%
+  WHEN F3  Call VerifyQuit
+           GOTO Intro
+ESELECT
+
+:GetTarget
+SET DrvCode=0
+SET HOLD=%Target%
+DISPLAY Target ENTER ESC HELP F3
+SELECT %RETURN%
+  WHEN ESC SET Target=%HOLD%
+           GOTO Intro
+  WHEN F3  CALL VerifyQuit
+           GOTO GetTarget
+ESELECT
+
+SELECT %DrvCode%
+  WHEN 2 Display TargetEr ENTER
+         GOTO GetTarget
+ESELECT
+
+SET TD=%Target%:
+
+%TD% 1>%loga% 2>%logb%
+SELECT %RC%
+  WHEN 0 CALL VerifyTarget
+         GOTO GetDirectory
+ESELECT
+
+DISPLAY TargetEr ENTER
+GOTO GetTarget
+
+:GetDirectory
+SET DIRBLANK=1
+SET HOLD=%MainDir%
+DISPLAY Director ENTER ESC HELP F3
+SELECT %RETURN%
+  WHEN ESC SET MainDir=%HOLD%
+           GOTO GetTarget
+  WHEN F3  CALL VerifyQuit
+           GOTO GetDirectory
+ESELECT
+
+SELECT %DirBlank%
+  WHEN 2 SET Base=%TD%
+         GOTO Libraries
+ESELECT
+
+CD %TD%\%MainDir% 1>%loga% 2>%logb%
+SELECT %RC%
+  WHEN 0 SET Base=%TD%\%MainDir%
+         SET MainDir=\%MainDir%
+         GOTO Libraries
+ESELECT
+
+MD %TD%\%MainDir% 1>%loga% 2>%logb%
+SELECT %RC%
+  WHEN 0 SET Base=%TD%\%MainDir%
+         SET MainDir=\%MainDir%
+         GOTO Libraries
+ESELECT
+
+CD %TD%%MainDir% 1>%loga% 2>%logb%
+SELECT %RC%
+  WHEN 0 SET Base=%TD%%MainDir%
+         GOTO Libraries
+ESELECT
+
+MD %TD%%MainDir% 1>%loga% 2>%logb%
+SELECT %RC%
+  WHEN 0 SET Base=%TD%%MainDir%
+         GOTO Libraries
+ESELECT
+
+DISPLAY DirError ENTER
+GOTO GetDirectory
+
+:Libraries
+DISPLAY DosLib ENTER ESC HELP F3
+SELECT %RETURN%
+  WHEN ESC RD %Base% 1>%loga% 2>%logb%
+           GOTO GetDirectory
+  WHEN F3  CALL VerifyQuit
+           GOTO Libraries
+ESELECT
+SET LibType=%CHOICE%
+
+:Lib2
+DISPLAY FamAPI ENTER ESC HELP F3
+SELECT %RETURN%
+  WHEN ESC GOTO Libraries
+  WHEN F3  CALL VerifyQuit
+           GOTO Lib2
+ESELECT
+SET FamAPI=%CHOICE%
+
+:MathLibraries
+DISPLAY MathLib ENTER ESC HELP F3
+SELECT %RETURN%
+  WHEN ESC GOTO Libraries
+  WHEN F3  CALL VerifyQuit
+           GOTO MathLibraries
+ESELECT
+SET MathType=%CHOICE%
+
+:Disk1
+
+SELECT %Size%
+  WHEN 1 SET DiskName=NP_LIBRARY
+  WHEN 2 SET DiskName=LIBRARY
+ESELECT
+
+SET File=%SD%\FORTRAN.PIP
+CALL GetDiskette
+
+COPY %SD%\FORTPIP.LIB %TD%\FORTPIP.LIB 1>%loga% 2>%logb%
+LIBRARY /d %SD%\FORTPIP.LIB 1>%loga% 2>%logb%
+LIBRARY %TD%\FORTPIP.LIB 1>%loga% 2>%logb%
+
+SET TEMP=%TD%\XZK3
+MD %TEMP%  1>%loga% 2>%logb%
+
+XCOPY %SD%\*.LIB %TEMP% 1>%loga% 2>%logb%
+COPY %SD%\LIB.EXE %Base% 1>%loga% 2>%logb%
+HISTORY %Base%\LIB.EXE
+
+SELECT %Size%
+WHEN 2 GOTO Disk3
+ESELECT
+
+:Disk2
+
+SET DiskName=EM_LIBRARY
+SET File=%SD%\FORTRRE.LIB
+CALL GetDiskette
+
+XCOPY %SD%\*.LIB %TEMP% 1>%loga% 2>%logb%
+
+:Disk3
+
+SET Diskname=INSTALL
+SET FILE=%SD%\FORTRAN.EXE
+CALL GetDiskette
+
+COPY %SD%\FORTRAN.EXE %Base% 1>%loga% 2>%logb%
+COPY %SD%\FORTRAN.CER %Base% 1>%loga% 2>%logb%
+COPY %SD%\DEMO.* %Base% 1>%loga% 2>%logb%
+COPY %SD%\*.BAT %Base% 1>%loga% 2>%logb%
+HISTORY %Base%\FORTRAN.EXE
+HISTORY %Base%\FORTRAN.CER
+HISTORY %Base%\DEMO.FOR
+HISTORY %Base%\DEMO.DCM
+HISTORY %Base%\QFORT.BAT
+HISTORY %Base%\QFORTLNK.BAT
+HISTORY %Base%\QFORTRUN.BAT
+
+:Disk4
+
+SET DiskName=LINK_RUN
+SET File=%SD%\FORTRAN.ERR
+Call GetDiskette
+
+COPY %SD%\FORTRAN.ERR %Base% 1>%loga% 2>%logb%
+COPY %SD%\FORTRAN.DER %Base% 1>%loga% 2>%logb%
+COPY %SD%\FORTDBG.HLP %Base% 1>%loga% 2>%logb%
+COPY %SD%\FORTRUN.DLL %Base% 1>%loga% 2>%logb%
+COPY %SD%\FORTRUE.DLL %Base% 1>%loga% 2>%logb%
+COPY %SD%\*.ASM       %Base% 1>%loga% 2>%logb%
+
+HISTORY %Base%\FORTRAN.ERR
+HISTORY %Base%\FORTRAN.DER
+HISTORY %Base%\FORTDBG.HLP
+HISTORY %Base%\FORTRUN.DLL
+HISTORY %Base%\FORTRUE.DLL
+HISTORY %Base%\FORTILC.ASM
+HISTORY %Base%\COPYMEM.ASM
+
+
+:BuildLib
+DISPLAY Process1
+
+SELECT %LibType%
+WHEN 2 GOTO BuildReal
+ESELECT
+
+MD %Base%\PLIB 1>%loga% 2>%logb%
+
+SELECT %MathType%
+WHEN 1 %Base%\LIB %TEMP%\FORTRIN.LIB/p:16+%TEMP%\FORTRDN.LIB,nul,%Base%\PLIB\FORTRAN.LIB 1>nul 2>nul
+       HISTORY %Base%\PLIB\FORTRAN.LIB
+WHEN 2 %Base%\LIB %TEMP%\FORTRIE.LIB/p:16+%TEMP%\FORTRDE.LIB,nul,%Base%\PLIB\FORTRAE.LIB 1>nul 2>nul
+       HISTORY %Base%\PLIB\FORTRAE.LIB
+WHEN 3 %Base%\LIB %TEMP%\FORTRIN.LIB/p:16+%TEMP%\FORTRDN.LIB,nul,%Base%\PLIB\FORTRAN.LIB 1>nul 2>nul
+       HISTORY %Base%\PLIB\FORTRAN.LIB
+       %Base%\LIB %TEMP%\FORTRIE.LIB/p:16+%TEMP%\FORTRDE.LIB,nul,%Base%\PLIB\FORTRAE.LIB 1>nul 2>nul
+       HISTORY %Base%\PLIB\FORTRAE.LIB
+ESELECT
+
+SELECT %LibType%
+WHEN 1 GOTO BuildAPI
+ESELECT
+
+:BuildReal
+MD %Base%\RLIB 1>%loga% 2>%logb%
+
+SELECT %MathType%
+WHEN 1 %Base%\LIB %TEMP%\FORTRIN.LIB/p:16+%TEMP%\FORTRRN.LIB+%TEMP%\PCDOS.LIB,nul,%Base%\RLIB\FORTRAN.LIB 1>nul 2>nul
+       HISTORY %Base%\RLIB\FORTRAN.LIB
+WHEN 2 %Base%\LIB %TEMP%\FORTRIE.LIB/p:16+%TEMP%\FORTRRE.LIB+%TEMP%\PCDOS.LIB,nul,%Base%\RLIB\FORTRAE.LIB 1>nul 2>nul
+       HISTORY %Base%\RLIB\FORTRAE.LIB
+WHEN 3 %Base%\LIB %TEMP%\FORTRIN.LIB/p:16+%TEMP%\FORTRRN.LIB+%TEMP%\PCDOS.LIB,nul,%Base%\RLIB\FORTRAN.LIB 1>nul 2>nul
+       HISTORY %Base%\RLIB\FORTRAN.LIB
+       %Base%\LIB %TEMP%\FORTRIE.LIB/p:16+%TEMP%\FORTRRE.LIB+%TEMP%\PCDOS.LIB,nul,%Base%\RLIB\FORTRAE.LIB 1>nul 2>nul
+       HISTORY %Base%\RLIB\FORTRAE.LIB
+ESELECT
+
+:BuildAPI
+SELECT %FamAPI%
+WHEN 2 GOTO END
+ESELECT
+
+MD %Base%\FLIB 1>%loga% 2>%logb%
+SELECT %MathType%
+WHEN 1 %Base%\LIB %TEMP%\FORTRIN.LIB/p:16+%TEMP%\FORTRRN.LIB,nul,%Base%\FLIB\FORTRAN.LIB 1>nul 2>nul
+       HISTORY %Base%\FLIB\FORTRAN.LIB
+WHEN 2 %Base%\LIB %TEMP%\FORTRIE.LIB/p:16+%TEMP%\FORTRRE.LIB,nul,%Base%\FLIB\FORTRAE.LIB 1>nul 2>nul
+       HISTORY %Base%\FLIB\FORTRAE.LIB
+WHEN 3 %Base%\LIB %TEMP%\FORTRIN.LIB/p:16+%TEMP%\FORTRRN.LIB,nul,%Base%\FLIB\FORTRAN.LIB 1>nul 2>nul
+       HISTORY %Base%\FLIB\FORTRAN.LIB
+       %Base%\LIB %TEMP%\FORTRIE.LIB/p:16+%TEMP%\FORTRRE.LIB,nul,%Base%\FLIB\FORTRAE.LIB 1>nul 2>nul
+       HISTORY %Base%\FLIB\FORTRAE.LIB
+ESELECT
+
+
+GOTO END
+
+/* SUBROUTINES */
+
+:VerifyQuit
+
+SELECT %CFLAG%
+  WHEN 0 DISPLAY Cancel ENTER F3
+  WHEN 1 DISPLAY Cancel1 ENTER F3
+ESELECT
+
+SELECT %RETURN%
+  WHEN F3 RD %Base% 1>%loga% 2>%logb%
+          LIBRARY /d %SD%\FORTPIP.LIB 1>%loga% 2>%logb%
+          LIBRARY /d %TD%\FORTPIP.LIB 1>%loga% 2>%logb%
+          DEL %TD%\FORTPIP.LIB 1>%loga% 2>%logb%
+          DEL %TEMP%\*.LIB 1>%loga% 2>%logb%
+          RD %TEMP% 1>%loga% 2>%logb%
+          EXIT 1
+ESELECT
+RETURN
+
+:VerifyTarget
+
+DS %TD% %MaxReq%
+SELECT %RC%
+  WHEN 1 DISPLAY MemErr2 F3
+         LIBRARY /d %SD%\FORTPIP.LIB 1>%loga% 2>%logb%
+         EXIT 1
+ESELECT
+RETURN
+
+:GetDiskette
+VF %File%
+SELECT %RC%
+  WHEN 0 GOTO GotDisk
+ESELECT
+
+DISPLAY Insert ENTER HELP F3
+SELECT %RETURN%
+  WHEN F3 CALL VerifyQuit
+          GOTO GetDiskette
+ESELECT
+
+VF %File%
+SELECT %RC%
+  WHEN 1 DISPLAY INSERTER ENTER
+         GOTO GetDiskette
+ESELECT
+
+:GotDisk
+DISPLAY Process
+SET CFLAG=1
+RETURN
+
+:End
+
+DEL %TEMP%\*.LIB 1>%loga% 2>%logb%
+RD %TEMP% 1>%loga% 2>%logb%
+
+VF %Base%\config.doc
+SELECT %RC%
+        WHEN 0 ERASE %Base%\config.doc
+ESELECT
+
+ATF %Base%\config.doc rem *****************************************************
+ATF %Base%\config.doc rem * These sample statements are meant to be used as a
+ATF %Base%\config.doc rem * guide. The LIBPATH statement should be appended to
+ATF %Base%\config.doc rem * existing LIBPATH statement. See the FORTRAN/2 and
+ATF %Base%\config.doc rem * OS/2 manuals for information on these statements.
+ATF %Base%\config.doc rem *****************************************************
+ATF %Base%\config.doc LIBPATH=%Base%
+ATF %Base%\config.doc FILES=20
+ATF %Base%\config.doc BUFFERS=20
+ATF %Base%\config.doc BREAK ON
+ATF %Base%\config.doc SHELL=COMMAND.COM /e:1000 /p
+ATF %Base%\config.doc RMSIZE=640
+
+VF %Base%\autoexec.doc
+SELECT %RC%
+        WHEN 0 ERASE %Base%\autoexec.doc
+ESELECT
+
+ATF %Base%\autoexec.doc rem****************************************************
+ATF %Base%\autoexec.doc rem* These sample statements are meant to be used as a
+ATF %Base%\autoexec.doc rem* guide. The PATH statement should be appended to
+ATF %Base%\autoexec.doc rem* the existing PATH statement. See the FORTRAN/2 and
+ATF %Base%\autoexec.doc rem* OS/2 manuals for information on these statements.
+ATF %Base%\autoexec.doc rem****************************************************
+ATF %Base%\autoexec.doc PATH=%Base%
+ATF %Base%\autoexec.doc SET LIB=%Base%\RLIB
+ATF %Base%\autoexec.doc SET FORTRAN.CER=%Base%\FORTRAN.CER
+ATF %Base%\autoexec.doc SET FORTRAN.DER=%Base%\FORTRAN.DER
+ATF %Base%\autoexec.doc SET FORTRAN.ERR=%Base%\FORTRAN.ERR
+ATF %Base%\autoexec.doc SET FORTRAN.HLP=%Base%\FORTRAN.HLP
+
+VF %Base%\startup.doc
+SELECT %RC%
+        WHEN 0 ERASE %Base%\startup.doc
+ESELECT
+
+ATF %Base%\startup.doc rem ****************************************************
+ATF %Base%\startup.doc rem * These sample statements are meant to be used as a
+ATF %Base%\startup.doc rem * guide. The PATH statement should be appended to
+ATF %Base%\startup.doc rem * the existing PATH statement. See the FORTRAN/2 and
+ATF %Base%\startup.doc rem * OS/2 manuals for information on these statements.
+ATF %Base%\startup.doc rem ****************************************************
+ATF %Base%\startup.doc PATH=%Base%
+ATF %Base%\startup.doc SET LIB=%Base%\PLIB
+ATF %Base%\startup.doc SET FORTRAN.CER=%Base%\FORTRAN.CER
+ATF %Base%\startup.doc SET FORTRAN.DER=%Base%\FORTRAN.DER
+ATF %Base%\startup.doc SET FORTRAN.ERR=%Base%\FORTRAN.ERR
+ATF %Base%\startup.doc SET FORTRAN.HLP=%Base%\FORTRAN.HLP
+
+HISTORY %Base%\config.doc
+HISTORY %Base%\autoexec.doc
+HISTORY %Base%\startup.doc
+
+DISPLAY FINISH ENTER
+
+LIBRARY /d %TD%\FORTPIP.LIB 1>%loga% 2>%logb%
+DEL %TD%\FORTPIP.LIB 1>%loga% 2>%logb%
+
+EXIT 0
+

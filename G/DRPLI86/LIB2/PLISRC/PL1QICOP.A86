@@ -1,0 +1,58 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QICOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?QICOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?QICOP: pop     bp
+        mov     cx,0006h
+        cmp     al,cl
+        jbe     @j1
+        mov     cl,al
+@j1:    sub     sp,cx
+        mov     di,sp
+        push    ax
+        push    cx
+        mov     al,20h
+        dec     cx
+        repz    stosb
+        mov     cl,04h
+        xchg    ax,bx
+        cwd
+        test    ax,ax
+        jns     @j2
+        mov     bl,2Dh
+        neg     ax
+        inc     dx
+@j2:    mov     si,000Ah
+        mov     bh,30h
+@j3:    div     si
+        or      dl,bh
+        mov     [di],dl
+        dec     di
+        test    ax,ax
+        cwd
+        loopnz  @j3
+        jz      @j4
+        or      al,bh
+        mov     [di],al
+        dec     di
+@j4:    mov     [di],bl
+        pop     cx
+        pop     ax
+        sub     cl,al
+        add     sp,cx
+        jmp     bp
+
+
+        END
+
+

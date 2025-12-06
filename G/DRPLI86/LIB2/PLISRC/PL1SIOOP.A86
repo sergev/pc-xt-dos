@@ -1,0 +1,59 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1SIOOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SIOPR:NEAR
+
+        PUBLIC          ?SYSIN                  ; Located at 2:0000h Type = 1
+        PUBLIC          ?SYSPR                  ; Located at 2:0004h Type = 1
+        PUBLIC          ?SIOOP                  ; Located at 2:0008h Type = 1
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+        dw      offset @d3
+        dw      offset @d4
+        dw      offset @d5
+        dw      offset @d6
+
+@d2     rb      1
+@d3     rw      1
+@d4     rw      1
+@d5     rw      1
+@d6     rw      1
+
+
+CODE    CSEG
+
+
+?SYSIN: xor     al,al
+        jmps    @j1
+?SYSPR: mov     al,01h
+        jmps    @j1
+?SIOOP: mov     al,02h
+@j1:    mov      @d2,al
+        mov     @d3,bx
+        xchg    bx,dx
+        mov     @d4,bx
+        mov     bh,ch
+        mov     bl,cl
+        mov     @d5,bx
+        mov     bx,0002h
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     @d6,bx
+        mov     bx,offset @d1
+        jmp     ?SIOPR
+
+
+        END
+
+

@@ -1,0 +1,50 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FU40'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?OVERF:NEAR
+
+        PUBLIC          ?FU40                   ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FU40:  mov     dx,[bx]
+        mov     ax,[bx]+002h
+        rol     ax,1
+        or      ah,ah
+        jnz     @j1
+        xor     al,al
+        xor     cx,cx
+        xor     dx,dx
+        xor     bx,bx
+        ret
+@j1:    ror     ax,1
+        mov     ch,al
+        or      ch,80h
+        mov     cl,dh
+        mov     dh,dl
+        xor     dl,dl
+        mov     bx,ax
+        shl     ax,1
+        mov     al,ah
+        xor     ah,ah
+        sub     ax,007Fh
+        inc     ax
+        xchg    ax,bx
+        cmp     bx,0081h
+        jnz     @j2
+        jmp     ?OVERF
+@j2:    mov     al,ah
+        and     al,80h
+        xor     ah,ah
+        ret
+
+
+        END
+
+

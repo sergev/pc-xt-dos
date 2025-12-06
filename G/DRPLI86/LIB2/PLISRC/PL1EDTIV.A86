@@ -1,0 +1,440 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1EDTIV'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPBSTK
+
+
+        EXTRN           ?CNVER:NEAR
+        EXTRN           ?SIGNAL:NEAR
+        EXTRN           ?GNFMT:ABS
+        EXTRN           ?GNCPR:NEAR
+        EXTRN           ?INPFM:NEAR
+        EXTRN           ?BADFM:NEAR
+
+        PUBLIC          ?EDTIV                  ; Located at 3:0000h Type = 1
+
+?FPBSTK DSEG common
+
+
+@fs1    rs      00013h
+
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+        dw      offset @d3
+        dw      offset @fs1
+        dw      offset @d4
+@d2     db      005h
+@d3     db      007h
+@d4     db      000h
+        db      000h
+
+
+CODE    CSEG
+
+
+?EDTIV: call    ?INPFM
+        cmp     al,00h
+        jnz     @j5
+        mov     al,cl
+        inc     al
+        mov     al,01h
+        jnz     @j7
+        dec     al
+        inc     cl
+        jmps    @j7
+@j5:    cmp     al,01h
+        jz      @j6
+        jmp     @j19
+@j6:    xor     al,al
+        mov     cl,al
+@j7:    add     al,ch
+        add     al,cl
+        jnc     @j8
+        jmp     ?BADFM
+@j8:    mov     bl,al
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        call    @j51
+        inc     bx
+        inc     bx
+        inc     bx
+        inc     bx
+        pop     ax
+        xchg    al,ah
+        sahf
+        pop     dx
+        mov     sp,bx
+        push    dx
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        mov     dh,al
+        call    @j46
+        jnz     @j9
+        mov     byte ptr [bx],30h
+        inc     bx
+        dec     dh
+        jmps    @j13
+@j9:    cmp     al,45h
+        jnz     @j10
+        mov     al,65h
+@j10:   mov     [bx],al
+        inc     bx
+        dec     dh
+        cmp     al,2Eh
+        jnz     @j11
+        mov     cl,00h
+@j11:   cmp     al,65h
+        jnz     @j12
+        mov     cl,00h
+@j12:   mov     al,ch
+        or      al,al
+        jz      @j13
+        dec     ch
+        call    @j52
+        cmp     al,20h
+        jnz     @j9
+
+@j13:   call    @j48
+        pop     ax
+        xchg    al,ah
+        sub     al,dh
+        mov     ch,al
+        push    bx
+        mov     dl,dh
+        mov     dh,00h
+        lahf
+        add     bx,dx
+        sahf
+        pop     dx
+        push    cx
+@j14:   lahf
+        dec     dx
+        sahf
+        lahf
+        dec     bx
+        sahf
+        mov     al,cl
+        dec     al
+        js      @j16
+        mov     al,ch
+        dec     al
+        js      @j15
+        mov     si,dx
+        mov     al,[si]
+        sub     al,30h
+        cmp     al,0Ah
+        jc      @j16
+        inc     ch
+        lahf
+        inc     dx
+        sahf
+@j15:   mov     byte ptr [bx],30h
+        mov     bp,sp
+        xchg    bx,[bp]
+        inc     bh
+        mov     bp,sp
+        xchg    bx,[bp]
+        jmps    @j17
+@j16:   mov     si,dx
+        mov     al,[si]
+        mov     [bx],al
+@j17:   dec     cl
+        jnz     @j18
+        lahf
+        dec     bx
+        sahf
+        mov     byte ptr [bx],2Eh
+        mov     bp,sp
+        xchg    bx,[bp]
+        inc     bh
+        mov     bp,sp
+        xchg    bx,[bp]
+@j18:   dec     ch
+        mov     al,cl
+        dec     al
+        jns     @j14
+        mov     al,ch
+        dec     al
+        jns     @j14
+        pop     ax
+        xchg    al,ah
+        sahf
+        pop     dx
+        mov     sp,bx
+        xchg    bx,dx
+
+        jmp     bx
+@j19:   cmp     al,03h
+        jz      @j20
+        jmp     @j31
+@j20:   pop     dx
+        mov     al,ch
+        inc     al
+        jnz     @j27
+        mov     bx,0FF00h
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     sp,bx
+        mov     cx,00FFh
+        call    @j55
+        cmp     al,0Ah
+@j21:   jnz     @j22
+        call    @j55
+@j22:   cmp     al,0Dh
+        jz      @j24
+        cmp     al,0Ah
+        jz      @j24
+        mov     [bx],al
+        lahf
+        inc     bx
+        sahf
+        inc     ch
+        dec     cl
+        jnz     @j23
+        jmp     ?CNVER
+@j23:   xor     al,al
+        jmps    @j21
+@j24:   mov     cl,ch
+        inc     cl
+        xchg    bx,dx
+        push    bx
+        mov     bx,0102h
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+@j25:   dec     cl
+        jz      @j26
+        lahf
+        dec     bx
+        sahf
+        lahf
+        dec     dx
+        sahf
+        mov     si,dx
+        mov     al,[si]
+        mov     [bx],al
+        jmps    @j25
+@j26:   pop     dx
+        mov     sp,bx
+        xchg    bx,dx
+        mov     al,ch
+        jmp     bx
+@j27:   mov     cl,al
+        xor     al,al
+        sub     al,ch
+        mov     bl,al
+        mov     al,00h
+
+        sbb     al,al
+        mov     bh,al
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     sp,bx
+        push    dx
+@j28:   mov     al,ch
+        dec     cl
+        jnz     @j29
+        ret
+@j29:   call    @j55
+        jnz     @j30
+        jmp     ?CNVER
+@j30:   cmp     al,0Dh
+        jz      @j29
+        cmp     al,0Ah
+        jz      @j29
+        mov     [bx],al
+        lahf
+        inc     bx
+        sahf
+        jmps    @j28
+@j31:   sub     al,04h
+        jnc     @j32
+        jmp     ?BADFM
+@j32:   dec     al
+        jns     @j33
+        inc     al
+@j33:   cmp     al,04h
+        jc      @j34
+        jmp     ?BADFM
+@j34:   inc     al
+        mov     dl,al
+        inc     ch
+        jnz     @j35
+        jmp     ?BADFM
+@j35:   dec     ch
+        mov     cl,dl
+        xor     al,al
+@j36:   add     al,ch
+        jnc     @j37
+        jmp     ?BADFM
+@j37:   dec     cl
+        jnz     @j36
+        mov     bl,al
+        mov     dh,al
+        call    @j51
+        inc     bx
+        inc     bx
+        pop     bp
+        mov     sp,bx
+        push    bp
+        push    dx
+        call    @j46
+        jz      @j43
+@j38:   mov     cl,dl
+        sub     al,30h
+        jnc     @j39
+        jmp     ?CNVER
+@j39:   cmp     al,0Ah
+
+        jc      @j40
+        add     al,30h
+        and     al,5Fh
+        add     al,0C9h
+        cmp     al,10h
+        jc      @j40
+        jmp     ?CNVER
+@j40:   ror     al,1
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        and     al,7Fh
+        dec     cl
+        jnz     @j40
+        or      al,al
+        jz      @j41
+        jmp     ?CNVER
+@j41:   mov     cl,dl
+@j42:   pop     ax
+        xchg    al,ah
+        rol     al,1
+        and     al,01h
+        add     al,30h
+        mov     [bx],al
+        inc     bx
+        dec     dh
+        dec     cl
+        jnz     @j42
+        mov     al,ch
+        or      al,al
+        jz      @j43
+        dec     ch
+        call    @j52                      ; Large jump translated into short
+        cmp     al,20h
+        jnz     @j38
+        call    @j48                      ; Large jump translated into short
+@j43:   pop     ax
+        xchg    al,ah
+        sub     al,dh
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        mov     ch,al
+        push    bx
+        mov     dl,dh
+        mov     dh,00h
+        add     bx,dx
+        pop     dx
+        inc     ch
+@j44:   dec     ch
+        jz      @j45
+        dec     dx
+        dec     bx
+        mov     si,dx
+        mov     al,[si]
+        mov     [bx],al
+        jmps    @j44
+@j45:   pop     ax
+        xchg    al,ah
+        sahf
+        pop     dx
+        mov     sp,bx
+        xchg    bx,dx
+        jmp     bx
+
+@j46:   mov     al,ch
+        or      al,al
+        jnz     @j47
+        ret
+@j47:   dec     ch
+        call    @j52                      ; Large jump translated into short
+        jz      @j46
+        ret
+@j48:   mov     al,ch
+        or      al,al
+        jnz     @j49
+        ret
+@j49:   dec     ch
+        call    @j52                      ; Large jump translated into short
+        jz      @j50
+        jmp     ?CNVER
+@j50:   jmps    @j48
+@j51:   xor     al,al
+        sub     al,bl
+        mov     bl,al
+        mov     al,00h
+        sbb     al,al
+        mov     bh,al
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        lahf
+        inc     bx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        ret
+@j52:   call    @j55                      ; Large jump translated into short
+        jnz     @j53
+        jmp     ?CNVER
+@j53:   cmp     al,0Dh
+        jz      @j52
+        cmp     al,0Ah
+        jz      @j52
+        cmp     al,20h
+        jnc     @j54
+        jmp     ?CNVER
+@j54:   ret
+
+@j55:   push    cx
+        push    dx
+        push    bx
+        call    ?GNCPR
+        cmp     al,1Ah
+        jnz     @j56
+        mov     bx,offset @d1
+        call    ?SIGNAL
+        mov     al,0Dh
+        or      al,al
+@j56:   pop     bx
+        pop     dx
+        pop     cx
+        ret
+
+
+        END
+
+

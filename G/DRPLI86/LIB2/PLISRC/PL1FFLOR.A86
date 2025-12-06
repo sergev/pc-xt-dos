@@ -1,0 +1,82 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FFLOR'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+        EXTRN           ?FP40:NEAR
+        EXTRN           ?FPSHF:NEAR
+        EXTRN           ?FN40S:NEAR
+
+        PUBLIC          ?FFLOR                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?FCEIL                  ; Located at 1:0047h Type = 1
+
+CODE    CSEG
+
+
+?FFLOR: mov     bx,sp
+        inc     bx
+        inc     bx
+        call    ?FU40
+        xchg    cx,bx
+        xchg    dx,bx
+        cmp     cx,+000h
+        jnl     @j1
+        sub     dx,dx
+        sub     bh,bh
+        or      al,al
+        jns     @j4
+        sub     cx,cx
+        jmps    @j3
+@j1:    cmp     cl,18h
+        jnc     @j4
+        or      al,al
+        jns     @j2
+        call    @j5                       ; Large jump translated into short
+@j2:    push    ax
+        mov     al,18h
+        sub     al,cl
+        call    ?FPSHF
+        pop     ax
+        or      al,al
+        jns     @j4
+        call    @j5                       ; Large jump translated into short
+        jnz     @j4
+@j3:    mov     dh,80h
+        inc     cx
+@j4:    call    ?FP40
+        pop     bx
+        pop     ax
+        pop     ax
+        push    cx
+        push    dx
+        jmp     bx
+?FCEIL: pop     bx
+        pop     dx
+        pop     cx
+        push    bx
+        push    cx
+        push    dx
+        call    ?FN40S
+        call    ?FFLOR                    ; Large jump translated into short
+        call    ?FN40S
+        pop     dx
+        pop     cx
+        pop     bx
+        push    cx
+        push    dx
+        jmp     bx
+@j5:    not     bh
+        not     dx
+        inc     bh
+        jnz     @j6
+        inc     dx
+@j6:    ret
+
+
+        END
+
+

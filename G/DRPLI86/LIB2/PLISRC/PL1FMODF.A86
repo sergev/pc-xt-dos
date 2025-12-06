@@ -1,0 +1,47 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FMODF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FE40M:NEAR
+        EXTRN           ?FFLOR:NEAR
+        EXTRN           ?FS44S:NEAR
+        EXTRN           ?FM44S:NEAR
+        EXTRN           ?FD44S:NEAR
+
+        PUBLIC          ?FMODF                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rw      1
+
+
+CODE    CSEG
+
+
+?FMODF: pop     @d1
+        mov     bx,sp
+        call    ?FE40M
+        or      al,al
+        jnz     @j1
+        push    @d1
+        ret     0004h
+@j1:    mov     bp,sp
+        push    word ptr [bp]+006h
+        push    word ptr [bp]+004h
+        push    word ptr [bp]+002h
+        push    word ptr [bp]
+        call    ?FD44S
+        call    ?FFLOR
+        call    ?FM44S
+        call    ?FS44S
+        jmp     @d1
+
+
+        END
+
+

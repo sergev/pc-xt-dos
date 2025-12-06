@@ -1,0 +1,56 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FM44'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+        EXTRN           ?FP40:NEAR
+
+        PUBLIC          ?FM44                   ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rb      1
+@d2     rw      1
+@d3     rb      1
+@d4     rw      1
+
+
+CODE    CSEG
+
+
+?FM44:  push    dx
+        call    ?FU40
+        mov      @d1,al
+        mov     @d2,bx
+        mov     @d3,dh
+        mov     @d4,cx
+        pop     bx
+        call    ?FU40
+        add     @d2,bx
+        xor     @d1,al
+        mov     al,dh
+        mul     byte ptr @d4 + 00001h
+        mov     bx,ax
+        mov     al,ch
+        mul     byte ptr @d3
+        add     bx,ax
+        pushf
+        mov     ax,cx
+        mul     word ptr @d4
+        popf
+        adc     dx,+000h
+        add     bx,ax
+        adc     dx,+000h
+        mov     al, @d1
+        mov     cx,@d2
+        jmp     ?FP40
+
+
+        END
+
+

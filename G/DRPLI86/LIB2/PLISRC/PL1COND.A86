@@ -1,0 +1,116 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1COND'
+
+        ; Compiler:     RASM-86 1.0A 03/17/83
+
+DGROUP  GROUP   ?CONSP
+
+
+        EXTRN           ?ERMSG:NEAR
+
+        PUBLIC          ?ONPRO                  ; Located at 3:0000h Type = 1
+        PUBLIC          ?ONCOP                  ; Located at 3:0001h Type = 1
+        PUBLIC          ?REVOP                  ; Located at 3:003Dh Type = 1
+        PUBLIC          ?ONCPC                  ; Located at 3:0065h Type = 1
+
+?CONSP  DSEG common
+
+
+@cs1    rb      1
+@cs2    rs      00020h
+
+
+DATA    DSEG
+
+
+@d1     rs      00050h
+@d2     db      00Dh,00Ah,'Condition Stack Overflow$'
+
+
+CODE    CSEG
+
+
+?ONPRO: ret
+?ONCOP: mov     si,offset @cs1
+        mov     cl,[si]
+        cmp     cl,10h
+        jc      @j5
+        mov     dx,offset @d2
+        jmp     ?ERMSG
+@j5:    inc     byte ptr [si]
+        push    ax
+        mov     al,05h
+        mul     cl
+        mov     di,offset @d1
+        add     di,ax
+        pop     ax
+        stosb
+        mov     ax,bx
+        stosw
+        pop     si
+        push    si
+        lods    cs: word ptr [si]
+        cmp     al,0EBh
+        jz      @j6
+        inc     si
+@j6:    mov     ax,si
+        stosw
+        mov     ax,sp
+        inc     ax
+        inc     ax
+        mov     di,offset @cs2
+        sub     ch,ch
+        shl     cx,1
+        add     di,cx
+        stosw
+        ret
+?REVOP: call    @j14                      ; Large jump translated into short
+        jcxz    @j9
+@j7:    inc     dx
+        sub     di,+005h
+        cmp     al,[di]
+        jnz     @j8
+        cmp     bx,[di]+001h
+        jz      @j10
+@j8:    loop    @j7
+@j9:    ret
+@j10:   dec     byte ptr @cs1
+        mov     si,0005h
+        add     si,di
+@j11:   dec     dx
+        jz      @j9
+        mov     cx,0005h
+        repz    movsb
+        jmps    @j11
+?ONCPC: call    @j14                      ; Large jump translated into short
+        inc     cx
+@j12:   dec     cx
+        jz      @j9
+        sub     di,+005h
+        cmp     al,[di]
+        jnz     @j12
+        cmp     word ptr [di]+001h,+000h
+        jz      @j13
+        cmp     bx,[di]+001h
+
+        jnz     @j12
+@j13:   mov     bx,[di]+003h
+        or      cx,cx
+        ret
+@j14:   mov     cl,@cs1
+        sub     ch,ch
+        mov     di,offset @d1
+        push    ax
+        mov     ax,0005h
+        mul     cl
+        add     di,ax
+        pop     ax
+        sub     dx,dx
+        ret
+
+
+        END
+
+

@@ -15,6 +15,9 @@ rem Caches up to 50 file locations in RAM for quicker hard drive access.
 rem Adjust lower (e.g., 20) if memory is tight.
 rem Omit if no hard drive or for pure floppy use (uses ~2.5KB at =50).
 
+set TMP=c:\
+rem For Microsoft Fortran compiler.
+
 turboon
 get_rtc
 vc

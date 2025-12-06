@@ -1,0 +1,52 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DSTOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DOVER:NEAR
+
+        PUBLIC          ?DSTOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DSTOP: mov     di,bx
+        mov     si,sp
+        inc     si
+        inc     si
+        cbw
+        inc     ax
+        mov     cx,ax
+        inc     cx
+        shr     cx,1
+        ror     ax,1
+        mov     dx,0009h
+        sub     dx,cx
+        repz    movsb
+        dec     si
+        lodsb
+        or      ah,ah
+        js      @j1
+        mov     cl,04h
+        shr     al,cl
+@j1:    and     al,0Fh
+        jz      @j4
+        cmp     al,09h
+        jz      @j3
+@j2:    jmp     ?DOVER
+@j3:    mov     al,99h
+@j4:    dec     dx
+        jz      @j5
+        cmp     al,[si]
+        jnz     @j2
+        inc     si
+        jmps    @j4
+@j5:    ret     0008h
+
+
+        END
+
+

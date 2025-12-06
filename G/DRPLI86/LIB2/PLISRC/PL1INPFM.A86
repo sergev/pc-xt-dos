@@ -1,0 +1,91 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1INPFM'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPB
+
+
+        EXTRN           ?GNFMT:NEAR
+        EXTRN           ?GNCPR:NEAR
+        EXTRN           ?SKPPR:NEAR
+
+        PUBLIC          ?INPFM                  ; Located at 3:0000h Type = 1
+
+?FPB    DSEG     common
+
+
+@f1     rd      1
+@f2     rs      00011h
+@f3     rs      00019h
+
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+
+@d2     rb      1
+
+
+CODE    CSEG
+
+
+?INPFM: call    ?GNFMT
+        cmp     al,0Bh
+        jnz     @j5
+        inc     ch
+@j4:    dec     ch
+        jz      ?INPFM
+        push    cx
+        call    ?GNCPR
+        pop     cx
+        jmps    @j4
+@j5:    cmp     al,0Ch
+        jnz     @j7
+        mov     al,ch
+        inc     ch
+        jnz     @j6
+        mov     al,01h
+@j6:    call    @j14                      ; Large jump translated into short
+        jmps    ?INPFM
+@j7:    cmp     al,0Dh
+        jz      @j8
+        ret
+@j8:    call    @j9                       ; Large jump translated into short
+        jmps    ?INPFM
+@j9:    inc     ch
+        dec     ch
+        jz      @j13
+        mov     al,ch
+        mov     bx,offset @f2
+        sub     al,[bx]
+        jnc     @j10
+        push    cx
+        call    @j13                      ; Large jump translated into short
+        pop     cx
+        jmps    @j9
+@j10:   mov     al, @f3
+        or      al,al
+        jz      @j11
+        cmp     al,ch
+        jc      @j13
+@j11:   mov     al, @f2
+        cmp     al,ch
+        jnz     @j12
+        ret
+@j12:   push    cx
+        call    ?GNCPR
+        pop     cx
+        jmps    @j10
+@j13:   mov     al,01h
+@j14:   mov      @d2,al
+        mov     bx,offset @d1
+        jmp     ?SKPPR
+
+
+        END
+
+

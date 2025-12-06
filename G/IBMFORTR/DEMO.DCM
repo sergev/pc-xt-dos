@@ -1,0 +1,116 @@
+LOG
+*
+* DEMONSTRATION INPUT FILE FOR DEBUG.
+* COMPILE DEMO.FOR WITH THE /T OPTION, LINK AND EXECUTE.
+* ENTER 'INPUT DEMO.DCM' IN RESPONSE TO THE DEBUG PROMPT.
+*
+***************************************************************************
+****** S E T T I N G   B R E A K P O I N T S  I N   D E M O  **************
+***************************************************************************
+*
+AT (17,/10)
+AT (23,MYSIN./10-1)
+AT MYSIN
+WHEN 2 (X(1,1) .LT. 0.5)
+LISTBRKS
+AT * OFF
+AT MYSIN./10-1 OFF
+AT MYSIN OFF
+WHEN 2 OFF
+LISTBRKS
+QUALIFY FACTRL
+AT /10
+QUALIFY DEMO
+LISTBRKS
+AT FACTRL./10 OFF
+*
+**************************************************************************
+* L I S T I N G   A N D  S E T T I N G   V A R I A B L E S  I N  D E M O *
+**************************************************************************
+*
+SET X =30*0
+SET NUMBER = 10*0
+LIST (X,NUMBER)
+AT 18
+GO
+LIST (I,VAL,X(I,1))
+GO
+LIST (I,VAL,X(I,1))
+*
+*** STEPPING THROUGH THE DEMO.  NEXT, STEP, GO, RUN STATEMENTS.
+*
+NEXT
+NEXT
+NEXT
+NEXT
+NEXT
+LIST (I,VAL,X(I,1))
+STEP
+STEP
+STEP
+STEP
+STEP
+LIST I
+GO
+RUN
+LIST (I,VAL,X(I,1))
+AT 18 OFF
+* RERUN DEMO *
+W
+LB
+AT 14
+GO 14
+AT 14 OFF
+W
+LB
+*
+******************************************************************
+****************** T R A C I N G   D E M O ***********************
+******************************************************************
+*
+AT 21
+TRACE
+GO 14
+TRACE OFF
+TRACE 16:18
+GO
+AT MYSIN.39
+TRACE OFF
+TRACE 18:20
+ENTRY
+GO
+AT MYSIN.39 OFF
+ENTRY OFF
+GO
+AT MYSIN.36
+ENTRY PARM
+GO
+LIST (P1, DEMO.VAL, P2, DEMO.N)
+W
+AT * OFF
+AT DEMO./10 OFF
+TRACE OFF
+ENTRY OFF
+GO
+W
+AT 14
+GO 14
+AT 14 OFF
+W
+LB
+*
+******************************************************************
+* S O U R C E,  O B J E C T,  R E G I S T E R   C O N T E N T S  *
+******************************************************************
+*
+AT 14
+GO 14
+SOURCE 11:/10
+AT 19
+GO
+MACHINE 19
+REGISTERS
+DISPLAY SS:0016
+HELP
+END
+

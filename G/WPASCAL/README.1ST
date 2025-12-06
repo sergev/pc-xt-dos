@@ -1,0 +1,531 @@
+ 
+
+
+ 
+                +--------------------------------------------------+
+                |                WATCOM Editor V3.5                |
+                |    Copyright by WATCOM Systems Inc. 1981, 1988   |
+                |                   IBM PC - DOS                   |
+                +--------------------------------------------------+
+
+
+          1 Package Contents          1 Package Contents
+
+          We  are  pleased to  forward  the  enclosed package  of  software
+          developed for  the IBM PC family  of computers by  WATCOM Systems
+          Inc.  The package contains the following components:
+
+                ______ ______  ____ _ _____ ___  ___ ___  ________ ________             o  WATCOM Editor  User's Guide for  the IBM  Personal Computer
+                ____ ___                with DOS
+
+                ______ ______ _________ ____ ___ ___ ___ __ ______             o  WATCOM Editor Reference Card for the IBM PC Family
+
+             o  One 3.5-inch  or 5.25-inch  diskette containing  the WATCOM
+                Editor V3.5
+
+          We recommend  that you take time  now to identify  each component
+          described.
+
+
+          2 Installation Procedures for the WATCOM Editor V3.5          2 Installation Procedures for the WATCOM Editor V3.5
+
+
+          Step 1.  Preparation          Step 1.  Preparation
+
+          The complete software installation process should require at most
+          20 minutes.   It may be broken up  into a number of smaller steps
+          which we have numbered for you (Step 1, Step 2, and so on).   You
+          should  have a  number of  unused diskettes  and diskette  labels
+          handy.    You  will need  one  unused  diskette for  each  WATCOM
+          diskette for making backups.   If you are installing the software
+          onto diskettes,  you will require,  at  most,  an equal number of
+          unused diskettes for making your day-to-day working copies.
+
+          Your personal computer should have at  least 128K bytes of memory
+          in order to run the software.  You will also require a version of
+          DOS which is compatible with one of IBM PC DOS versions 2.1, 3.1,
+          3.2 or  3.3.   To  perform the  software installation,   you will
+          require a copy of DOS and  the following DOS programs:   DISKCOPY
+          and FORMAT.    These programs can be  found on the  DOS diskette.
+          DOS is supplied by the manufacturer of your personal computer.
+
+
+          Step 2.  Diskette BACKUP!          Step 2.  Diskette BACKUP!
+
+          (1) The diskette  in this  package is  protected from  accidental
+              erasure by a write-protect tab.   Do not remove this tab from
+              the diskette.
+          2                                              WATCOM Editor V3.5
+
+
+ 
+          (2) The diskette in this package must be copied,  using DOS,  for
+              backup purposes, since diskettes can be damaged by use.   You
+              can use  the DOS "DISKCOPY" program  to do this  as described
+              below.
+
+          (3) Never "DISKCOPY"  onto a diskette which  contains information
+              that you wish to keep.   The  disk copying process erases any
+              information which might  have been on the  output diskette so
+              it is best to start with a new, unused diskette.
+
+          (4) Place a copy of your DOS diskette  in drive "A" and type in a
+              DOS DISKCOPY command of the following form:
+
+                 A>diskcopy a: b:
+
+              Once you  have typed  in this command  and pressed  the Enter
+              key, you may remove the DOS diskette.
+
+          (5) Place the WATCOM software diskette in drive "A".
+
+              If you have a second "B" diskette drive, place a new,  unused
+              diskette  in this  drive  and proceed  as  instructed by  the
+              DISKCOPY program.
+
+              If you  do not have a  second diskette drive,   messages will
+              appear, as DISKCOPY proceeds,  that will instruct you when to
+              remove one diskette and insert  the other diskette into drive
+              "A".   Always remember that the diskette for drive "A" is the
+              WATCOM diskette and  that the diskette for drive  "B" is your
+              new, unused diskette.  During the DISKCOPY operation, you may
+              be required to exchange the two diskettes several times.
+
+
+          Step 3.  The Software Installation Procedure          Step 3.  The Software Installation Procedure
+
+          The WATCOM  Editor diskette contains  an "INSTALL"  program which
+          can be used to install the software that it contains onto another
+          diskette  or  hard  disk.   We  recommend  that  you  familiarize
+          yourself with the contents of the diskette before installing them
+          on  your  system.    Section 4,   entitled  "Diskette  Contents",
+          describes the diskette.
+
+          The INSTALL program is a DOS batch file which is used to copy the
+          software to another diskette or to a hard disk.   It will perform
+          the steps required to install the software on your system quickly
+          and easily.
+
+
+          Step 4.  Establishing Disk Space Requirements          Step 4.  Establishing Disk Space Requirements
+
+          Approximately  132K bytes  of  disk space  are  required for  the
+          software.
+          WATCOM Editor V3.5                                              3
+
+
+ 
+          Step 5.  Preparing the Working-copy Diskettes          Step 5.  Preparing the Working-copy Diskettes
+
+          Customers who plan  to install the software onto a  hard disk may
+          skip this step.   Customers who plan to install the software onto
+          a Waterloo JANET network fileserver may also skip this step.
+
+          If you have a diskette-only system,   you should create a working
+          copy of  the diskette.   This will  be the diskette that  you use
+          from day to day.
+
+          (1) To install  the WATCOM software  onto one or  more diskettes,
+              make  sure that  each  target  diskette has  been  formatted.
+              Simple  instructions  for  formatting a  diskette  are  given
+              below.   More detailed instructions can  be found in your DOS
+              manual.
+
+          (2) Never format a  diskette which contains information  that you
+              wish to keep.   The formatting process erases any information
+              which might have been on the diskette  so it is best to start
+              with a new, unused diskette.
+
+          (3) To format your diskette, place a copy of your DOS diskette in
+              drive "A" and  enter a DOS "FORMAT" command  of the following
+              form:
+
+                 A>format b:
+
+              Remove  the DOS  diskette from  drive  "A" and  place a  new,
+              unused diskette in  drive "B".   If you do not  have a second
+              diskette drive,  simply place the diskette into the "A" drive
+              (the FORMAT  program will treat drive  "A" as though  it were
+              drive "B").  Proceed as instructed by the FORMAT program.
+
+          (4) Format  as many  diskettes as  required.    We recommend  one
+              diskette for each diskette in the WATCOM package.
+
+
+          Step 6.  Preparing Waterloo JANET Minidisks          Step 6.  Preparing Waterloo JANET Minidisks
+
+          Customers who do not plan to install the software onto a Waterloo
+          JANET network fileserver may skip this step.
+
+          Before proceeding  with the Waterloo JANET  minidisk preparation,
+          we recommend that  you familiarize yourself with  the contents of
+              ________  _____ ____________ _____          the Waterloo  JANET Installation Guide.    Use it as  a reference
+          guide for this step.
+
+          (1) To install  the WATCOM software  onto a JANET  minidisk,  you
+              must first create a minidisk.    Log on to the administrators
+              account from any workstation.    Use the JANET Administrative
+              (Directory)   Maintenance program  "JAM" to  create a  userid
+              called EDIT and make this user's minidisk 320K bytes in size.
+              The minidisk mode should be set for "public read".
+          4                                              WATCOM Editor V3.5
+
+
+ 
+          (2) Insert  your WATCOM  Editor Software  diskette  into the  "A"
+              drive  of  the network  controller/fileserver.    Access  the
+              controller's diskette drive as the virtual "C" disk by typing
+              the command:
+
+                 A:ACCESS C:FLPYA rdpswd
+
+              where  "rdpswd"  is  the  current  "read"  password  for  the
+              diskette  drive.    If  you  do not  know  the  password  for
+              accessing the controller's  diskette drive,  you may  use the
+              Waterloo JANET "JAM" program to find out this information.
+
+          (3) Access  the  EDIT minidisk  that  you  created above  as  the
+              virtual "D" disk by typing the command:
+
+                 A:ACCESS D:EDIT wtpswd
+
+              where  "wtpswd"  is  the  current  "write"  password.    This
+              password was specified when you created the minidisk.
+
+          (4) You  are now  ready for  the  next step  in the  installation
+              procedure.   In the following step,  the source diskette will
+              be the  "C" drive  and the  output location  will be  the "D"
+              drive.
+
+
+          Step 7.  Run the INSTALL Program          Step 7.  Run the INSTALL Program
+
+          Before starting this step,  you should ensure that the computer's
+          date and time have been correctly set by using the DOS "DATE" and
+          "TIME" commands.
+
+          The installation  procedure will  copy several  files,  including
+          those that are not absolutely required to run the software,  from
+          the source diskette to the specified destination.  If, because of
+          space limitations,  you wish to copy only a subset of these files
+          then  you should  perform a  manual  software installation.    To
+          manually install the software, use the DOS "COPY" command to copy
+          necessary and desired files to the  target diskette or hard disk.
+          Section 4,  entitled "Diskette  Contents",  describes which files
+          are necessary to run the software.
+
+          When running  the INSTALL  batch program,   you must  specify two
+          parameters.
+
+             INSTALL  source-diskette:  output-location
+
+          The first parameter designates the diskette drive containing your
+          backup copy  of the WATCOM source  diskette.   The colon  must be
+          specified  after   the  drive  letter.    The   second  parameter
+          designates  the location  where  the  WATCOM software  should  be
+          placed.   This location would be the drive designation (e.g., B:,
+          C:, D:, etc.)  and, optionally,  a directory specification of the
+          disk or diskette that is to receive the files.  When specifying a
+                     ___ ____ _______ ___ ________ _____          directory, you must include the trailing slash.
+          WATCOM Editor V3.5                                              5
+
+
+ 
+          In the following examples,  we have  assumed that you have placed
+          your backup copy of the WATCOM  diskette into diskette drive "A".
+          If you are installing the software  onto another diskette and you
+          do not have a second diskette drive, you must specify "B:" as the
+          output location.  Messages will appear, as INSTALL proceeds, that
+          will instruct  you when  to remove  one diskette  and insert  the
+          other diskette into drive "A".  Always remember that the "SOURCE"
+          diskette is your backup copy of  the WATCOM diskette and that the
+          "TARGET" diskette  is your  new,  unused  diskette.   During  the
+          installation,  you may be required  to exchange the two diskettes
+          several times.
+
+          ________          Examples:
+
+          (1) Copy files from disk "A" to the root directory of disk "B".
+
+                 C>a:install  a:  b:\
+
+          (2) Copy files from disk "A" to the "CMDS" directory of disk "C".
+
+                 C>a:install  a:  c:\cmds\
+
+          (3) Copy files  from disk  "A" to the  current directory  of disk
+              "C".
+
+                 C>a:install  a:  c:
+
+          Run the INSTALL program specifying parameters appropriate to your
+          situation.  The INSTALL program will prompt you at various points
+          to confirm the operation which it is about to perform.   You will
+          be required to  type "y" (yes)  or  "n" (no)  and then  press the
+          Enter key.
+
+
+          Step 8.  Try the Software          Step 8.  Try the Software
+
+          New users  are advised  to begin  with the  WATCOM Editor  User's
+          Guide introductory  material to become  familiar with the  use of
+          the WATCOM Editor on the personal computer.
+
+
+          3 WATCOM Editor Documentation          3 WATCOM Editor Documentation
+
+              ______ ______  ____ _ _____ ___ ___ ___ __  ____ ___          The WATCOM Editor  User's Guide for the IBM PC  with DOS consists
+          of two  parts- a  Tutorial Guide  and a  Reference Manual.    The
+          WATCOM Editor  is completely described  in the  Reference Manual;
+          the Tutorial  Guide is meant to  provide an introduction  using a
+          series of simple examples.
+
+          The Tutorial  Guide is not intended  to be rigorous  or complete.
+          It is intended to familiarize the reader to the point where he or
+          she feels comfortable about reading the more concise and complete
+          reference documentation contained in the Reference Manual.
+
+          Help is provided in a file called "WEDIT.HLP".   This file may be
+          6                                              WATCOM Editor V3.5
+
+
+ 
+          placed in any directory listed in the  DOS PATH for access by the
+          editor.  The DOS "PATH" command is described in your DOS manual.
+
+          If  your  local  bookstore  does   not  carry  the  above  books,
+          additional copies of the documentation may be ordered from:
+
+             WATCOM Publications Limited.
+             415 Phillip St.
+             Waterloo, Ontario
+             CANADA  N2L 3X2
+
+
+          4 The WATCOM Editor Diskette          4 The WATCOM Editor Diskette
+
+          The contents of the WATCOM Editor diskette are listed below.
+
+          WEDIT.EXE     This is the WATCOM Editor program file.  Of all the
+                        files provided with  the editor,  this is  the only
+                        one which is required to run the editor.
+
+          WEDIT.HLP     This is the editor help file.   If you wish to have
+                        on-line help available while using the editor, this
+                        file must  be present in  the current  directory or
+                        one of the  disks or directories listed  in the DOS
+                        "PATH" command.   The editor  will search disks and
+                        directories  listed  in  the   DOS  "PATH"  command
+                        whenever it  is unable to  locate the help  file in
+                        the current directory.   The  DOS "PATH" command is
+                        described in your DOS manual.
+
+          PLAY.FTR      This is a WATCOM Editor "music" feature file.  This
+                        file contains the support  for playing single-voice
+                        musical notes  on just about any  personal computer
+                        equipped with a speaker  and tone generator.   This
+                        file  must  be  present  when  using  the  "CONFIG"
+                        program to  select music support.   See  the WATCOM
+                        Editor  User's Guide  for more  information on  the
+                        "PLAY" command and music support.
+
+          PLAYJR.FTR    This is a WATCOM Editor "music" feature file.  This
+                        file contains  the  support for  playing  multiple-
+                        voice musical  notes on the  IBM PCjr,  IBM  JX PC,
+                        Tandy 1000  SX PC  or any  other personal  computer
+                        equipped with  the TI76496 complex  tone generator.
+                        This file must  be present when using  the "CONFIG"
+                        program to  select music support.   See  the WATCOM
+                        Editor  User's Guide  for more  information on  the
+                        "PLAY" command and music support.
+
+          CONFIG.COM    The "CONFIG" program may be used to modify defaults
+                        in  the WATCOM  Editor and  to  select the  "music"
+                        feature.  The configuration program is described in
+                        the WATCOM Editor User's Guide.
+          WATCOM Editor V3.5                                              7
+
+
+ 
+          CANADA.SNG,   DARLING.SNG, DECK.SNG, HOME.SNG, MICE.SNG, POP.SNG,
+                        SAVE.SNG,  and  STARS.SNG.   These  are samples  of
+                        music which  may be played  when the  WATCOM Editor
+                        "music" feature has been selected.
+
+          BACHPCJR.SNG  This is  a sample of music  which may be  played on
+                        personal computers  (such as  the IBM  PCjr)  which
+                        support the  TI76496 complex tone  generator.   The
+                        music  demonstrates   multiple  voices   and  other
+                        features of the music  chip.   The "PLAYJR" version
+                        of music support must be selected (see "CONFIG").
+
+          WTALK.COM     This  program  is  used to  communicate  with  host
+                        computer systems over the serial port.  It emulates
+                        a  "dumb"  ASCII  terminal.    No  escape  sequence
+                        processing  is provided.    See  the WATCOM  Editor
+                        User's Guide  for more information on  the terminal
+                        emulation program.
+
+          CSET.COM      This program may  be used to set  screen colour and
+                        mode.   You can select  the foreground,  background
+                        and border  colours of personal  computers equipped
+                        with  a colour  graphics  adapter.    You can  also
+                        select from 80 or 40 column screen width.   Use the
+                        WATCOM Editor  command "HELP  CSET" to  obtain more
+                        information on the colour setting program.
+
+          COMPRESS.EXE  The Editor will remove any  TAB characters that are
+                        found in the records of  a file.   This program may
+                        be used  to reinsert TAB  characters into  the file
+                        and, in so doing, reduce the size of the file.  The
+                        program removes strings of  blank characters from a
+                        line and replaces them  with the appropriate number
+                        of  TAB characters.    For  example,   8 blanks  in
+                        columns 1  through 8 will  be replaced by  a single
+                        TAB character.    Blanks within quoted  strings are
+                        not compressed.  To use, type:
+
+                           COMPRESS <file-specification>
+
+                        where  <file-specification>  is a  valid  DOS  file
+                        specification.   Wild card patterns such as "*.FIL"
+                        may also be used with this program.  The IBM PC DOS
+                        manual describes  legal wild  card patterns  in the
+                        description of the DIRECTORY command.
+
+                        The   COMPRESS   program  is   provided   for   the
+                        compression  of WATCOM  help  files  that you  have
+                        edited.   We do not recommend its use for any other
+                        purpose.   Do NOT attempt to compress an executable
+                        image file such as WEDIT.EXE.   If you do,  it will
+                        never execute again.
+          8                                              WATCOM Editor V3.5
+
+
+ 
+          INSTALL.BAT   This file is  used to install the  software on your
+                        system.  Its primary function is to copy files from
+                        the  distribution  diskette  to   another  disk  or
+                        diskette.
+
+          WPROMPT.COM   This  is a  utility program  used  in the  software
+                        installation process and performs  a special set of
+                        functions for that purpose alone.
+
+          README.1ST    This file is  a copy of the "Read  Me First" notes.
+                        To obtain a printed copy of this file,  use the DOS
+                        "COPY" command to send it to a printer.
+
+
+          5 Differences from the WATCOM Editor V3.3          5 Differences from the WATCOM Editor V3.3
+
+          Version   3.5  of   the  WATCOM   Editor   contains  some   minor
+          enhancements.
+
+          (1)  The maximum record length that can  be handled by the editor
+               has been increased from 134 to 253 characters.
+
+          (2)  The editor  now supports  a variable  number of  screen rows
+               with the EGA/VGA adapters.   The  editor recognizes when the
+               number of screen rows is 25, 28, 30,  43,  or 50 and adjusts
+               the editing window accordingly.
+
+          (3)  Filenames are now treated in a case-insensitive manner.   In
+               previous versions of the editor,   commands such as "edit x"
+               and  "edit  X"  would  have   created  two  workspaces  with
+               different names.  Now the editor will search for a workspace
+               name that matches the specified  filename without regard for
+               case.
+
+          (4)  The editing profile filenames have  changed.   The new names
+               are as follows:
+
+                  Program Name  Software Product   Profile Filename
+                  WBAS.EXE      WATCOM BASIC       WBAS.PRF
+                  WEDITC.EXE    WATCOM C           WEDITC.PRF
+                  WCOB.EXE      WATCOM COBOL       WCOB.PRF
+                  WEDIT.EXE     WATCOM Editor      WEDIT.PRF
+                  WEDITC.EXE    WATCOM Express C   WEDITC.PRF
+                  WPAS.EXE      WATCOM Pascal      WPAS.PRF
+                  WEDITF.EXE    WATFOR-77          WEDITF.PRF
+
+          (5)  The following  help files are  provided with  the respective
+               software products.
+          WATCOM Editor V3.5                                              9
+
+
+ 
+                  Software Product   Help Filename
+                  WATCOM BASIC       WBAS.HLP
+                  WATCOM C           WEDITC.HLP
+                  WATCOM COBOL       WCOB.HLP
+                  WATCOM Editor      WEDIT.HLP
+                  WATCOM Express C   WEDITC.HLP
+                  WATCOM Pascal      WPAS.HLP
+                  WATFOR-77          WEDITF.HLP
+
+
+          6 Software Problem Reporting          6 Software Problem Reporting
+
+          Although  a significant  amount  of testing  has  gone into  this
+          product, errors in the WATCOM Editor may be encountered.  You may
+          also discover errors or omissions  in the documentation.   If you
+          find any problems or have some good suggestions, we would like to
+          hear from you.
+
+          The form  on the following page  should be used when  reporting a
+          problem or making a suggestion.  When reporting a problem, please
+          make a copy of  this form.   When you have filled  it in,  make a
+          second copy and keep it for your records.
+
+          Return your completed report to:
+
+             WATCOM Products Inc.
+             415 Phillip St.
+             Waterloo, Ontario
+             CANADA  N2L 3X2
+ 
+
+
+ 
+                               Software Problem Report
+
+          +----------------------------------------+------------------------+
+          |  Product Name and Version:             |  Date:                 |
+          +----------------------------------------+------------------------+
+          |  Operating System and Version:                                  |
+          +----------------------------------------+------------------------+
+          |  CPU Type:                             |  Memory Size:          |
+          +----------------------------------------+------------------------+
+          |  Your Name:                            |  Reference #           |
+          |  Institution:                          |                        |
+          |  Address:                              |                        |
+          |                                        |                        |
+          |                                        |                        |
+          +----------------------------------------+------------------------+
+          |  Please provide a  description of problem and how  it can be    |
+          |  reproduced.   Attach listings, console output, and anything    |
+          |  else that you may consider relevant.                           |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          |                                                                 |
+          +-----------------------------------------------------------------+
+                                 For WATCOM Use Only
+          +----------------------------------------+------------------------+
+          |  Received by:                          |  Date:                 |
+          +----------------------------------------+------------------------+
+          |  Resolution:                                                    |
+          |                                                                 |
+          |                                                                 |
+          +-----------------------------------------------------------------+

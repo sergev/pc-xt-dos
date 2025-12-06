@@ -1,0 +1,30 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1BSLOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?BSL08                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?BSL16                  ; Located at 1:0009h Type = 1
+
+CODE    CSEG
+
+
+?BSL08: dec     ch
+        jnz     @j1
+        ret
+@j1:    add     al,al
+        jmps    ?BSL08
+?BSL16: dec     ch
+        jnz     @j2
+        ret
+@j2:    shl     bx,1
+        jmps    ?BSL16
+
+
+        END
+
+

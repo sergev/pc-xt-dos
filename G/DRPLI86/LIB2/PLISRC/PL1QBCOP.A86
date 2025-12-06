@@ -1,0 +1,36 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QBCOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?QB08C                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?QB16C                  ; Located at 1:0004h Type = 1
+
+CODE    CSEG
+
+
+?QB08C: mov     bh,al
+        xor     bl,bl
+?QB16C: pop     di
+        mov     al,ch
+        mov     cx,0010h
+        mov     dx,3001h
+@j1:    cmp     al,cl
+        jc      @j2
+        mov     ah,dl
+        and     ah,bl
+        or      ah,dh
+        push    ax
+        inc     sp
+@j2:    shr     bx,1
+        loop    @j1
+        jmp     di
+
+
+        END
+
+

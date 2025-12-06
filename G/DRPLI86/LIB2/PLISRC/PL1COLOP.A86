@@ -1,0 +1,29 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1COLOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          COLLATE                 ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+COLLATE:
+        pop     dx
+        mov     cx,0080h
+        sub     sp,cx
+        mov     di,sp
+        sub     al,al
+@j1:    stosb
+        inc     ax
+        loop    @j1
+        jmp     dx
+
+
+        END
+
+

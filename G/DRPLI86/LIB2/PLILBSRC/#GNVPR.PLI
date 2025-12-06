@@ -1,0 +1,123 @@
+ ?gnvpr: proc(rec) returns(bit(1));
+ dcl 1 ?fpb        external,
+       2 fill1     char(12),
+       2 something bit( 8),
+       2 fill2     char(33);
+ dcl 1 ?fpbstk     static external,
+       2 msg       fixed bin(15),
+       2 fill      ptr init(null),
+       2 fill5(15) fixed bin(7);
+ dcl five          fixed bin(15) static init(5);
+ dcl one           bit(8) static init('01'b4);
+ dcl 1 rec, 
+       2 indx      fixed bin(7),
+       2 array(0:1) bit(8);
+ dcl byte          fixed bin(7) based;
+ dcl bit_char      bit( 8) based;
+ dcl i             bit( 8);
+ dcl hold_apostrophe bit(1);
+ dcl ?gncpr  entry returns(bit(8));
+ dcl ?signal entry(fixed bin(7), bit(8), fixed bin(15), ptr);
+
+ indx = 0;
+ call a;
+ if check_eof() then do;
+    call ?signal(addr(five)->byte, one, msg, null);
+    return('0'b);
+    end;
+ if check_comma() then
+    return('0'b);
+ hold_apostrophe = check_apostrophe();
+ if hold_apostrophe then do;
+     call d;
+     call b;
+     if (i | '20'b4) = '62'b4 then
+         call d;
+     end;
+ else
+     call b;
+ call c;
+ return('1'b);
+
+ a: proc;
+ do while('1'b);
+     call d;
+     if check_eof() then
+         return;
+     if check_char() then 
+         if ^(check_space()) then
+             return;
+     end;
+ end a;
+
+ b: proc;
+ do while('1'b);
+     if ^(check_char()) then
+         return;
+     if hold_apostrophe then do;
+         if check_apostrophe() then do; 
+             call d;
+             if ^(check_apostrophe()) then
+                 return;
+             end;      /* if */
+         end;
+     else do;
+         if check_space() then
+             return;
+         if check_comma() then
+             return;
+         end;          /* else */
+     call e;
+     call d;
+     end;   
+ end b;
+
+ c: proc;
+ something = '00'b4;
+ do while('1'b); 
+     if check_comma() then
+         return;
+     if ^(check_char()) then
+         return;
+     if ^(check_space()) then do;
+         something = i;
+         return;
+         end;
+     call d;
+     end;  
+ end c;
+
+ d: proc;
+ i = ?gncpr();
+ return;
+ end d;
+
+ e: proc;
+ if indx = -2 then
+    return;
+ array(indx) = i;
+ indx = indx + 1;
+ return;
+ end e;
+
+ check_eof: proc returns(bit(1));
+ return(i = '1a'b4);
+ end check_eof;
+
+ check_space: proc returns(bit(1));
+ return(i = '20'b4);
+ end check_space;
+
+ check_comma: proc returns(bit(1));
+ return(i = '2c'b4);
+ end check_comma;
+
+ check_char: proc returns(bit(1));
+ return(i >= '20'b4);
+ end check_char;
+
+ check_apostrophe: proc returns(bit(1));
+ return(i = '27'b4);
+ end check_apostrophe;
+ end ?gnvpr;
+

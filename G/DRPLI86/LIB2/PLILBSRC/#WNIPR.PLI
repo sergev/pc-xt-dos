@@ -1,0 +1,42 @@
+ ?wnipr: proc(arg1, arg2);
+ dcl five          fixed bin(15) static init(5);
+ dcl four          bit(8) static init('04'b4);
+ dcl arg1(1:2)     bit(8);
+ dcl arg2          fixed bin(15);
+ dcl temp1         fixed bin(15);
+ dcl temp2         fixed bin(15);
+ dcl byte          fixed bin(7) based;
+ dcl word          fixed bin(15) based;
+ dcl ?signal entry(fixed bin(7), bit(8), fixed bin(15), ptr);
+ dcl ?wrbuff entry(ptr, ptr, fixed bin(15))
+                     returns(bit(1));
+ dcl ?pncpr  entry(bit(8));
+
+ dcl 1 ?fpb        external,
+       2 first_byte bit(8),
+       2 fill1     char(11),
+       2 something bit( 8),
+       2 fill2     char(33);
+ dcl 1 ?filat      external,
+       2 open      bit( 1),
+       2 rest(8)   bit(8);
+ dcl 1 ?fpbstk     static external,
+       2 msg       fixed bin(15),
+       2 fill      ptr init(null),
+       2 fill5(15) fixed bin(7);
+
+ if open then do;
+     arg2 = arg1(1);
+     temp1 = 1;
+     temp2 = arg2;
+     do while(temp1 <= temp2);
+         call ?pncpr(arg1(temp1+1));
+         temp1 = temp1 + 1;
+         end;
+     end;
+ else
+     if ^(?wrbuff(addr(first_byte), addr(arg1), arg2)) then
+         call ?signal(addr(five)->byte, four, msg, null);
+ return;
+ end ?wnipr;
+

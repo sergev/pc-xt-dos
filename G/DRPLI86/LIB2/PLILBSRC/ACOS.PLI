@@ -1,0 +1,12 @@
+ acos: proc(arg) returns(float bin(24));		
+ dcl arg                 float bin(24);
+ dcl float_m1            float bin(24) static init(-1);
+ dcl float_1             float bin(24) static init(1);
+ dcl float_1v57079625    float bin(24) static init(1.57079625);
+ 
+ if arg < float_m1
+ | arg > float_1 then
+     signal error(3);
+ return(float_1v57079625 - asin(arg));
+ end acos;                                                             
+

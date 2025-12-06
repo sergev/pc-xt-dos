@@ -1,0 +1,42 @@
+ sin: proc(arg) returns(float bin(24));
+ dcl arg                float bin(24);
+ dcl parm_table(0:6)    float bin(24) static init
+ ( 2.552558,
+   -.28526158,
+    .009118016,
+   -.00013658751,
+    .0000011849619,
+   -.0000000067027915,
+    .000000000026672787);
+ dcl byte               fixed bin(7) based;
+ dcl float_v6366198     float bin(24) static init(.6366198);
+ dcl fixed_2            fixed bin(15) static init(2);
+ dcl float_v15915489    float bin(24) static init(.15915489);
+ dcl float_1            float bin(24) static init(1);
+ dcl float_2            float bin(24) static init(2);
+ dcl fixed_6            fixed bin(15) static init(6);
+ dcl (temp1, temp2)     float bin(24);
+ dcl j                  fixed bin(15);
+ dcl i                  fixed bin(7);
+ dcl ?fpex2           entry(fixed bin(7), float bin(24)) returns(float bin(24));
+ dcl ?cheby           entry(float bin(24), fixed bin(7), (0:6) float bin(24))
+                               returns (float bin(24));
+ 
+ temp1 = float_v6366198 * arg - ?fpex2(addr(fixed_2)->byte,
+   floor(float_v15915489 * arg)); 
+ i = 1;       
+ j = temp1;
+ temp1 = temp1 - j;
+ do while(j > 1);
+     i = -i;
+     j = j - 2;
+     end;
+ if j = 1 then do;
+     i = -i;
+     temp1 = temp1 - float_1;
+     end;
+ temp2 = temp1;
+ temp1 = temp1 * ?fpex2(addr(fixed_2)->byte,temp1) - float_2;
+ return(i * temp2 * ?cheby(temp1, addr(fixed_6)->byte, parm_table));
+ end sin;
+

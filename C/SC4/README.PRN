@@ -1,0 +1,24 @@
+
+Some additional information on SuperCalc4 1.1:
+
+1.  To run SuperCalc4 on a PC 3270 workstation, first perform the 
+following DEBUG sequence (DEBUG is a DOS utility program; see your 
+DOS manual for instructions):
+
+	A>DEBUG SC4.COM
+	-E 17C
+	xxxx:017C    00.01
+	-W
+	writing DC80 bytes
+	-Q
+	A>
+
+2.  To print the current date in headers and footers, use the symbol @.
+To format this date with a user defined date format, follow the @ symbol 
+with the corresponding format number.  For example:
+
+	@3
+
+prints the current date formatted as user-defined format #3.  See 
+/Format,Define in Chapter 3 for a discussion of user-defined formats,
+and refer to /Output for a discussion of the Output Options menu.

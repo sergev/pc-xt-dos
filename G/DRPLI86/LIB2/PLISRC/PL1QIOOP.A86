@@ -1,0 +1,135 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QIOOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPBSTK, ?FPB, ?CNCOL, ?FILAT
+
+
+
+        PUBLIC          ?QIOOP                  ; Located at 3:0000h Type = 1
+        PUBLIC          ?FPBIN                  ; Located at 3:0011h Type = 1
+        PUBLIC          ?FPBOU                  ; Located at 3:007Ch Type = 1
+
+?FPBSTK DSEG    common
+
+
+@fs1    rw      1
+@fs2    rb      1
+@fs3    rs      00010h
+
+
+?FPB    DSEG    common
+
+
+@f1     rw      1
+@f2     rw      1
+@f3     rw      1
+@f4     rs      00017h
+@f5     rw      1
+@f6     rs      0000fh
+
+
+CODE    CSEG
+
+
+?QIOOP: mov     bx,offset @fs2
+        mov     al,[bx]
+        or      al,al
+        jnz     @j1
+        ret
+@j1:    push    bx
+        call    ?FPBOU                    ; Large jump translated into short
+        pop     bx
+        dec     byte ptr [bx]
+?FPBIN: mov     al, @fs2
+        or      al,al
+        jnz     @j2
+        ret
+@j2:    mov     dl,al
+        mov     dh,00h
+        dec     dx
+        mov     bx,offset @fs3
+        add     bx,dx
+        add     bx,dx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     @fs1,bx
+        mov     dx,offset @f1
+        mov     cl,2Eh
+@j3:    mov     al,[bx]
+        mov     si,dx
+        mov     [si],al
+        inc     bx
+        inc     dx
+        dec     cl
+        jnz     @j3
+        mov     bx,@f5
+        shl     bx,1
+        shl     bx,1
+        shl     bx,1
+        shl     bx,1
+        shl     bx,1
+        mov     dx,offset @fa1
+        mov     cl,09h
+@j4:    shl     bx,1
+        mov     al,bh
+        mov     si,dx
+        mov     [si],al
+        inc     dx
+        dec     cl
+        jnz     @j4
+        mov     bx,@f1
+        mov     al,bh
+        or      al,al
+        jz      @j5
+        ret
+@j5:    mov     al,bl
+        cmp     al,03h
+        jc      @j6
+        ret
+@j6:    mov     bx,@c1
+        mov     @f3,bx
+
+        ret
+?FPBOU: mov     al, @fs2
+        or      al,al
+        jnz     @j7
+        ret
+@j7:    mov     bx,@fs1
+        mov     dx,offset @f1
+        mov     cl,1Fh
+@j8:    mov     si,dx
+        mov     al,[si]
+        mov     [bx],al
+        lahf
+        inc     dx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        dec     cl
+        jnz     @j8
+        ret
+
+
+?CNCOL  DSEG    common
+
+
+@c1     rw      1
+
+
+?FILAT  DSEG    common
+
+
+@fa1    rw      1
+@fa2    rs      00007h
+
+
+        END
+
+

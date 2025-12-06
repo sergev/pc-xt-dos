@@ -1,0 +1,60 @@
+ ?oiopr: proc(arg1, arg2);
+ dcl ?signal  entry(fixed bin(15), bit(8), ptr, ptr);
+ dcl ?opnfil  entry(fixed bin(7), char(14), ptr, fixed bin(15), fixed bin(15));
+ dcl 1 arg2,                  
+       2 arg2_struct,
+           3 arg2_array( 4)      fixed bin(15),
+           3 arg2_fill4          bit(16),
+       2 arg2_string         char(14) var; 
+ dcl 1 arg1,
+       2 arg1_fill         bit(16),
+       2 arg1_fill2(5)     fixed bin(15),
+       2 arg1_fill3(9)     bit(8),
+       2 arg1_struct,
+         3 arg1_array( 4)    fixed bin(15),
+         3 arg1_fill4        bit(16),
+       2 arg1_string       char(14) var;
+ dcl temp                  fixed bin(7);
+ dcl hold_string           char(14);
+ dcl 1 ?fpbstk static external,
+       2 something ptr,
+       2 fill1     ptr init(null),
+       2 fill2(15) bit(8);
+ if arg1_fill ^= '00'b4 then
+    return;
+ arg1_struct = arg2_struct;
+ if length(arg2_string) > 0 then
+     hold_string = arg2_string;
+ else
+     hold_string = arg1_string || '.dat';
+ if arg1_array(1) = 0 then
+    if ^substr(arg1_fill4,4,1) then
+        arg1_array(1) = 80;
+ if arg1_array(2) = 0 then
+    if substr(arg1_fill4,3,1) then
+        arg1_array(2) = -1;
+    else
+        arg1_array(2) = 60;
+ do;
+ arg1_fill2(4) = 1;
+ arg1_fill2(3) = 1;
+ arg1_fill2(2) = 1;
+ arg1_fill3(1) = '00'b4;
+ temp = bin(substr(arg1_fill4,10,1));
+ if substr(arg1_fill4,13,1) then
+     temp = temp + 2;
+ if substr(arg1_fill4,11,1) then
+     temp = 4;
+ if substr(arg1_fill4,14,1) then 
+     if arg2_array(3) = 0 then
+         arg2_array(3) = 1;
+ end;
+ call ?opnfil(temp, hold_string, addr(arg1), arg2_array(3),
+                                              arg2_array(4));
+ if arg1_fill = '00'b4 then
+     call ?signal(6, '01'b4, addr(arg1), null); 
+
+ return;
+
+ end ?oiopr;
+

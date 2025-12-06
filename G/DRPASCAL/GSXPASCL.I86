@@ -1,0 +1,68 @@
+;**********************************************************************
+;                                                                     *
+;      INTERFACE TO GSX-86 FROM PASCAL/MT+86                          *
+;                                                                     *
+;      File name: GSXPASCL.I86    (ASMT-86 Source)                    *
+;                                                                     *
+;      Calling sequence :                                             *
+;                 GSX (ptsout, intout, ptsin, intin, contrl)          *
+;                       arrays are passed as var params               *
+;                 Note the paramter calling sequence                  *
+;                                                                     *
+;      Entry :    return address on stack+0                           *
+;                 pointer to array contrl on stack+2                  *
+;                 pointer to array intin  on stack+6                  *
+;                 pointer to array ptsin  on stack+10                 *
+;                 pointer to array intout on stack+14                 *
+;                 pointer to array ptsout on stack+18                 *
+;                                                                     *
+;      Exit  :    return address on stack                             *
+;                                                                     *
+;      Notes :    calls bdos with DS:DX points at the location of     *
+;                 parameter block on stack                            *
+;                                                                     *
+;      Parameter Arrays Declared in Pascal program :                  *
+;	          type                                                *
+;                 param_array : array [ 1..Array_size] of integer     *
+;                 external                                            *
+;                 procedure GSX( var ptsout, intout, ptsin, intin,    *
+;                                    contrl : param_array );          *
+;                                                                     *
+;      Rather than move data off the stack, this routine points       *
+;      the data segment at the stack  and dx at the position of the   *
+;      parameter block in the stack frame.  Parameters are passed in  *
+;      reverse order to get them on the stack in the correct order    *
+;      for GDOS.                                                      *
+;                                                                     *
+;      History :   Sept. 28, 1983   rhk                               *
+;                                                                     *
+;**********************************************************************
+;     
+	public	GSX
+	name	pasgsx
+	assume	cs:code, ds:data
+data	segment	public
+data	ends
+code	segment	public
+GDOS	equ	224
+;
+GSX	proc 	near
+	push	ds		; Save caller's data segment register
+	push	es		; Save caller's extra segment register
+;
+	mov	ax,ss		; Move stack segment into AX
+	mov	ds,ax		; Set DS to SS
+	mov	dx,sp		; Move stack pointer into DX
+	add	dx,6		; Add 6 to point past DS, ES and ret address
+	mov	cx,473h		; GSX function number into CX
+	int	GDOS		; Call GDOS
+;
+	pop	es		; Restore caller's segemtn registers
+	pop	ds
+	ret	20		; return and pop 5 array addresses off stack
+GSX	endp
+;
+code	ends
+	end
+
+

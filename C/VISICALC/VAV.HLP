@@ -1,0 +1,1610 @@
+0000000000000001
+0000000000002967
+ MAIN LEVEL
+You are at the main level of the VisiCalc program.
+At this level you can:
+Move the cursor using
+     the arrow keys
+     the semicolon (;) to go to the other window
+     the ">" or "GO TO" command
+     the tab key, TAB and SHIFT-TAB
+Enter a VALUE or a LABEL in the current cell
+Recalculate the entire sheet by typing "!"
+Initiate any VisiCalc command by typing "/"
+Get help by typing "?"
+Correct typing mistakes by pressing the BKSP (<--) key
+Use CTRL-BREAK to cancel a command or data entry operation.
+
+The VisiCalc HELP function gives you information on how to use
+the VisiCalc program while you are actually using it. (Version
+108E/VC2/IBM)
+It consists of many frames, like this one, which give you
+information about various aspects of VisiCalc. If a frame does
+not fit the screen, it continues on one or more additional
+screens. You can see the next screen by pressing the N key,
+and the previous one by pressing the P key. If the bottom
+line of a screen shows an N or P prompt, there is a NEXT
+or PREVIOUS screen.
+A list of all topics for which HELP frames are available can be
+viewed by pressing the T key. When the topic list is on the
+screen, use the arrow keys to position the cursor on any topic,
+and press ENTER to display information contained in the desired
+frame. To return to the topic list, press ENTER again.
+To leave HELP and return to the VisiCalc sheet at the point
+where you asked for HELP, press BKSP.
+To cancel the current worksheet command or data entry operation
+and return to the VisiCalc sheet from HELP, press CTRL-BREAK.
+You will be at the main level of the VisiCalc program.
+
+ 0 MEMORY CONDITIONS
+When the VisiCalc program has used up all of its available
+memory, the memory indicator displays a 0.
+At this point:
+You cannot enter any values, expressions or labels onto the sheet,
+nor define new keystroke sequences or user formats. If you
+attempt to do so, the computer will beep. If you attempt to
+display cells with the expression attribute (/AE), they may
+display as 0.
+Sheet recalculation and command execution may take longer than
+usual, and program disk activity may increase.
+If you are performing a function and run out of memory in the
+middle of it, the program will do as much of the function as it
+can within the memory limitations. For example, if you are
+replicating a range, VisiCalc will replicate as much of the
+range as possible.
+At 0 memory:
+Portions of the worksheet can be deleted resulting in increased
+memory, and/or your work can be saved using one of the Storage
+commands; or
+The worksheet can be divided into smaller segments, saving each
+segment as a separate file.
+
+ VisiCalc Commands (/)
+By typing /, you invoke the set of commands listed below. For
+more details on each command, please refer to the topic list
+and select the frame on the command you wish to explore.
+A   Attribute. Sets a cell's attributes, which control the
+way a cell is displayed, what values may be entered into a
+cell, and whether modification is permitted.
+B   Blank. Clears a cell, erasing its contents.
+C   Clear. Clears the entire sheet.
+D   Delete. Deletes one or more rows or columns.
+E   Edit. Allows you to modify the contents of a cell.
+F   Format. Defines the display of a cell.
+G   Global. Global commands affect sheet recalculation and
+some cell display attributes.
+I   Insert. Inserts one or more rows or columns.
+K   Keystroke Memory. Allows you to assign multiple keystrokes to
+a single key.
+M   Move. Allows you to move entire rows or columns to
+another part of the worksheet.
+P   Print. Prints to a printer or to a disk. Also controls
+format of the printed worksheet.
+R   Replicate. Copies the entry and/or attributes from one cell
+or range of cells into other cells.
+S   Storage. Saves and loads files on disk.
+T   Title. Sets or eliminates horizontal and vertical title areas.
+V   Version. Displays the VisiCalc version number on the prompt line.
+W   Window. Splits the screen into two vertical or
+horizontal windows, or returns the screen to one window.
+-   Repeating Label. Repeats the character or characters
+typed after the - to fill the current cell.
+
+ ATTRIBUTES (/A)
+The Attributes command allows you to change the way cells are
+displayed and control how they can be modified. Setting
+attributes affects only the display of the cell and not the
+label or value stored in memory. The VisiCalc program always
+retains values to full precision and labels to the maximum
+buffer size.
+Attribute options are:
+/AE  Expression. Displays worksheet as expressions or formulas.
+/AH  Hide. Hides the display, but retains any data or expressions in
+a cell.
+/AL  Label. Sets label display attributes.
+/AM  Mode. Specifies whether the contents of a cell can be
+modified and allows you to restrict the type of data that may
+be entered.
+/AT  Tab. Specifies where the cursor will go when TAB or
+SHIFT-TAB is pressed.
+/AV  Value. Sets value display attributes.
+/AD  Default.
+See Topics for more information on each attribute setting.
+To modify attributes:
+1. Erasing attributes:  after choosing the type of attribute
+you want to modify (E, H, L, M, T, V), type the letter E
+(for Erase) and then the attribute setting you want to delete.
+You do not need to type the integer for attribute settings
+that require an integer, such as /AV2F.
+2. Modifying attributes:  after choosing the type of attribute
+you want to modify, type your new choices.  In some cases,
+certain attributes supersede previous choices. For example,
+/AVC would replace /AV( as you should not have CR/DR notation
+inside parenthesis. Other attribute choices are added to
+the current setting.
+
+ EXPRESSION FORMAT (/AE)
+Setting the expression attribute (/AE) displays the expression
+(formula) in the cell, and overrides all other attribute settings,
+including /AH (hide). The /AE setting is useful if you want to
+view your worksheet as a mathematical model.
+/AEY   Yes. Displays the expression.
+/AEN   No. Does not display the expression.
+/AED   Default.
+/AE!   Immediate mode. Allows you to view attribute setting
+changes as you type them. Type ! to turn off immediate mode.
+Using /AE, you can print the expressions on your worksheet
+just as you would print values on a worksheet (see /PP).
+Make sure your column width settings are wide enough to
+accommodate the entire expression.
+
+ HIDE ATTRIBUTE (/AH)
+Setting the /AH attribute allows you to hide
+the contents of the cell by causing the display
+to be blank, but not affecting its value or label content.
+/AHY  Yes. Hides the contents of the cell.
+/AHN  No.  Displays the contents of the cell.
+/AHD  Default.
+/AH!  Immediate mode. Allows you to view attribute setting
+changes as you type them. Type ! to turn off immediate mode.
+
+ MODE ATTRIBUTE (/AM)
+The /AM setting determines whether the cell may be modified,
+and what kind of entry can be made in the cell.
+/AMP  Protected. Locks the cell. A blank entry or any value,
+label, or expression (formula) currently in the cell when /AMP
+is set cannot be altered.
+/AMU  Unprotected. Unlocks the cell.
+/AMA  All. Allows values, labels, or expressions to be entered
+in the cell.
+/AML  Label. Allows only labels to be entered in the cell.
+/AMV  Value. Allows only numbers or expressions to be entered
+in the cell.
+/AM#  Number. Allows only numbers to be entered in the cell; no
+expressions or labels may be entered.
+/AMD  Default.
+/AM!  Immediate mode. Allows you to view attribute setting changes
+as you type them. Type ! to turn off immediate mode.
+To erase attributes, type /A and the letter of the attribute group
+you want to modify (E, H, L, M, T, V). Then type the letter E
+(for Erase) and the attribute setting you want to clear. For
+example, if you type /AMP#, type E P. The setting then becomes /AM#.
+For more information, see the Topics list: Attributes.
+
+ TAB ATTRIBUTE SETTING (/AT)
+/AT  Allows you to set tab stops on specific cells. The
+setting specifies where the cursor will go when the TAB key or
+backtab (SHIFT-TAB) key is pressed.
+When the  TAB key is pressed, the cursor will move to the next
+cell to the right which has the Tab attribute set;  if none is
+found, it will go to the following row, and so on. Finally,
+it will move to cell A1 and search for the next cell from there.
+/ATY  Yes. Sets tab.
+/ATN  No. Removes tab.
+/ATD  Default.
+/AT!  Immediate mode. Allows you to view attribute setting
+changes as you type them. Type ! to turn off immediate mode.
+
+ LABEL ATTRIBUTES (/AL)
+Label attribute settings control only the display of labels.
+/AL settings in effect in a cell do not affect any values or
+expressions that are entered in that cell. The attributes
+in effect in a cell in which @LABEL is used will control
+the display of the result.
+/AL<  Left justifies the label between the gutters.
+/AL>  Right justifies the label between the gutters.
+/ALL  Left gutter. Sets the number of spaces for the left
+gutter (/AL6L, for example). If no integer precedes
+the second L, the gutter is set to 0 spaces.
+/ALR  Right gutter. Sets the number of spaces for the right
+gutter (/AL6R, for example). If no integer precedes
+R, the gutter is set to 0 spaces.
+/ALF  Fill. Fills the space between the gutters with the label
+repeated.
+/ALC  Center. Centers the label between the gutters.
+/ALD  Default.
+/AL!  Immediate mode. Allows you to view attribute setting changes
+as you type them. Type ! to turn off immediate mode.
+Left and right gutter settings for labels are 0 when the VisiCalc
+program is first loaded. You can set label attributes on cells
+that contain values. These settings, however, do not affect the
+display until a label is entered in the cell.
+To erase attribute settings, type /A and the letter of the group
+you want to modify (E, H, L, M, T, V). Then type the letter E
+(for Erase) and the attribute setting you want to clear. For
+example, if you type /AL>2R, then type E R;  the setting becomes
+/AL>. For more information, see the Topics list: Attributes.
+
+ VALUE ATTRIBUTES (/AV)
+Value attribute settings affect the display of values only.
+/AV<  Left. Left justifies the displayed value between the gutters.
+/AV>  Right. Right justifies the displayed value between the gutters.
+/AVL  Left Gutter. Sets the number of spaces for the left gutter
+(/AV3L, for example). If no integer precedes L, the gutter is
+set to 1 space.
+/AVR  Right Gutter. Sets the number of spaces for the right gutter
+(/AV3R, for example). If no integer precedes R, the gutter is set
+to 0 spaces.
+/AV+  Sign. Positive values are preceded by +;  negative by -.
+No sign is associated with zero.
+/AV-  Negative. Negative values are preceded by -. No signs are
+associated with 0 or positive values.
+/AV(  Parenthesis. Encloses negative values in parentheses.
+/AVC  Credit. Displays CR (Credit) to the right of negative
+values, and DR (Debit) to the right of positive values.
+Displays no notation for the value 0.
+/AV,  Comma. Displays commas in positive and negative numbers
+with more than 3 integers, as in 1,000. The comma setting
+has no effect on values displayed in scientific notation.
+/AV. Decimal. Displays a decimal point in all values.
+/AVZ  Zero. Suppresses trailing zeros after the decimal point.
+Use /AVZ with /AVF and /AVS (see below).
+/AV%  Percent. Displays % to the right of the value. The /AV%
+command displays a value that is 100 times the value that
+is in memory, thus 0.5 will display as 50% and 1 as 100%.
+/AV$  Dollar. Displays $ to the left of the value, but does not
+affect the display of decimal places which are set with /AVF.
+(See below, /AVF.)
+/AVG  General. Displays in general format, as when the VisiCalc
+program is first loaded.
+/AVF  Fixed Format. Specifies the number of digits to the right of
+the decimal for display. An integer precedes F, e.g. /AV2F. If no
+integer is specified, /AVF displays values in the general format,
+except that the values do not change to scientific notation when
+limited by column width.
+/AVI  Integer. Displays values as integers.
+/AVS  Scientific. Displays values in scientific notation.
+/AV*  Graph. Displays the values as a graph using *.
+/AVD  Default.
+/AV!  Immediate mode. Allows you to view attribute setting
+changes as you type them. Type ! to turn off immediate mode.
+To erase attribute settings, type /A and the letter of the group
+you want to modify (E, H, L, M, T, V). Then type the letter E
+(for Erase) and the attribute setting you want to clear. For
+example, if you type /AVC%, then type E C;  the setting becomes
+/AV%. For more information, see the Topics list:  Attributes.
+
+ ATTRIBUTE DEFAULT (/AD)
+/AD sets the attribute to display the default settings in the
+current window, as set by /GA or the system default if no
+global attributes are in effect for the current window.  The
+VisiCalc program prompts you to type Y to confirm that you
+indeed want to set all attribute settings to default.
+
+ BLANK Command (/B)
+The Blank command clears an entry.
+This command does not take effect until the arrow, tab or
+ENTER key is pressed. If any other key is pressed, the Blank
+command is cancelled.
+/B does not affect attributes or formats set at the
+current cell.
+
+ CLEAR Command (/C)
+The Clear command clears the sheet of data and resets
+the display.
+/CA All. Clears the sheet of data, keystroke memory, format,
+attribute, printer, column width, and title settings, and all
+functions loaded into memory.
+/CS Sheet. Clears only data, attribute, column width, and title
+settings. Does not clear functions already loaded into memory,
+keystroke memory, printer settings or user-defined formats
+(/F=).
+When utilizing the /SL command, it is a good idea to clear the
+sheet before loading a new file. The new data is then written
+on a clear sheet, and no old data appears on the screen. The
+/SR command clears the sheet displayed on the screen before
+loading the specified file.
+
+ DELETE COMMAND (/D)
+The Delete command allows you to delete one or more rows or
+columns. The VisiCalc program prompts you to type Y to confirm
+that you do indeed want to delete the designated rows or columns.
+Any other key will cancel the command.
+To delete a single row or column, type R or C. Type Y to
+confirm your choice and the row or column where the cursor lies
+will then be deleted. Type any other key to cancel the command.
+The other rows or columns on the worksheet will shift to fill
+the space where the deleted row or column was. All row or
+column references will be adjusted automatically.
+To delete multiple rows or columns, enter an integer before the
+R or C, e.g. /D3C. Again, you are prompted to type
+Y to confirm. The designated number of rows or columns are
+deleted, beginning with the row or column where the cursor
+lies and including the columns to the right or rows below
+the cursor. The rows or columns on the worksheet shift to fill
+the vacated space.
+You can also delete multiple rows or columns by designating a
+range. The cell in which the cursor lies is defined as the
+beginning of the range. Type a period (.) for the ellipsis;
+then designate the end of the range by pointing to or typing
+the coordinates of a cell in the same row or column as the
+cursor. Terminate the command with ENTER. The range must be
+defined horizontally or vertically. The /D command does not
+accept diagonal coordinates.
+
+ EDITING (/E and CTRL-E)
+There are three ways to edit the contents of a cell:
+1. With the BKSP key:  If you have made a simple typing mistake
+while entering something in a cell, you can usually recover
+from it by pressing the BKSP key. Doing so erases the last
+character you typed. Repeatedly pressing BKSP will cancel
+whatever you have typed and returns you to a blank prompt
+line.
+2. With the /E Command:  Use /E to edit the contents of a cell
+that has already been entered. The contents of the cell are
+redisplayed on the edit line with the command /E. The edit cue
+that appears can be moved with the arrow keys. New characters
+typed are inserted to the left of the cue. Characters are
+erased by pressing the BKSP key. Erasures are made to the
+left of the cue. You can jump to the beginning or end of the
+edit line by typing the up-arrow or down-arrow key
+respectively. When you have finished editing a cell's
+contents, press ENTER.
+3. With CTRL-E:  If you have not yet entered an expression or
+label into the cell with ENTER, and wish to edit it, type
+CTRL-E. This invokes the editing function just as /E does
+after a cell has been entered. The editing operation is the
+same as /E.
+You can edit cell contents, file names, subdirectory
+names or /P setup strings.
+To enter a "?" into a label, type CTRL-Q. This enters the "?"
+character, and does not invoke the HELP facility.
+
+ FORMAT (/F)
+The Format command allows you to change the way cells are
+displayed. Only one format per cell is allowed if /F is used.
+To set multiple formats for a single cell, use the Attributes
+command (see /A).
+/FD  Default. Resets an entry to use the global format
+instead of an explicit format set with a /F command.
+/FG  General. Displays the cell in the general format, as when
+the VisiCalc program is first loaded.
+/FI  Integer. Displays values in integer format. Does not
+affect label entries.
+/FL  Left justified. Left justifies the display of values.
+/FR  Right justified. Right justifies the display of labels.
+/F$  Dollars and cents. Displays values with two decimal
+places, but does not add the dollar sign before the value.
+To display values with a dollar sign and 2 decimal places,
+you need to use /AV$2F. /F$ and /AV$ affect only the display;
+the value in the cell is carried in memory to full precision.
+/F*  Graph. Displays values with appropriate number of *
+symbols, within the limits of the column size.
+/F-  Repeating label. Displays characters typed after the -
+as a repeating label, filling the space between the gutters.
+/F= User defined format. Allows new formats to be defined. See
+Topics for more information on /F=.
+
+ DEFINING NEW FORMATS (/F=)
+/F= allows you to define your own formats. To define
+your own format, type /F= and a character. Characters
+accepted are any alphabetic character (except D)
+or !, @, #, $, %, ^, &, *, (, ), ", or '. You can reset any
+existing formats, such as L, R, $, etc. except D (default).
+After naming the new format, you will be put into attribute
+setting mode. You can now choose which attribute settings you
+want for the new format as you would with the /A command. You
+can use the immediate mode of display to see changes as you
+type them. Type ! to turn immediate mode on or off. The
+format is not set until you press ENTER. See more at the
+topics list, Attributes (/A).
+To return formats to their original setting or clear a format,
+type /F=xO, where x is the name of the format.
+
+ ORIGINAL FORMAT ENTRY (/F=xO)
+User-defined formats may be returned to their original settings
+when VisiCalc was first loaded. This feature can be used to
+return settings such as I, *, $, L, R to their original formats
+or for clearing formats.
+To return to the original format, type /F=xO, where
+x is the name of the format.
+
+ GLOBAL Commands (/G)
+Global commands apply to the entire sheet or window.
+The commands that can be set globally are:
+/GA Sets attributes for the current sheet or window.
+(see attributes command for options). /GA! allows you
+to view attribute setting changes as you type them. ! is
+off, by default. To turn the immediate mode (!) on or off,
+type !. Attributes are not set until you press ENTER.
+/GC Sets the column width in the current window. All columns
+in the current window that have not been set by the /GCC command
+will be displayed with the new width specified. The width may
+be between 1 and 125. After entering a number, press ENTER.
+/GO Sets the order of recalculation for the entire sheet. It
+has three options: Natural order (/GON), Columns (/GOC), and
+Rows (/GOR). The default is Natural order. Natural order will
+perform a recalculation once for entries requiring calculation.
+The user should force recalculation with ! if the worksheet
+contains intentional circular or forward references.
+/GOC Recalculates by column beginning with the entry in A1.
+All entries in column A are recalculated first, then all
+entries in column B and so on.
+/GOR Recalculates by row beginning with the entry in A1. All
+entries in row 1 are recalculated first, then row 2 and so on.
+/GR Sets the recalculation to be automatic (/GRA), manual
+(/GRM) or background (/GRB). The default is automatic (/GRA).
+This setting causes the program to automatically recalculate
+the entire sheet each time an entry is modified. The manual
+setting (/GRM) requires an ! for all recalculations. The
+background setting (/GRB) allows you to move the cursor and
+enter data while the program is performing an automatic
+recalculation. No matter what the setting, you can always
+recalculate manually by pressing !.
+/GF Sets the global default format for the current window. The
+default format determines the display of all entries that have
+not been specifically set using the /F or /A commands.
+Different global attributes, column and format commands can be
+set for each window. If you split the screen and set global
+attributes, columns or formats, the global command affects
+only the window where the cursor lies. When you return to one
+window, the global settings where the cursor lies when you type
+/W1 will be the global settings for the sheet.
+/GP Sets the prompts to be displayed in either Short (/GPS) or
+Long (/GPL) mode. When the VisiCalc program is first loaded,
+the prompts are displayed in long mode. Typing the first
+character of the long prompt initiates the command similar to
+utilizing the short prompt.
+Global attributes, columns and format settings affect all cells
+not set with /F, /A or /GCC.
+
+ ORDER OF REEVALUATION (/GO)
+The Reevaluation Order command sets the order in which
+calculations are carried out.
+If natural order (/GON), the program respects the relationships
+among all cells when performing a recalculation. If a new
+formula requires recalculation, the formulas on which it
+depends are recalculated first, then the new formula is
+recalculated. Natural order takes into account circular and
+forward references. However, if you have intentionally entered
+circular or forward references, you should press ! to force
+recalculation.
+If by column (/GOC), the order of recalculation is A1,
+A2...A254, B1, etc.
+If by row (/GOR), the order of recalculation is A1, B1...BK1,
+A2, etc.
+
+ RECALCULATION (/GR)
+The recalculation command sets the recalculation to automatic
+(/GRA), manual (/GRM) or background (/GRB).
+If you have a large sheet with many expressions, you may want
+to set recalculation to background (/GRB) or manual (/GRM). If
+you set it to background, you can continue moving the cursor
+and entering data while the program recalculates the sheet. If
+you set it to manual, the program does not recalculate the new
+values and expressions you enter. If you use the manual
+setting, remember to either press ! or reset recalculation to
+either automatic (/GRA) or background (/GRB) when you have
+finished entering data.
+! will appear in the upper-right hand corner of the screen to
+indicate that your sheet is being recalculated.
+
+ COLUMN WIDTH SETTINGS (/GC)
+/GC controls column width settings in a window.
+/GC followed by an integer changes the column width settings
+for all columns in a window. Column widths of 1 to 125 characters are
+accepted by the program. ENTER completes the setting. The default
+setting for /GC is 9.
+/GCC followed by an integer sets the column width for the
+column where the cursor lies and, if the screen has been split,
+in both windows. Column widths of 1 to 125 are accepted.
+ENTER completes the setting. /GCCD sets the column width for a
+single column to the global default value. The column width
+then displays the current window's global column width.
+
+ INSERTING ROWS OR COLUMNS (/I)
+The Insert command (/I) allows you to insert blank rows or
+columns on the worksheet. The program prompts you for
+R, C or RANGE.
+To insert a single row or column, type R or C. A row (R) or
+column (C) will be inserted where the cursor is positioned.
+All references will be adjusted.
+To insert multiple rows or columns, type an integer before
+R or C, e.g. /I3C. The designated number of rows or columns
+will be inserted, and references will be adjusted.
+You can also insert multiple rows or columns by designating a
+range. The cell in which the cursor lies is defined as the
+beginning of the range. Type a period (.) for the ellipsis;
+then designate the end of the range by pointing to or typing
+the coordinates of a cell in the same row or column as the
+cursor. The range must be defined horizontally or vertically.
+The /I command does not accept diagonal coordinates. Complete
+the command with ENTER.
+
+ KEYSTROKE MEMORY (/K)
+Keystroke memory allows you to save a sequence of up to 123
+keystrokes, which can then be recalled by typing as few as
+one.
+/KE Edit. Edits a keystroke sequence.
+/K= Equals. Creates keystroke sequence. Some special
+characters are required. (See HELP frame on /K=)
+/KC Clear. Clears all keystroke sequences from memory.
+/K ENTER. Reviews the keystroke sequences currently in
+memory. To scroll to the next sequence, press the right arrow key.
+CTRL-K=  is similar to /K=, but differs in that the keystroke
+sequence is carried out as it is created. No special characters
+are needed. CTRL-K= can be pressed at any time to begin collecting
+a keystroke sequence.
+
+ CREATING & EDITING KS SEQUENCES (/K=, /KE)
+Sequences may be created, without carrying them out by using
+/K=. The VisiCalc program prompts for a sequence name (a letter
+from A-Z or a function key). The ten function keys are mapped
+in a one-to-one correspondence with the first ten letters of
+the alphabet (A through J). The function key and the
+corresponding letter can be used interchangeably in all
+keystroke sequence functions. After naming the sequence, type
+the desired keystrokes, and complete the sequence by typing
+ENTER. The sequence has been created and is available (see
+CTRL-K). The length of the sequence is limited to 123
+characters.
+When creating a sequence with /K=, you must use the following
+special characters to represent the single keystrokes indicated:
+^^ caret (^)
+^U up arrow
+^D down arrow
+^< left arrow
+^> right arrow
+^B Delete
+^C Break
+^E Edit
+^K to chain sequences together
+^P Pause (The prompt following the pause must be ended with :)
+^R Return
+^TF Tab
+^TB Backtab
+^MH Home
+^? Help (To generate a ?, type Control-Q)
+To edit a sequence, type /KE. The VisiCalc program prompts for
+the sequence name. Editing is the same as with /E. The special
+characters listed above must be used to add those functions.
+ENTER completes the editing command.
+
+ CLEARING KS SEQUENCES (/KC)
+/KC is used to clear or delete all current sequences. The VisiCalc
+program prompts you to type Y to confirm that you indeed want
+to clear all sequences in memory.
+To clear or delete individual sequences, you can type:
+/K=XY ENTER, where X is the name of the sequence
+/KEX then delete each character in the sequence, until the
+entire sequence has been deleted;  then press ENTER.
+
+ CREATE OR CARRY OUT KS SEQUENCES WITH CTRL-K
+CTRL-K can be used to create and carry out a sequence. Type
+CTRL-K=;  a K will appear in the upper-right corner of the
+screen (next to the indicator for order of recalculation),
+indicating that you are defining a keystroke sequence. The
+VisiCalc program prompts you for a sequence name which can be
+either a one letter name (A-Z) or a function key. The ten
+function keys are mapped in a one-to-one correspondence with
+the first ten letters of the alphabet (A through J). When you
+create a sequence with a function key, the corresponding
+alphabetic letter will appear as the sequence name. The
+function key and the corresponding letter can be used
+interchangeably in all keystroke sequence functions. You can
+then enter the keystrokes as you would while executing
+functions and cursor moves on the VisiCalc worksheet. No
+special characters are needed. Complete the sequence by typing
+CTRL-K. This method creates the sequence, names it, and
+carries it out as the keystrokes are typed.
+To carry out a sequence that has already been created, type
+CTRL-Kx, where x is the name of the sequence. If you have
+created a keystroke sequence with a letter name (A through J)
+or with one of the function keys, you may carry out the
+sequence just by entering the appropriate function key without
+preceding the command with CTRL-K. A K will appear in the
+upper-right hand corner of the screen indicating that a
+keystroke sequence is being carried out.
+To carry out a sequence multiple times, type CTRL-Knx, where
+n is an integer and x is the name of the sequence. For example,
+CTRL-K3A carries out the sequence A three times.
+
+ SCROLLING THROUGH KS SEQUENCES
+You can view or scroll through keystroke sequences you have
+created by typing /K, then pressing ENTER. The first sequence
+appears on the edit line. Press the right arrow-key to display
+the other sequences, which are displayed in alphabetical order.
+
+ MOVING ROWS OR COLUMNS (/M)
+The Move command (/M) allows you to move entire rows or columns
+from one part of the worksheet to another. All value references
+are automatically adjusted to reflect the new position on the sheet.
+To move one or more rows or columns, place the cursor on the row
+or column you wish to move and type /M. You can indicate multiple
+rows or columns by typing an integer before R or C. For example,
+to move 3 rows, type 3R. You can also indicate a range of
+rows or columns to be moved. The cell where the cursor lies is
+the beginning of the range;  type a period (.) for the ellipsis.
+Then point to or type the coordinates of the end of the range,
+and press ENTER.
+To complete the command, point to or type the coordinates of the
+location where you wish the range of moved rows or columns to be
+inserted. The last coordinate in the range specified will always
+appear immediately to the left (if moving columns) or above
+(if moving rows) the target coordinate. Complete the
+command with ENTER.
+
+ PRINT (/P)
+The print command lets you send a VisiCalc sheet to a printer
+or disk. Sheets sent to a disk (/PF) are saved as text files
+and may be read by a BASIC or other high level programming
+language program. The VisiCalc program also allows you to
+format the page to be printed.
+/PF  Prints the file to disk.
+/PP  Sends the designated part of the sheet to the printer.
+/PS  Sets printer settings for report formatting. See Topics
+for more information on printer settings.
+Position the cursor at the upper-left corner of the rectangle
+of entries you wish to output and type /P.
+To send a worksheet to a printer:
+1. Type P (i.e. /PP).
+2. The VisiCalc program then prompts with two printer options:
+A:  Lower right - move the cursor to (or type the coordinates of)
+the lower right corner of the rectangle of entries to be printed,
+press ENTER, and printing will begin.
+B:  "SETUP  to send a special sequence of alphanumeric, Control
+or Escape characters to setup the printer, e.g., for character
+width, type ", then type the setup string and press ENTER to
+send to the printer. Non-printable characters may be inserted
+into the setup string by typing:
+    ^C char produces Control character;
+    ^E produces an Escape character;
+    ^Hnn produces the single ASCII character defined by hex number nn;
+    ^R produces a Carriage Return character;
+    ^L produces a Linefeed character;
+    ^^ produces a ^.
+To send a sheet to a file on disk:
+1. Type F (i.e. /PF). VisiCalc prompts for the file name.
+2. Type the name followed by ENTER. (See also Topics: Storage)
+3. Move the cursor to (or type the coordinates of) the lower
+right corner of the rectangle of entries to be printed, and
+press ENTER.
+Files printed to disk cannot be loaded with the /SL or /SR
+command. Printing to disk is used primarily to allow other
+programs to access the file.
+Note:  The screen may be overwritten by the printer controller.
+It is returned to normal when the /P command is finished.
+You may stop printing at any time by pressing CTRL-BREAK.
+
+ OUTPUT TO A PRINTER (/PP)
+The /PP command lets you output a VisiCalc sheet to a printer.
+1. Type /PP.
+2. The VisiCalc program then prompts for two printer options:
+Lower Right  Move the cursor to (or type the coordinates of) the
+lower-right corner of the rectangle of entries to be printed. Press
+ENTER, and printing will begin.
+"Setup  To output a special sequence of alphanumeric, control or
+escape characters to setup the printer, e.g., for character width,
+type ", then type the setup string and press ENTER to send the
+string to the printer.
+Non-printable characters may be inserted into the setup string by
+typing:
+    ^C char produces a Control character;
+    ^E produces an Escape character;
+    ^Hnn produces the single ASCII character defined by hex number nn;
+    ^R produces a Carriage Return character;
+    ^L produces a Linefeed character;
+    ^^ produces a ^.
+Printing to a printer does not save the file on disk. You
+should remember to save the file if you plan to use it again.
+Otherwise, the only record you will have of a worksheet is what
+you have printed using /PP.
+
+ PRINTER SETTINGS (/PS)
+/PS commands control the settings for printer output.
+/PS ENTER. Allows you to scroll through current printer
+settings by pressing the right-arrow key.
+/PSL  Linefeed. Sends carriage return and linefeed (Y), or
+carriage return only (N).
+/PSB  Break. Breaks the printed page into pages. You are
+prompted for a Yes or No (Y,N).
+/PST  Titles. Prints the sheet with titles or without (Y,N).
+/PS#  Number. Numbers the pages (Y,N).
+/PSP  Page length. Sets the number of printed lines on the
+page, from 0 to 255 lines.
+/PSW  Width. Sets the width of the page, from 0 to 255
+characters.
+/PSF  Form. Sets the length of the form or paper, from 0 to 255
+lines.
+/PSM  Margin. Sets the width of the left margin, from 0 to 129
+characters.
+/PSS Setup string. Allows you to edit the setup string saved
+with the sheet.
+/PSR  Replace. Replaces the current setup string saved with
+the sheet.
+
+ REVIEWING PRINTER SETTINGS (/PS ENTER)
+/PS followed by ENTER allows you to scroll through the
+current printer settings. Press the right arrow key
+to view subsequent settings.
+You can edit the printer settings as you scroll by typing the
+new settings. Or you can type /PS and the appropriate setting
+option. To edit the setup string, use CTRL-E and normal
+editing sequences. For more information, see Topics: Printer
+Format Settings (/PS).
+
+ PROMPTS
+/GP sets the prompts to be displayed in either Short (/GPS) or
+Long (/GPL) mode. When the VisiCalc program is first loaded,
+the prompts are displayed in long mode. Typing the first
+character of the long prompt initiates the command similar to
+utilizing the short prompt.
+
+ REPLICATING A CELL OR RANGE (/R)
+The Replicate command allows you to replicate a cell
+or range of cells to another part of the worksheet.
+(  Limits what part of the cell (A for attributes only or
+C contents only) is replicated or whether expression
+references are all No Change (N) or Relative (R). ENTER
+or ) completes this part of the command. Then continue by
+indicating the source range to be replicated and the
+target range where you want the copy to appear.
+Range  Indicates the source range of cells to be replicated.
+Both attributes and contents are replicated, unless specified
+otherwise by the ( option. Type a period (.) for the ellipsis
+and the coordinate of the end of the range. ENTER completes
+the source range. Indicate the target range by typing or
+pointing to the beginning and ending coordinates of the range
+where you want the copy or copies to appear. ENTER completes
+the command.
+ENTER  Indicates the source to be replicated is only
+the cell where the cursor lies. Both attributes and cell
+contents are replicated, unless specified otherwise by the
+( option. Indicate the target range by typing or pointing
+to the beginning and ending coordinates of the range where you
+want the copy or copies to appear.
+If the ( option for No Change (N) or Relative (R) has not been
+set, the VisiCalc program prompts you for R or N for each cell
+reference that is being replicated.
+A block of cells may be replicated by indicating the upper-left
+and lower-right cell coordinates for the source range.
+Multiple copies of the source range can be made by indicating
+a target range longer than the source range. The VisiCalc program
+makes an integer number of copies. That is, the program makes
+complete copies of the source range, given the length of the
+target range. For example, if the source range is A1...A3,
+and the target range is B1...B4, VisiCalc will make 2 complete
+copies of the source with one copy in B1...B3, and the second
+copy in B4...B6.
+Multiple copies of a row range can be made by indicating a column
+range for the target. Similarly, multiple copies of a column range
+can be made by indicating a row range for the target. For example,
+if the source range is A1...A3, and the target range is B1...D1,
+VisiCalc will make 3 copies of A1...A3. These copies will appear
+in B1...B3, C1...C3 and D1...D3.
+
+ STORAGE (/S)
+The Storage commands let you save, load, or delete your
+VisiCalc worksheets, or exit from the program.
+Any Storage command may be cancelled by pressing CTRL-BREAK.
+/SW Writes all entries, titles, window settings, keystroke
+sequences, printer settings, etc. in a file. Prompts for
+filename. Similar to /SS but faster. Not compatible with other
+versions of VisiCalc. Requires /SR to load the file.
+/SR Reads the contents of a worksheet saved in a file using
+/SW. Prompts for filename. The /SR command clears the sheet
+currently on the screen before loading the specified file.
+Similar to /SL but much faster. Not compatible with other
+versions of VisiCalc.
+/SS  Saves all entries, titles, window settings, keystroke
+sequences, printer settings, etc. in a file. Prompts
+for file name. Requires /SL to load the file.
+/SL  Loads the contents of the worksheet that were saved in a
+file with /SS. Prompts for file name. The /SL command does not
+clear the sheet currently on the screen before loading the
+specified file. If that is desired, use the /C command first.
+/SD  Deletes file from diskette. Prompts for file name and
+requests confirmation of delete. Type Y to confirm or any
+other key to cancel.
+/SQ  Quits the VisiCalc program and returns to the operating system.
+/S#S  Saves data in a DIF file. Saves a sheet or a rectangular
+portion of one. The upper left corner of the sheet saved is
+the position where the cursor lies when the command is given.
+Prompts for a file name, then requests the coordinate of the
+cell in the lower right. Specify the coordinate by either
+pointing to the cell with the cursor or typing its coordinate.
+Finally, it asks whether the data is to be saved by rows (R or
+ENTER) or by columns (C).
+/S#L  Loads data from a DIF file. Prompts for a file name,
+then asks whether the data is to be loaded by rows (R or
+ENTER) or by columns (C). When DIF files are loaded the cursor
+is not repositioned.  The position of the cursor at the time
+the DIF file loads determines the upper left location of the
+file.
+
+ DELETE FILE (/SD)
+The Storage command to delete a file (/SD) allows you to name
+the file you want to erase. The program prompts for a file
+name. The program asks you to type Y to confirm that you
+indeed want to delete the file.
+There is no way to retrieve a file that has been deleted from a
+diskette. The space from which the file has been deleted is now
+available to save other files.
+
+ QUIT FROM VISICALC (/SQ)
+The Storage command to quit VisiCalc (/SQ) is the command used
+to terminate a VisiCalc session. Type Y to confirm.
+If you are finished using VisiCalc and do not wish to load
+another program, you can just turn off the machine. You do not
+need any special command to exit from VisiCalc in that case.
+
+ DIRECTORY SCROLLING
+When saving, loading or deleting files (see Storage Command),
+you can scroll through filenames in directories or
+subdirectories on a disk. After giving a storage command, you
+can designate the directory in one of two ways. Either type
+the entire pathname up to and including the  filename and press
+ENTER or use the right arrow key to scroll through the current
+directory until you see the subdirectory you want, and then
+press ENTER. Directory names end with a backslash(\).
+When you press ENTER, the directory you have named or selected
+becomes the current directory. You can then scroll through the
+filenames in that directory using the right arrow key.
+Filenames are followed by the names of the subdirectories
+within that directory. Use CTRL-E to edit the current filename.
+When you see the filename you want to save, load or delete,
+complete the command by pressing ENTER. If you are saving a
+file and have found the filename by scrolling through the
+directory, VisiCalc will prompt you to type Y to confirm that
+you want this new file to replace the existing one.
+
+ STORING DIF FILES (/S#)
+DIF files are data files that you can use to exchange data
+between the VisiCalc program and other programs. Only the data
+(actual values) are stored in DIF files, not the expressions
+that yield the data.
+/S#S  Saves data in a DIF file. The program prompts for a
+filename. Next, it prompts for the coordinate of the cell that
+is the lower right of a rectangle of entries to be saved. Point
+the cursor or type the coordinate, then press ENTER. Finally,
+it asks whether the data is to be saved by rows (R or ENTER) or
+by columns (C).
+/S#L  Loads a DIF file. The program prompts for a file name,
+and whether the data is to be loaded by rows (R or ENTER) or
+by columns (C).
+
+ FILE EXISTS
+When you save a file with /SW, /SS, or /S#S, using a file name that
+already exists on the same disk, the program will prompt you to
+type Y to replace the old file with the new file.  Once you
+have written the new file in place of the old one, the old file
+no longer exists.
+
+ TITLE (/T)
+The Title command sets title areas so that you can scroll
+the worksheet, but keep the title area stationary. Titles
+may be set horizontally (/TH), vertically (/TV) or in both
+directions (/TB). /TN resets the window to have no title
+areas set.
+The position of the cursor when the title command is given
+determines the setting of the title area, which always
+includes the row or column in which the cursor lies. Horizontal
+titles are set in those rows in and above the one containing
+the cursor; vertical titles are set in and to the left of
+the one containing the cursor.
+The cursor cannot be moved into the title area by using the
+arrow keys. If you want to move into a title area, use the GO
+TO command (>) or the HOME key. However, you can use the arrow
+keys to move the cursor out of a title area.
+
+ VERSION NUMBER (/V)
+The copyright notice and version number are displayed when:
+1. The VisiCalc program is first loaded.
+2. The screen is cleared, using the /C command.
+3. /V has been pressed.
+The copyright notice and version number for your VisiCalc
+diskette appears in all of the above circumstances. The notice
+disappears from the screen as soon as you press any key.
+When reporting problems to Software Arts, Inc. make sure you
+include the version number of your diskette.
+
+ WINDOW (/W)
+The Window control splits the screen horizontally (/WH)
+or vertically (/WV) into two windows at the cursor position.
+To return the screen to one window, use /W1.
+You can scroll two windows together, or synchronized, with
+(/WS), or you can scroll them separately, or unsynchronized,
+with (/WU).
+If the screen is split, most global commands apply only to the
+window in which the cursor lies when /G is used. When you
+return to one window, the global settings of the window where
+the cursor lies when /W1 is typed will be the settings for the
+screen.
+When the screen is split, use the semicolon (;) to move the
+cursor from one window to the other.
+
+ REPEATING LABEL (/-)
+The Repeating Label command (/-) allows you to indicate
+a character or series of characters to be repeated, filling
+the cell. The characters typed after /- are the characters
+repeated.
+As you change the width of the column where this label lies,
+the number of characters will change to accommodate the width.
+Thus, if you widen the column, the repeating label
+automatically fills the new space. Similarly, if you narrow
+the column, the label will adjust to fit the space.
+This feature is useful for drawing a line across your worksheet
+or creating a border. See also Label Attributes (/ALF) and
+Formats (/F-).
+
+ @ FUNCTIONS
+The VisiCalc program has a variety of built in functions that
+help you to set up sheets more quickly and efficiently.
+There are six groups of functions:
+MATH FUNCTIONS
+       @SUM       @AVERAGE     @ABS       @LN      @ROUND
+       @MIN       @NA          @PI        @LOG10
+       @MAX       @ERROR       @MOD       @EXP
+       @COUNT     @SQRT        @INT       @DOTPROD
+FINANCIAL FUNCTIONS
+       @NPV       @RATE        @PERIODS
+       @IRR       @PMT         @PV         @FV
+LOGICAL FUNCTIONS
+       @TRUE      @FALSE
+       @AND       @OR          @NOT
+       @IF        @ISNA        @ISERROR
+TRIGONOMETRIC FUNCTIONS
+       @SIN       @COS         @TAN        @PI
+       @ASIN      @ACOS        @ATAN
+DATE AND TIME FUNCTIONS
+       @MDY       @VMDY
+       @MONTH     @DAY         @YEAR
+       @HMS
+       @HOUR      @MINUTE      @SECOND
+CHOOSING AND LABEL FUNCTIONS
+       @CHOOSE    @LCHOOSE     @LOOKUP
+       @VALUE     @LABEL
+Please refer to the appropriate HELP frame for more
+information on each set of functions.
+
+ MATH FUNCTIONS
+Math Functions include:
+@SUM(list) Calculates the sum of the values in a list or range.
+@MIN(list) Selects the minimum value in a list or range.
+@MAX(list) Selects the maximum value in a list or range.
+@COUNT(list) Calculates the number of non-blank entries in a
+list or range.
+@AVERAGE(list) Calculates the average of the non-blank entries in
+a list or range.
+@NA Results in "Not Available" value that makes all expressions
+using the value display as NA.
+@ERROR Results in an "Error" value that makes all expressions using
+the value display as ERROR.
+@SQRT(v) Results in the square root of v.
+@ABS(v) Results in the absolute value of v.
+@PI Results in 3.1415926536.
+@MOD(v,m) Results in value v modulo m. The sign associated
+with the result will match the sign of m.
+@INT(v) Results in the integer portion of v.
+@LN(v) Results in natural log (base e) of v.
+@LOG10(v) Results in logarithm (base 10) of v.
+@EXP(v) Results in e (2.71828...) to the power of v.
+@DOTPROD(range1, range2) Results in a value which is the
+the sum of each item in range1 multiplied by the corresponding
+value in range2. The number of entries in the two ranges must
+be the same.
+@ROUND(v1, v2) Results in value v1 rounded to the precision
+indicated by v2. Negative numbers are accepted for v2 to
+indicate rounding of numbers to hundreds, thousands, etc. If v2
+is 0, v1 is rounded to the nearest integer. If v2 is not
+entered as an argument, the ROUND function will assume v2 is 0.
+
+ FINANCIAL FUNCTIONS
+Financial Functions include the functions listed below. These
+functions observe a sign convention for the cash flow arguments.
+Money paid out has a negative sign. Money taken in has a
+positive sign. For example, income is positive and loan
+payments are negative. To compute the correct result, you
+need to enter the arguments according to this convention.
+VisiCalc will not change the signs for you automatically.
+@NPV(i, range) Calculates the net present value of the
+cash flows in range, discounted at the rate specified by
+i (i must be in decimal form, e.g. .18). The cash flows
+in the range do not include the cash flow at time 0.
+@IRR(v, range) Returns the interest rate for which the
+discounted cash flows in the range equals the cash flow v
+at time 0. In other words, @IRR returns a rate for which
+the NPV of the cash flows is 0.
+@RATE(n, pmt, pv, fv) Returns the interest rate given the number
+of periods (n), payment (pmt), present value of the sum (pv) or
+future value of the sum (fv). You must enter n and at least
+two additional arguments. You can enter all arguments.
+@NA specifies the argument not entered, for example,
+@RATE(12, -100, 1000, @NA).
+@PMT(i, n, pv, fv) Returns the payment necessary to comply with
+the parameters given. You must enter interest rate (i) in
+decimal form, and the number of periods (n). You must also enter
+either the present value (pv) or future value (fv). You can
+enter all arguments.  @NA specifies the argument not entered,
+for example, @PMT(.12, 120, -1000, @NA).
+@PERIODS(i, pmt, pv, fv) Returns the number of periods necessary
+to comply with the parameters given. You must enter interest
+rate (i) in decimal form, and at least two additional arguments.
+You can enter all arguments. @NA specifies the argument not
+entered, e.g. @PERIODS(.18, 100, @NA, -1000).
+@PV(i, n, pmt, fv) Returns the present value of a future sum of
+money (fv) or of an annuity (pmt) given the parameters
+specified. You must enter the interest rate (i) in decimal
+form, and the number of periods (n). You must also specify
+either the payment or the future value. @NA specifies the
+argument not entered, e.g.
+@PV(.18, 25, @NA, 1000).
+@FV(i, n, pmt, pv) Returns the future value of a sum of money (pv) or
+of an annuity (pmt) given the parameters specified. You must
+enter the interest rate (i) in decimal form and the number of
+periods (n). You must also specify either the payment (pmt) or
+the present value (pv). You can enter all arguments. @NA
+specifies the argument not entered, for example, @FV(.18, 25,
+-100, @NA).
+
+ LOGICAL FUNCTIONS AND OPERATORS
+The Logical Operators:
+<,   >,   =,   <=,   >=,   <>
+Compare two numeric values giving the logical
+value TRUE or FALSE.
+Logical Functions:
+@TRUE Results in the logical value TRUE.
+@FALSE Results in the logical value FALSE.
+@AND(list)  Results in the logical value TRUE if ALL statements are
+true, and FALSE if ANY statement is false.
+@OR(list) Results in the logical value TRUE if ANY argument is
+true, and FALSE if ALL arguments are false.
+@IF(logical value, v1, v2) Results in value v1 if the logical
+value is TRUE; otherwise, results in value v2.
+@NOT(logical value)  Results in the logical value TRUE if the
+statement is false, and FALSE if the statement is true.
+@ISNA(v) Results in TRUE if value v is NA; otherwise results in FALSE.
+@ISERROR(v) Results in TRUE if value v is ERROR; otherwise results in
+FALSE.
+
+ TRIGONOMETRIC FUNCTIONS
+Calculates the appropriate function; trigonometric calculations
+are done in radians.
+           @SIN(v)     @COS(v)      @TAN(v)      @PI
+           @ASIN(v)    @ACOS(v)     @ATAN(v)
+
+ DATE AND TIME FUNCTIONS
+Date Functions:
+You can specify dates and perform date arithmetic using the
+calendar functions. The base date for the calendar functions
+is January 1, 1979, a Monday. In all date calculations the base
+date is day 0.
+@MDY(v1, v2, v3) Returns the number of days between the base date
+and the date specified by the month v1, day v2 and year v3.
+@MDY(1,2,1979) returns 1.
+@VMDY(v1, v2, v3) Similar to @MDY but accepts only valid
+dates. For example, @VMDY(2,29,1979) returns ERROR, because
+1979 was not a leap year.
+@YEAR(v) Returns the year portion of a date represented by the
+number of days v, since the base date.
+@MONTH(v)  Returns the month portion in numerical format (i.e.
+1-12) of a date represented by the number of days v, since the
+base date.
+@DAY(v) Returns the day portion of a date represented by the
+number of days v, since the base date.
+To find the day of the week, use @MOD(@MDY(v1, v2, v3),7) which
+returns a value between 0 and 6, corresponding to the day of
+the week, Monday to Sunday.
+Time Functions:
+@HMS(v1, v2, v3) Returns the fraction of the day corresponding
+to the hours v1, minutes v2 and seconds v3 specified. Hours
+are entered based on a 24 hour day, e.g. 1:00PM = 13. If seconds
+are not entered, they are assumed to be 0. For example,
+@HMS(11, 60) = .5.
+@HOUR(v) Returns the hour within the day (modulo 24) specified
+by the fractional portion of v.
+@MINUTE(v) Returns the minute within the day specified by the
+fractional portion of v.
+@SECOND(v) Returns the seconds within the day specified by the
+fractional portion of v.
+
+ CHOOSING AND LABEL FUNCTIONS
+Choosing and Label Functions include:
+@CHOOSE(n, list) Returns the nth value in the list.
+@LCHOOSE(n, range) Returns the contents of the nth cell in the range.
+@LABEL(expression) Returns a label if the expression is
+evaluated to a label; otherwise, the value of the expression
+is displayed.
+@VALUE(expression) Returns the value of what is displayed in
+the cell. If the cell contains a label, 0 is returned.
+@LOOKUP(v1, range, v2) Compares the value v1 to the values of
+successive entries in range and selects a corresponding value
+from the column or row specified by the value (v2) of the third
+argument. The third argument (v2) is optional and if omitted
+assumes a value of 1. Values in the range must be in ascending
+order. The value returned corresponds to the last entry in the
+range that is less than or equal to v1, before any greater v1
+is found.
+@NA is returned if the first entry in range is greater than v1.
+
+ USE OF ARROW KEYS
+Arrows may be used to point to cells for value references
+or to end a command and move to the next cell.
+When you use /I, /D, /M, or /R or are entering an arithmetic
+expression, you may use the arrow keys to move around the
+worksheet. As the cursor moves, VisiCalc displays the cell
+coordinates on the edit line, automatically changing them as
+the cursor changes position.
+To enter an arithmetic expression, press ENTER if you have
+completed the expression. If the expression is not complete,
+continue by typing an operator (+, -, *, /, ^).
+When entering a range:
+1. If you have just typed or pointed to the beginning of a
+range, type an ellipsis (you need only to type a period, the
+program fills in the other periods to create the ellipsis).
+You are now ready to type or point to the coordinate that ends
+the range.
+2. If you have just pointed to the end of the range, press
+ENTER to enter the information.
+
+ COLUMN/ROW RANGES
+In the Delete, Insert or Move commands, use the arrow keys or
+type the cell coordinates to indicate the range of columns,
+rows, or cells that you wish to be acted on. For information on
+the operation of the current command, please refer to the HELP
+frame for that command (see Delete, Insert or Move).
+You may enter:
+the letter R to indicate one row;
+the letter C to indicate one column;
+a number followed by R or C, indicating a number of rows
+or columns.
+a range of cells, e.g. A1...A8.
+After you have entered the range, type ENTER.
+
+ ERROR - I/O
+The ERROR message indicates that the VisiCalc program is unable to
+process your command because of some limitation in one of your
+input/output devices, such as a disk drive or printer.
+Typical situations causing this error message to appear are:
+1. There is no disk in the drive.
+2. Trying to save (/SS, /SW, /S#S, /PF) when the disk is full.
+3. The printer is not connected or is turned off.
+4. The printer driver is missing, or does not have the name
+specified.
+5. Trying to save, load or print with an incorrect device name.
+
+ PRINTER SETTINGS (/PS)
+Certain printer settings require you to enter an integer
+for the argument.
+1. Page length (/PSP) - type an integer to indicate the number
+of lines you want to print on each page. This number must be less
+than or equal to the setting for Paper Length (see below).
+Complete this setting by pressing ENTER.
+2. Page width (/PSW) - type an integer to indicate the width in
+characters of the area to be printed. Complete this setting
+by pressing ENTER.
+3. Form length (/PSF) - type an integer to indicate the number
+of lines available per page on the paper or form you are using.
+This number must be equal to or larger than the page length.
+Complete this setting by pressing ENTER.
+4. Margin Width (/PSM) - type an integer to indicate the width
+in characters of the left margin you want printed on each
+page. This integer must be less than or equal to the number
+129. Complete this setting by pressing ENTER.
+
+ PRINTER SETTINGS (/PS)
+Certain printer settings require you to enter Y or N (yes or
+no) for the argument.
+1. Break Into Pages (/PSB) - If you press Y, this setting
+allows you to segment your printed worksheet into pages, the
+length and width of which are determined by other printer
+settings. If you press N, the worksheet is printed in a
+continuous format, limited only by the setting for the width of
+the printed area and the size of your paper. Pressing ENTER
+completes this setting.
+2. Print With Titles (/PST) - Enter N if you do not want
+titles to appear at the top of each page and/or at the
+beginning of each line. The titles that are printed are those
+you have set by the /T command. Pressing ENTER completes this
+setting.
+3. Number Pages (/PS#) - Enter Y if you want page numbers to
+appear at the bottom of each page printed. Page numbers are
+centered at the bottom of the page. Pressing ENTER completes
+this setting.
+4. Linefeed (/PSL) - This setting allows you to send a linefeed
+and carriage return to the printer (Y) or a carriage return only (N).
+
+ PRINTER SETTINGS (/PS)
+As printer settings appear, you can change them by typing your
+new choice. Pressing ENTER or the right-arrow key completes
+the new setting. Use BKSP to erase typing errors. Use
+CTRL-E to modify the setup string.
+
+ REPLICATE
+When you replicate an expression containing cell references,
+the VisiCalc program asks whether the references in the newly created
+expressions should be written with No change (type N), or
+should always refer to the entry in the same Relative position
+(type R).
+If you have a large number of expressions, all of which should be
+written with No change or with a change to the same Relative
+position, use the /R ( command. See Topics: Replicate.
+
+ CHARACTER STRING
+To enter a label (or repeating label), complete a command for
+saving/loading a file, or create a setup string, press ENTER
+after you have finished typing the information.
+If you make a mistake while typing a label, filename, or setup
+string, you can edit the character string using CTRL-E (see
+EDITING) or by pressing BKSP deleting one character at a time.
+Once you have finished typing the label, filename or setup
+string, press ENTER to complete the entry.
+If you are using the Storage command and wish to see what
+filenames occur on a disk, type the device name or directory
+name (or a subdirectory name followed by \), then press the
+right arrow key to scroll through the directory.
+To enter a "?" in one of the above situations, type CTRL-Q.
+This enters the ? character and does not invoke the HELP
+facility.
+
+ COMPLETING A RANGE
+To complete a range, you must specify its end by typing the
+coordinate or pointing to it with the cursor. To enter the
+range, press ENTER.
+To cancel the command, press CTRL-BREAK, or continue to press
+BKSP until the edit and prompt lines are clear.
+
+ CURSOR REPOSITIONING
+If you have pressed >, type the coordinate of the cell where
+you want the cursor to go, then press ENTER.
+If you are using /D, /I, /M or /R, type the coordinate or point
+with the cursor to the entry where you want the range to begin
+and type a period (.) for the ellipsis. To designate the end
+of the range, type or point to the cell coordinate. Complete
+the command with ENTER.
+If you are defining an expression in a cell, type the coordinate
+of the cell you want referenced in the expression.
+
+ ACCEPT
+VisiCalc is expecting some input such as an arithmetic expression,
+or a number.
+
+ EXPRESSIONS
+If you are entering an arithmetic expression, and have just
+completed typing an operator (such as + or *), the VisiCalc
+program is expecting a number, a cell coordinate,  a function
+name, or a parenthetic expression. You may use the arrow keys
+to indicate a cell coordinate, if you wish.
+
+ LOGICAL OPERATOR
+The allowable logical operators are:
+<  >  =  <=  >=  <>
+<  less than, e.g. 1<2
+>  greater than, e.g. 10>5
+=  equal to, e.g. 1=1
+<=  less than or equal to, e.g. A1 <= 5
+>=  greater than or equal to, e.g. A1 >= 5
+<>  not equal to, e.g. 1<>2
+
+ ENTERING AND COMPLETING A NUMBER
+You have entered a number within an expression, cell reference
+or a command and the VisiCalc program is now waiting for you
+either to continue the number or to complete the command. In
+expressions or values, you must end the number by pressing
+ENTER which completes the expression or by entering an operator
+(+, -, *, /, ^) which will continue the expression.
+In many commands, the VisiCalc program will accept numbers as
+part of the command. /M, /I, /D, /GC, /GCC, /PSL, /PSW, /PSF,
+/PSM and CTRL-K all accept numbers as part of the command.
+/M, /I, and /D need R (row) or C (column) to complete the
+command.
+CTRL-K needs a sequence name to complete the command.
+/PS commands need ENTER to complete the command.
+/GC or /GCC needs ENTER to complete the command.
+Numbers also can be entered in scientific notation or can be
+scaled using %. For scientific notation, the VisiCalc program
+accepts E and then an integer, which may be preceded by either
++ or -, e.g. 1.23E-6. For percents, type the number and the
+percent sign (%). The program divides the number by 100 and
+displays the result. For example, if you type the characters
+12%, the VisiCalc program will display .12.
+
+ COMPLETING A RANGE
+/M, /I, /D and /R accept a range for both the source
+and/or target of the command. After the initial coordinate
+has been designated and a period (.) typed for the ellipsis (...),
+you can point to or type the coordinate for the end of the range.
+ENTER completes the range.
+
+ EDIT OR KS SEQUENCE ERROR
+You may encounter an error message while you edit a cell or
+while you are defining a keystroke sequence. The error message
+gives you information on what was not accepted by the program.
+To clear the error message from the edit line, cancel the
+operation by pressing CTRL-BREAK.
+
+ SEQUENCE ALREADY EXISTS
+The sequence name has already been used on this worksheet.
+Type Y if you want to overwrite the existing sequence
+with the new one. The existing sequence at this point
+will no longer be available to you. The new one has
+taken its place.
+Type any key other than Y to cancel the request to replace
+the sequence.
+If you are editing an existing sequence, you can press BKSP
+to erase the sequence name, and then type in another name. If
+you are defining the sequence, begin the command again with /K=
+or CTRL-K=, and choose another name.
+
+ LIMITING THE REPLICATE COMMAND
+You can limit what part of the cell you replicate by typing
+( after you type /R.
+A  Attributes. Replicate only the attributes of the source range.
+C  Contents. Replicate only the contents of the source range.
+N  No Change. Replicate the source range with no change in
+expressions which reference other cells.
+R  Relative. Replicate the source range making cell references
+refer to the cell in the same relative position.
+) Exit. Completes the command.
+See Topics for more information on Replicate (/R).
+
+ COMPLETING AN EXPRESSION
+If you are building an expression (formula) and have completed
+a parenthetic expression with ) or a number, the VisiCalc
+program is now waiting for an arithmetic operator (+, -, *, /,
+or ^) to continue the expression or ENTER to complete the
+expression.
+
+ Main Level of VisiCalc
+ 0 Memory Conditions
+ Available Commands (/)
+ Attributes Command (/A)
+     Displaying formulas or expressions (/AE)
+     Hiding an entry (/AH)
+     Protecting entries (/AM)
+     Setting Tabs (/AT)
+     Label Attributes (/AL)
+     Value Attributes (/AV)
+     Attribute Default (/AD)
+ Clearing entries (/B)
+ Clearing the Sheet (/C)
+ Deleting Columns or Rows  (/D)
+ Modifying Your Sheet (/E and CTRL-E)
+ Controlling Cell Display (/F)
+     Defining New Formats (/F=)
+     Returning to Original Formats (/F=xO)
+ Global Commands (/G)
+     Reevaluation Order (/GO)
+     Recalculation (/GR)
+     Variable Column Width Settings (/GC)
+ Inserting Rows or Columns (/I)
+ Keystroke Memory (/K)
+     Creating & Editing KS Sequences (/K= and /KE)
+     Clearing KS Sequences (/KC)
+     Creating or Calling a Sequence with CTRL-K
+     Scrolling Through Sequences
+ Moving Rows or Columns (/M)
+ Printing Commands (/P)
+     Printing to a Printer (/PP)
+     Printer Format Settings (/PS)
+     Reviewing Printer Settings
+ Prompts
+ Replicating a Cell or Range (/R)
+ Operations with Diskettes (/S)
+     How to Delete Files from Disks (/SD)
+     How to Quit From VisiCalc (/SQ)
+     Scanning Files on Disk
+     Storing DIF Files (/S#)
+     File Overwrite
+ Setting Titles  (/T)
+ VisiCalc Version Number (/V)
+ Screen Splitting   (/W)
+ Repeating Label (/-)
+ @ Functions
+     Math Functions
+     Financial Functions
+     Logical Functions and Operators
+     Trigonometric Functions
+     Date and Time Functions
+     Choosing and Label Functions
+ Using the Arrow Keys in Commands
+ Disk I/O Error
+
+2
+47
+3
+9
+54
+53
+55
+56
+57
+58
+59
+1
+5
+27
+30
+10
+52
+62
+6
+7
+8
+44
+71
+48
+49
+50
+51
+23
+72
+18
+19
+45
+46
+14
+60
+15
+16
+17
+32
+36
+31
+13
+4
+12
+74
+63
+64
+65
+66
+67
+68
+69
+34
+11
+
+0
+13397
+0
+36
+0
+2784
+0
+-21165
+0
+13676
+0
+19763
+0
+22527
+0
+23246
+0
+4338
+0
+17298
+0
+-8719
+0
+-20664
+0
+-22003
+0
+-29670
+0
+-26991
+0
+-24880
+0
+-24477
+0
+31188
+0
+-32228
+0
+-8150
+0
+-7188
+0
+-6087
+0
+29854
+0
+-1439
+0
+-9304
+0
+-1123
+0
+14412
+0
+-5841
+0
+-5370
+0
+15876
+0
+-22301
+0
+-24140
+0
+-4229
+0
+-10266
+0
+-4511
+0
+-23020
+0
+590
+0
+-3693
+0
+-3597
+0
+-3285
+0
+-2992
+0
+-1742
+1
+314
+0
+24019
+0
+-31084
+0
+-30127
+0
+1724
+0
+25657
+0
+26370
+0
+27728
+0
+28158
+0
+18599
+0
+6617
+0
+5896
+0
+7041
+0
+8173
+0
+8819
+0
+10389
+0
+13067
+0
+-29379
+0
+-545
+0
+19424
+0
+-19327
+0
+-18224
+0
+-16667
+0
+-14029
+0
+-13124
+0
+-12902
+0
+-11252
+1
+23
+0
+24696
+0
+30145
+0
+0
+0
+-19981
+
+1
+2224
+1
+2014

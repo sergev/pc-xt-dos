@@ -1,0 +1,139 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1TIME'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?BDOS:NEAR
+
+        PUBLIC          TIME                    ; Located at 1:0000h Type = 1
+        PUBLIC          DATE                    ; Located at 1:0002h Type = 1
+
+CODE    CSEG
+
+
+TIME:   stc
+        db      0B7h
+DATE:   clc
+        push    ds
+        pushf
+        mov     cl,0Ch
+        call    ?BDOS
+        cmp     bh,11h
+        mov     ax,2020h
+        mov     bx,ax
+        mov     dx,ax
+        jz      @j1
+        jmp     @j7
+@j1:    mov     cl,9Bh
+        call    ?BDOS
+        mov     bx,dx
+        popf
+        jnc     @j2
+        mov     al,[bx]+002h
+        mov     dl,[bx]+003h
+        mov     bl,[bx]+004h
+        mov     cx,0F04h
+        mov     si,3030h
+        call    @j12
+        xchg    ax,dx
+        call    @j12
+        xchg    ax,bx
+        call    @j12
+        jmps    @j8
+@j2:    mov     ax,[bx]
+        pop     ds
+        add     ax,016Dh
+        xor     dx,dx
+        mov     cx,05B5h
+        call    @j14
+        xchg    ax,dx
+        shl     dx,1
+        shl     dx,1
+        mov     si,dx
+        cwd
+        mov     bx,dx
+        mov     cx,016Dh
+        call    @j14                      ; Large jump translated into short
+        cmp     al,03h
+        jbe     @j3
+        dec     ax
+        mov     bx,cx
+@j3:    cmc
+        pushf
+        add     ax,004Dh
+        add     si,ax
+        add     dx,bx
+        mov     bx,sp
+        inc     bx
+        inc     bx
+        xchg    ax,dx
+        mov     cx,0001h
+        mov     di,offset @j9
+        mov     bp,offset @j10
+
+        call    bp
+        popf
+        mov     dx,ax
+        sbb     ax,001Ch
+        jnbe    @j4
+        xchg    ax,dx
+        jmps    @j6
+@j4:    inc     cx
+        call    @j5                       ; Large jump translated into short
+@j5:    call    bp
+        call    di
+        call    bp
+        call    di
+        call    bp
+        ret
+@j6:    mov     sp,bx
+        xchg    ax,bx
+        xchg    ax,si
+        mov     dx,cx
+        mov     cl,0Ah
+        mov     si,3030h
+        call    @j13                      ; Large jump translated into short
+        xchg    ax,dx
+        call    @j13                      ; Large jump translated into short
+        xchg    ax,bx
+        call    @j13                      ; Large jump translated into short
+        db      0A9h
+@j7:    pop     si
+@j8:    pop     ds
+        pop     si
+        push    ax
+        push    bx
+        push    dx
+        mov     al,06h
+        jmp     si
+@j9:    sub     ax,001Eh
+        jnbe    @j11
+        add     ax,001Eh
+@j10:   sub     ax,001Fh
+        jnbe    @j11
+        add     ax,001Fh
+        jmps    @j6
+@j11:   inc     cx
+        ret
+@j12:   mov     ah,al
+        shr     al,cl
+        and     ah,ch
+        or      ax,si
+        ret
+@j13:   div     cl
+        or      ax,si
+        ret
+@j14:   div     cx
+        test    dx,dx
+        jnz     @j15
+        dec     ax
+        mov     dx,cx
+@j15:   ret
+
+
+        END
+
+

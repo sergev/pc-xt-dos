@@ -1,0 +1,31 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DNGOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?DNGOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DNGOP: mov     di,sp
+        inc     di
+        inc     di
+        mov     bx,0008h
+        clc
+@L1:    mov     al,00h
+        sbb     al,[di]
+        das
+        stosb
+        dec     bx
+        jnz     @L1
+        ret
+
+
+        END
+
+

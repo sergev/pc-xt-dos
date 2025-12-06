@@ -1,0 +1,58 @@
+ ?skppr: proc(arg);
+ dcl cr            bit(8) static init('0d'b4);
+ dcl lf            bit(8) static init('0a'b4);
+ dcl five          fixed bin(15) static init(5);
+ dcl bfive         bit(8) static init('05'b4);
+ dcl arg           fixed bin(7);
+ dcl temp          bit(8);
+ dcl ?signal  entry(fixed bin(15), bit(8), ptr, ptr);
+ dcl ?gncpr   entry returns(bit(8));
+ dcl ?pncpr   entry(bit(8));
+ dcl 1 ?fpb   external,
+       2 fill1(2) bit(16),
+       2 whatever1 bit(16),
+       2 fill2(3)  bit(16),
+       2 whatever2 bit(8),
+       2 fill3(33) bit(8);
+ dcl 1 ?filat external,
+       2 open      bit(1),
+       2 fill1     bit(1),
+       2 whatever3 bit(1),
+       2 fill2(6)  bit(8);
+ dcl 1 ?fpbstk static external,
+       2 something ptr,
+       2 fill1     ptr init(null),
+       2 fill2(15) bit(8);
+
+ if ^(open) then
+     return;
+ if whatever3 then
+    do while(arg > 0);
+        arg = arg - 1;
+        temp = '00'b4;
+        do while(temp ^= '0a'b4);
+            call a;
+            end;
+        end;
+ else do;
+     call ?pncpr(cr);
+     do while(arg > 0);
+         arg = arg - 1;
+         whatever2 = '00'b4;
+         call ?pncpr(lf);
+         if whatever2 then
+             arg = 0;
+         end;
+     end; 
+ return;
+ a: proc;
+ temp = ?gncpr();
+ if temp = '1a'b4 then do;
+    call ?signal(five, bfive, something, null);
+    whatever1 = '0001'b4;
+    temp = '0a'b4;
+    end;
+ return;
+ end a;
+ end ?skppr;
+

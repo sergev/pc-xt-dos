@@ -1,0 +1,73 @@
+ ?siopr: proc(arg1, arg2, arg3, arg4, arg5);	
+ dcl stream_record_msg char(13) var static init('Stream/Record');
+ dcl sequen_direct_msg char(13) var static init('Sequen/Direct');
+ dcl input_output_msg char(13) var static init('Input/Output');
+ dcl keyed_access_msg char(13) var static init('Keyed Access');
+ dcl arg1    fixed bin(7);
+ dcl arg2    file;
+ dcl arg3    bit(16);
+ dcl arg4    ptr;
+ dcl arg5    ptr;
+ dcl arg6    ptr;
+ dcl ?signal entry(fixed bin(15), bit(8), ptr, ptr);
+ dcl ?fpbio  entry(file);
+ dcl ?oiopr  entry(1, 2 bit(8), 2(12) bit(8), 2 ptr, 2 ptr, 2(6) bit(16),
+  2 bit(16),2(15) bit(8),
+  1, 2(4) fixed bin(15), 2 fixed bin(15), 2 fixed bin(15));
+ dcl 1 ?filat static external,
+       2 fill(4)                bit(8),
+       2 filat_bit              bit(1),
+       2 fill2(2)               bit(8),
+       2 filat_bit2             bit(1),
+       2 fill3                  bit(8);
+ dcl 1 ?fpb static external,
+        2 byte1                 bit(8),
+        2 fill1(12)             bit(8),
+        2 word1                 ptr,
+        2 word2                 ptr,
+        2 fill(6)               bit(16),
+        2 temp                  bit(16),
+        2 fill2(15)             bit(8);                   
+ dcl 1 ?fpbstk static external,
+       2 fpbstk_word            ptr,
+       2 fill                   ptr init(null),
+       2 fill2(15)              bit(8);
+ dcl (sysin, sysprint) file;
+ dcl 1 table_data static,
+       2 table1(4)  fixed bin(15) init(80,60,0,0),
+       2 fill       fixed bin(15),
+       2 table2     fixed bin(15) init(8192);
+
+ if arg1 < 2 then
+    if arg1 = 0 then do;
+         open file(sysin) stream input title('$con');
+         call ?fpbio(sysin);
+         end;
+    else do;
+         open file(sysprint) stream output print title('$con') pagesize(0);
+         call ?fpbio(sysprint);
+         end;
+ else do;
+     call ?fpbio(arg2);
+     call ?oiopr(?fpb,table_data);
+     end;
+ word1 = arg4;
+ word2 = arg5;
+ if substr(arg3,7,2) ^= substr(temp,7,2) then
+    call err(stream_record_msg);
+ if substr(arg3,12,2) ^= substr(temp,12,2) then
+    call err(sequen_direct_msg);
+ if ^filat_bit then
+    if substr(arg3,9,2) ^= substr(temp,9,2) then
+        call err(input_output_msg);
+ if ^filat_bit2 then
+    if substr(arg3,14,1) then
+        call err(keyed_access_msg);
+ return;
+ err: proc(message);
+ dcl message char(13) var;
+ call ?signal(0,'04'b4,fpbstk_word,addr(message)); 
+ return;
+ end err;
+ end ?siopr;
+

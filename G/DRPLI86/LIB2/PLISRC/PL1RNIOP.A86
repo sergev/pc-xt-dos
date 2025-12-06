@@ -1,0 +1,34 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1RNIOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?RNIPR:NEAR
+
+        PUBLIC          ?RNIOP                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rw      1
+@d2     dw      offset @d3
+
+@d3     rw      1
+
+
+CODE    CSEG
+
+
+?RNIOP: mov     @d1,bx
+        xchg    bx,dx
+        mov     @d3,bx
+        mov     bx,offset @d1
+        jmp     ?RNIPR
+
+
+        END
+
+

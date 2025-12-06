@@ -1,0 +1,68 @@
+ ?rnipr: proc(arg1, arg2);
+ dcl five          fixed bin(15) static init(5);
+ dcl bthree        bit(8) static init('03'b4);
+ dcl arg1(0:1)     bit(8);
+ dcl arg2          ptr;
+ dcl temp1         bit(16);
+ dcl temp2         bit(8);
+ dcl byte          fixed bin(7) based;
+ dcl word          fixed bin(15) based;
+ dcl ?signal  entry(fixed bin(15), bit(8), ptr, ptr);
+ dcl ?gncpr   entry returns(bit(8));
+ dcl ?rdbuff  entry(ptr, ptr, ptr) returns(bit(1));
+ dcl 1 ?fpb   external,
+       2 fill1(2) bit(16),
+       2 whatever1 bit(16),
+       2 fill2(3)  bit(16),
+       2 whatever2 bit(8),
+       2 fill3(33) bit(8);
+ dcl 1 ?filat external,
+       2 open      bit(1),
+       2 fill1     bit(1),
+       2 whatever3 bit(1),
+       2 fill2(6)  bit(8);
+ dcl 1 ?fpbstk static external,
+       2 something ptr,
+       2 fill1     ptr init(null),
+       2 fill2(15) bit(8);
+
+ if open then do;
+     call b;
+     if c() then do;
+        call d;
+        return;
+        end;
+     call a;
+     arg1(0) = substr(temp1,9,8);
+     return;
+     end;
+ if ^(?rdbuff(addr(?fpb), addr(arg1(0)),arg2)) then
+     call d;
+ return;
+ a: proc;
+ temp1 = '00'b4;
+ do while('1'b);
+     if c() then
+         return;
+     addr(temp1)->word = addr(temp1)->word + 1;
+     arg1(addr(temp1)->word) = temp2;
+     if addr(temp1)->word = addr(arg2)->word - 1 then
+         return;
+     if temp2 = '0A'b4 then
+         return;
+     call b;
+     end;
+ end a;
+ b: proc;
+ temp2 = ?gncpr();
+ return;
+ end b;
+ c: proc returns(bit(1));
+ return(temp2 = '1A'b4);
+ end c;
+ d: proc;
+    call ?signal(five, bthree, something, null);
+ return;
+ end d;
+ end ?rnipr;
+

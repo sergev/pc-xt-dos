@@ -1,0 +1,40 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1CS2AD'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?VS3AD                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?VS2AD                  ; Located at 1:0003h Type = 1
+        PUBLIC          ?CS2AD                  ; Located at 1:0004h Type = 1
+        PUBLIC          ?CS3AD                  ; Located at 1:000Ah Type = 1
+
+CODE    CSEG
+
+
+?VS3AD: lodsb
+        jmps    ?CS3AD
+?VS2AD: lodsb
+?CS2AD: mov     cl,al
+        sub     cl,dl
+        inc     cl
+?CS3AD: cmp     al,dl
+        jnc     @j1
+        mov     dl,al
+@j1:    sub     dh,dh
+        add     si,dx
+        dec     si
+        sub     al,dl
+        inc     al
+        cmp     al,cl
+        jc      @j2
+        mov     al,cl
+@j2:    ret
+
+
+        END
+
+

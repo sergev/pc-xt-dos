@@ -1,0 +1,115 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FTC'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?CNVER:NEAR
+        EXTRN           ?QFCMS:NEAR
+
+        PUBLIC          FTC                     ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+FTC:    mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        pop     cx
+        mov     bx,0FFEFh
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     sp,bx
+        push    cx
+        xchg    bx,dx
+        mov     al,0Dh
+        call    ?QFCMS
+        mov     bx,0000h
+        add     bx,sp
+        xchg    bx,dx
+        mov     bx,000Fh
+        add     bx,dx
+        mov     si,dx
+        mov     al,[si]
+        mov     [bx],al
+        push    bx
+        mov     bx,000Ah
+        add     bx,dx
+        mov     cl,[bx]
+        inc     bx
+        mov     al,[bx]
+        sub     al,30h
+        mov     ch,al
+        add     al,al
+        add     al,al
+        add     al,ch
+        add     al,al
+        inc     bx
+        add     al,[bx]
+        pop     bx
+        inc     dx
+        inc     bx
+        sub     al,30h
+        mov     ch,al
+        mov     al,cl
+        mov     cl,0Fh
+        cmp     al,2Dh
+        jnz     @j4
+        mov     byte ptr [bx],2Eh
+@j1:    lahf
+        inc     bx
+        sahf
+        dec     ch
+        jz      @j3
+        mov     byte ptr [bx],30h
+        dec     cl
+        jnz     @j2
+        jmp     ?CNVER
+@j2:    jmps    @j1
+@j3:    dec     ch
+@j4:    mov     si,dx
+        mov     al,[si]
+        cmp     al,45h
+        jnz     @j5
+        dec     dx
+        mov     al,30h
+
+@j5:    cmp     al,2Eh
+        jz      @j7
+        mov     [bx],al
+        inc     bx
+        mov     al,ch
+        or      al,al
+        jnz     @j6
+        mov     byte ptr [bx],2Eh
+        inc     bx
+@j6:    dec     ch
+        dec     cl
+        jz      @j8
+@j7:    inc     dx
+        jmps    @j4
+@j8:    mov     al,ch
+        or      al,al
+        js      @j9
+        jmp     ?CNVER
+@j9:    mov     bx,000Dh
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     sp,bx
+        mov     al,11h
+        ret
+
+
+        END
+
+

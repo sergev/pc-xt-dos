@@ -1,0 +1,28 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1IABOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?IAB07                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?IAB15                  ; Located at 1:0007h Type = 1
+
+CODE    CSEG
+
+
+?IAB07: or      al,al
+        jns     @j1
+        neg     al
+@j1:    ret
+?IAB15: or      bh,bh
+        jns     @j1
+        neg     bx
+        ret
+
+
+        END
+
+

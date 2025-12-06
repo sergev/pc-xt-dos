@@ -1,0 +1,108 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FPBIO'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPBSTK, ?FMTS
+
+
+        EXTRN           ?SIGNAL:NEAR
+        EXTRN           ?FPBOU:NEAR
+        EXTRN           ?FPBIN:NEAR
+
+        PUBLIC          ?FPBIO                  ; Located at 3:0000h Type = 1
+
+?FPBSTK DSEG    common
+
+
+@fs1    rw      1
+@fs2    rb      1
+@fs3    rs      00010h
+
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+        dw      offset @d3
+        dw      offset @fs1
+        dw      offset @d4
+@d2     db      000h
+@d3     db      002h
+@d4     dw      offset @d5
+@d5     db      ' I/O Stack Overflow',000h
+
+
+CODE    CSEG
+
+
+?FPBIO: mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        push    dx
+        call    ?FPBOU
+        mov     al, @fs2
+        cmp     al,08h
+        jc      @j1
+        mov     bx,offset @d1
+        call    ?SIGNAL
+        xor     al,al
+        mov      @fs2,al
+@j1:    mov     cl,al
+        mov     ch,00h
+        mov     bx,offset @f1
+        or      al,al
+        jnz     @j2
+        mov     byte ptr [bx],0FFh
+        jmps    @j3
+@j2:    lahf
+        add     bx,cx
+        sahf
+        lahf
+        dec     bx
+        sahf
+        mov     al,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],al
+@j3:    pop     dx
+        mov     bx,offset @fs3
+        lahf
+        add     bx,cx
+        sahf
+        lahf
+        add     bx,cx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     [bx],dl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        mov     bx,offset @fs2
+        inc     byte ptr [bx]
+        call    ?FPBIN
+        ret
+
+
+?FMTS   DSEG    common
+
+
+@f1     rs      00008h
+
+
+        END
+
+

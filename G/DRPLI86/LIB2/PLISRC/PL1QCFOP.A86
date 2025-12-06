@@ -1,0 +1,241 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QCFOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?CNVER:NEAR
+        EXTRN           ?FP40:NEAR
+        EXTRN           ?UADOP:NEAR
+        EXTRN           ?USLOP:NEAR
+        EXTRN           ?UDV10:NEAR
+        EXTRN           ?UML10:NEAR
+
+        PUBLIC          ?QCFOP                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+@d1     rb      1
+@d2     rw      1
+@d3     rw      1
+@d4     rb      1
+@d5     rw      1
+@d6     rw      1
+@d7     rb      1
+@d8     rb      1
+@d9     rw      1
+@d10    rb      1
+
+CODE    CSEG
+
+
+?QCFOP: xor     ah,ah
+        mov     bl,20h
+        xchg    ax,bx
+        mov     si,sp
+        lea     di,[bx+si]+001h
+        mov     cx,bx
+        mov     si,di
+        std
+        repz    scasb
+        jz      @j1
+        inc     di
+@j1:    xchg    si,di
+        mov     ax,di
+        sub     ax,si
+        xchg    ax,bx
+        jz      @j2
+        sub     ax,bx
+        mov     cx,ax
+        inc     cx
+        inc     cx
+        repz    movsb
+        add     sp,bx
+@j2:    cld
+        mov      @d7,al
+        mov      @d8,al
+        xor     bx,bx
+        mov     @d4,bl
+        mov     @d10,bl
+        mov     @d2,bx
+        mov     @d3,bx
+        mov     @d5,bx
+        mov     @d6,bx
+        mov     bl,02h
+        add     bx,sp
+        mov     @d9,bx
+@j3:    call    @j21
+        cmp     al,20h
+        jz      @j3
+        mov     bx,offset @d1
+        mov     byte ptr [bx],00h
+        cmp     al,2Bh
+        jz      @j4
+        cmp     al,2Dh
+        jnz     @j5
+        mov     byte ptr [bx],80h
+@j4:    call    @j21
+@j5:    cmp     al,2Eh
+        jnz     @j7
+        mov     al, @d10
+        or      al,al
+        jz      @j6
+        jmp     ?CNVER
+@j6:    not     al
+
+        mov      @d10,al
+        jmps    @j4
+@j7:    cmp     al,45h
+        jz      @j9
+        cmp     al,65h
+        jz      @j9
+        call    @j23
+        xor     bx,bx
+        push    bx
+        mov     bl,al
+        push    bx
+        mov     bx,@d2
+        push    bx
+        mov     cx,bx
+        mov     bx,@d3
+        push    bx
+        xchg    bx,dx
+        call    ?USLOP
+        call    ?USLOP
+        call    ?UADOP
+        call    ?USLOP
+        call    ?UADOP
+        mov     bx,cx
+        mov     al,bh
+        or      al,al
+        jnz     @j4
+        mov     @d2,bx
+        xchg    bx,dx
+        mov     @d3,bx
+        mov     al, @d10
+        or      al,al
+        jnz     @j8
+        jmp     @j4                       ; Large jump translated into short
+@j8:    mov     bx,@d6
+        dec     bx
+        mov     @d6,bx
+        jmp     @j4                       ; Large jump translated into short
+@j9:    call    @j21
+        cmp     al,2Bh
+        jnz     @j11
+@j10:   mov      @d4,al
+        jmps    @j12
+@j11:   cmp     al,2Dh
+        jz      @j10
+        jmps    @j13
+@j12:   call    @j21
+@j13:   call    @j23
+        mov      byte ptr @d5,al
+        call    @j21
+        call    @j23
+
+        mov     bx,@d5
+        mov     dx,bx
+        shl     bx,1
+        shl     bx,1
+        lahf
+        add     bx,dx
+        sahf
+        shl     bx,1
+        mov     dl,al
+        mov     dh,00h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     @d5,bx
+        call    @j21
+        jmp     ?CNVER
+        jmps    @j12
+@j14:   mov     bx,@d5
+        mov     al, @d4
+        cmp     al,2Dh
+        jnz     @j15
+        neg     bx
+@j15:   xchg    bx,dx
+        mov     bx,@d6
+        add     bx,dx
+        mov     @d6,bx
+        pop     cx
+        mov     al, @d7
+        mov     bl,al
+        mov     bh,00h
+        add     sp,bx
+        push    cx
+        mov     bx,@d6
+        push    bx
+        mov     bx,0020h
+        push    bx
+        mov     bx,@d2
+        mov     cx,bx
+        mov     bx,@d3
+        xchg    bx,dx
+@j16:   mov     al,ch
+        and     al,0C0h
+        jnz     @j18
+        mov     bx,cx
+        shl     bx,1
+        mov     cx,bx
+        xchg    bx,dx
+        shl     bx,1
+        xchg    bx,dx
+        jnc     @j17
+        inc     cx
+@j17:   pop     bx
+        dec     bl
+        push    bx
+
+        jnz     @j16
+@j18:   mov     bx,0002h
+        add     bx,sp
+        mov     al,[bx]
+        or      al,al
+        jz      @j20
+        js      @j19
+        call    ?UML10
+        jmps    @j18
+@j19:   call    ?UDV10
+        jmps    @j18
+@j20:   mov     bx,dx
+        mov     dx,cx
+        pop     cx
+        mov     al, @d1
+        call    ?FP40
+        pop     bx
+        pop     bx
+        push    cx
+        push    dx
+        jmp     bx
+@j21:   mov     al, @d8
+        or      al,al
+        jnz     @j22
+        pop     bx
+        jmp     @j14
+@j22:   dec     al
+        mov      @d8,al
+        mov     bx,@d9
+        mov     al,[bx]
+        inc     bx
+        mov     @d9,bx
+        ret
+@j23:   cmp     al,30h
+        jns     @j24
+        jmp     ?CNVER
+@j24:   cmp     al,3Ah
+        js      @j25
+        jmp     ?CNVER
+@j25:   sub     al,30h
+        ret
+
+
+        END
+
+

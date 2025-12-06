@@ -1,0 +1,26 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1IE20N'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?IE20N                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?IE20N: mov     ax,bx
+        cwd
+        or      ax,dx
+        jz      @j1
+        js      @j1
+        mov     al,01h
+@j1:    ret
+
+
+        END
+
+

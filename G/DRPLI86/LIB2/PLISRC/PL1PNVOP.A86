@@ -1,0 +1,192 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1PNVOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPB, ?FILAT
+
+
+        EXTRN           ?PNCPR:NEAR
+
+        PUBLIC          ?PNBOP                  ; Located at 3:0000h Type = 1
+        PUBLIC          ?PNCOP                  ; Located at 3:0005h Type = 1
+        PUBLIC          ?PNVOP                  ; Located at 3:0034h Type = 1
+
+?FPB    DSEG    common
+
+
+@f1     rd      1
+@f2     rw      1
+@f3     rs      0000fh
+@f4     rw      1
+@f5     rs      00017h
+
+
+DATA    DSEG
+
+
+@S23    dw      offset @S1
+
+@S1     rb      1
+
+
+CODE    CSEG
+
+
+?PNBOP: mov     dx,0300h
+        jmps    @j3
+?PNCOP: mov     cl,al
+        mov     al, @fa2
+        or      al,al
+        mov     al,cl
+        js      ?PNVOP
+        mov     bx,0002h
+        push    bx
+        pop     dx
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     ch,al
+        inc     ch
+@j1:    dec     ch
+        jz      @j2
+        mov     al,[bx]
+        inc     bx
+        cmp     al,27h
+        jnz     @j1
+        inc     dh
+        jmps    @j1
+@j2:    mov     al,cl
+        jmps    @j3
+?PNVOP: mov     dx,0001h
+@j3:    lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        mov     cl,al
+        mov     al, @fa1
+        or      al,al
+        js      @j4
+        mov     dx,0001h
+        jmp     @j10                      ; Large jump translated into short
+@j4:    mov     ch,00h
+        call    @j16
+        js      @j5
+        inc     cx
+@j5:    mov     al,dl
+        cmp     al,02h
+        jnz     @j6
+        inc     cx
+        inc     cx
+@j6:    mov     bx,@f4
+        mov     al,bh
+        or      al,bl
+        jz      @j8
+        mov     bl,dh
+        mov     bh,00h
+        lahf
+        add     bx,cx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        push    dx
+        push    bx
+        mov     bx,@f4
+        sub     bx,@f2
+
+        inc     bx
+        pop     dx
+        sub     bx,dx
+        pop     dx
+        mov     al,0Dh
+        jnc     @j7
+        call    @j17                      ; Large jump translated into short
+@j7:    mov     al,0Ah
+        jnc     @j8
+        call    @j17                      ; Large jump translated into short
+@j8:    call    @j16                      ; Large jump translated into short
+        mov     al,20h
+        js      @j9
+        call    @j17                      ; Large jump translated into short
+@j9:    mov     al,dl
+        dec     al
+        mov     al,27h
+        jz      @j10
+        call    @j17                      ; Large jump translated into short
+@j10:   pop     ax
+        xchg    al,ah
+        pop     cx
+        mov     bx,0000h
+        add     bx,sp
+@j11:   or      al,al
+        jz      @j13
+        dec     al
+        lahf
+        xchg    al,ah
+        push    ax
+        mov     al,[bx]
+        inc     bx
+        cmp     al,27h
+        jnz     @j12
+        mov     al,dl
+        cmp     al,02h
+        mov     al,27h
+        jnz     @j12
+        call    @j17                      ; Large jump translated into short
+@j12:   call    @j17                      ; Large jump translated into short
+        pop     ax
+        xchg    al,ah
+        jmps    @j11
+@j13:   mov     sp,bx
+        push    cx
+        mov     al,dl
+        dec     al
+        mov     al,27h
+        jz      @j14
+        call    @j17                      ; Large jump translated into short
+@j14:   mov     al,dl
+        or      al,al
+        mov     al,62h
+        jnz     @j15
+        call    @j17                      ; Large jump translated into short
+@j15:   ret
+@j16:   mov     bx,@f2
+        dec     bx
+        dec     bx
+        mov     al,bh
+        or      al,al
+        ret
+
+@j17:   lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        push    cx
+        push    dx
+        push    bx
+        mov      @S1,al
+        mov     bx,offset @S23
+        call    ?PNCPR
+        pop     bx
+        pop     dx
+        pop     cx
+        pop     ax
+        xchg    al,ah
+        sahf
+        ret
+
+
+?FILAT  DSEG    common
+
+
+@fa1    rs      00008h
+@fa2    rb      1
+
+
+        END
+
+

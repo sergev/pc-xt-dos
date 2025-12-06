@@ -1,0 +1,55 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FP40'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?UNDER:NEAR
+        EXTRN           ?OVERF:NEAR
+
+        PUBLIC          ?FP40                   ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FP40:  mov     si,dx
+        or      si,bx
+        jnz     @j1
+        xor     cx,cx
+        ret
+@j1:    or      dh,dh
+        js      @j2
+        dec     cx
+        shl     bx,1
+        rcl     dx,1
+        jmps    @j1
+@j2:    add     bx,0080h
+        adc     dx,+000h
+        jnc     @j3
+        rcr     dx,1
+        inc     cx
+@j3:    dec     cx
+        cmp     cx,+07Fh
+        jg      @j4
+        cmp     cx,-07Eh
+        jl      @j5
+        add     cx,+07Fh
+        mov     ch,cl
+        mov     cl,dh
+        mov     dh,dl
+        mov     dl,bh
+        shl     cl,1
+        shr     cx,1
+        or      ch,al
+        ret
+@j4:    mov     al,01h
+        jmp     ?OVERF
+@j5:    mov     al,01h
+        jmp     ?UNDER
+
+
+        END
+
+

@@ -1,0 +1,31 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1SKPOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SKPPR:NEAR
+
+        PUBLIC          ?SKPOP                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+
+@d2     rb      1
+
+
+CODE    CSEG
+
+
+?SKPOP: mov      @d2,al
+        mov     bx,offset @d1
+        jmp     ?SKPPR
+
+
+        END
+
+

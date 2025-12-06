@@ -1,0 +1,47 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DCMOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?DCMOP                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?DCOMP                  ; Located at 1:0008h Type = 1
+
+CODE    CSEG
+
+
+?DCMOP: call    ?DCOMP                    ; Large jump translated into short
+        pop     dx
+        mov     sp,si
+        jmp     dx
+?DCOMP: mov     di,0004h
+        add     di,sp
+        mov     si,di
+        mov     cx,0008h
+        add     si,cx
+        sub     ah,ah
+@j1:    lodsb
+        sbb     al,[di]
+        das
+        inc     di
+        pushf
+        or      ah,al
+        popf
+        loop    @j1
+        or      ah,ah
+        jz      @j3
+        or      al,al
+        mov     al,02h
+        jns     @j2
+        sub     al,al
+@j2:    cmp     al,01h
+@j3:    mov     al,80h
+        ret
+
+
+        END
+
+

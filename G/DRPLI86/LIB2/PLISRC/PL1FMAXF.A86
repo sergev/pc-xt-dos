@@ -1,0 +1,43 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FMAXF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FC44S:NEAR
+
+        PUBLIC          ?FMAXF                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?FMINF                  ; Located at 1:000Bh Type = 1
+
+CODE    CSEG
+
+
+?FMAXF: call    @j3                       ; Large jump translated into short
+        call    ?FC44S
+        js      @j2
+@j1:    ret     0004h
+?FMINF: call    @j3                       ; Large jump translated into short
+        call    ?FC44S
+        js      @j1
+@j2:    pop     bx
+        pop     cx
+        pop     dx
+        pop     ax
+        pop     ax
+        push    dx
+        push    cx
+        jmp     bx
+@j3:    pop     cx
+        mov     bp,sp
+        push    word ptr [bp]+008h
+        push    word ptr [bp]+006h
+        push    word ptr [bp]+004h
+        push    word ptr [bp]+002h
+        jmp     cx
+
+
+        END
+
+

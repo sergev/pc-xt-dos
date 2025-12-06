@@ -1,0 +1,47 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FTRNC'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+        EXTRN           ?FP40:NEAR
+        EXTRN           ?FPSHF:NEAR
+
+        PUBLIC          ?FTRNC                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FTRNC: mov     bx,sp
+        inc     bx
+        inc     bx
+        call    ?FU40
+        push    ax
+        xchg    cx,bx
+        xchg    bx,dx
+        cmp     cx,+000h
+        jnl     @j1
+        sub     dx,dx
+        sub     bh,bh
+        jmps    @j2
+@j1:    cmp     cl,18h
+        jnc     @j2
+        mov     al,18h
+        sub     al,cl
+        call    ?FPSHF
+@j2:    pop     ax
+        call    ?FP40
+        pop     bx
+        pop     ax
+        pop     ax
+        push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

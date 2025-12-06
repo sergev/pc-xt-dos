@@ -1,0 +1,8 @@
+ cosh: proc(arg) returns(float bin(24));
+ dcl arg         float bin(24);
+ dcl ?fpex2      entry(fixed bin(7), float bin(24)) returns(float bin(24));
+ dcl fixed_m1    fixed bin(15) static init(-1);
+ dcl ex_arg      fixed bin(7) based;
+ return(?fpex2(addr(fixed_m1)->ex_arg, exp(arg) + exp(-arg)));
+ end cosh;
+

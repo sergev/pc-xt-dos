@@ -1,0 +1,49 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1BC22N'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?BC22N                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?BC12N                  ; Located at 1:0019h Type = 1
+
+CODE    CSEG
+
+
+?BC22N: xchg    bx,dx
+        mov     al,cl
+        not     al
+        and     al,bl
+        mov     bl,al
+        mov     al,dh
+@j1:    ror     al,1
+        dec     ch
+        jnz     @j1
+        and     al,cl
+        or      al,bl
+        mov     bl,al
+        ret
+?BC12N: mov     al,dh
+        and     al,cl
+        mov     dh,al
+@j2:    and     al,al
+        mov     al,bh
+        rcr     al,1
+        mov     bh,al
+        mov     al,bl
+        rcr     al,1
+        mov     bl,al
+        dec     ch
+        jnz     @j2
+        mov     al,dh
+        or      al,bh
+        mov     bh,al
+        ret
+
+
+        END
+
+

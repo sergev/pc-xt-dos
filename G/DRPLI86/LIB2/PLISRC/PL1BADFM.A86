@@ -1,0 +1,43 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1BADFM'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPBSTK
+
+
+        EXTRN           ?SIGNAL:NEAR
+
+        PUBLIC          ?BADFM                  ; Located at 3:0000h Type = 1
+
+?FPBSTK DSEG common
+
+
+@fb1    rs      00013h
+
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+        dw      offset @d3
+        dw      offset @fb1
+        dw      offset @d4
+@d2     db      000h
+@d3     db      006h
+@d4     dw      offset @d5
+@d5     db      ' Invalid Format Item',000h
+
+
+CODE    CSEG
+
+
+?BADFM: mov     bx,offset @d1
+        jmp     ?SIGNAL
+
+
+        END
+
+

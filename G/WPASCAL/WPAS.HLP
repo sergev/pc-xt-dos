@@ -1,0 +1,1128 @@
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³ Copyright by WATCOM Systems Inc. 1988.  All rights reserved.  ³
+ ³ No part of this publication may be reproduced in any form or  ³
+ ³ by any means - graphic, electronic or mechanical, including	 ³
+ ³ photocopying, recording, taping or information storage and	 ³
+ ³ retrieval systems - except for its intended use with WATCOM	 ³
+ ³ Pascal.							 ³
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+All help topics must be stored in order of the ASCII collating sequence.
+Each topic is identified by a header consisting of a string of 4 colons
+followed by the topic name.  Any alphabetic characters must be entered in
+upper-case.  Use the WATCOM Editor COMPRESS utility to reduce the size of
+this file after it has been editted.
+::::#
+
+   Syntax:	<line-id>#
+
+   Description: The number-sign command ("#") displays the line number of
+		the specified line.  Lines are numbered in the workspace
+		starting at 1.	The "nth" line in a workspace has line
+		number "n".  The "<beginning of file>" line is line number 0
+		in the workspace.
+
+   Examples:	$#	    Position to the last line in the workspace
+			    and report its line number.
+		-100#	    Position back one hundred lines in the
+			    workspace and report the new line number.
+		#	    Report the line number of the current line.
+::::=
+
+   Syntax:	=
+
+   Description: The equal-sign command ("=") repeats the last command.
+::::?
+
+   Syntax:	?
+
+   Description: The question-mark command ("?") recalls the last command so
+		that it may be altered and resubmitted.
+::::@
+
+   Syntax:	@ <file-name>
+
+   Description: The indirection command ("@") causes the editor commands
+		stored in the specified file to be executed.  The commands
+		are executed without pause until end-of-file is reached.
+
+		The editor automatically executes an indirection command at
+		start-up time. WATCOM Pascal uses the file "WPAS.PRF". The
+		"profile" file need not exist. This feature allows you to
+		store a command or commands in the "profile" file which will
+		be automatically executed when the editor is started.
+::::APPEND
+
+   Syntax:	<line-range>APPend <file-name>
+
+   Description: The append command copies all the lines specified by the
+		<line-range> to the end of the file specified by
+		<file-name>.  If <line-range> is not specified then only the
+		current line is appended to the specified file.
+
+   Examples:	app collect
+			    Append the current line to the file
+			    named "collect".
+		.,.+2append group
+			    Append the 3 lines identified by the line-
+			    range to the file named "group".
+		*/integer/append decls.fil
+			    Append all lines containing the word "integer"
+			    to the file "decls.fil".  Previous contents of
+			    "decls.fil" are not changed.
+::::AUTOSAVE
+
+   Syntax:	AUTosave <count>
+
+   Description: The autosave command is used to control automatic saving of the
+		workspace to a "save" file.  After every <count> alterations
+		to a workspace, the workspace is saved on disk.  Only the
+		current workspace is saved.  Alterations of the workspace
+		include addition of lines and changes to lines.  If <count>
+		is 0 then no checkpointing is done (i.e., checkpointing is
+		turned off).  The current setting of the autosave count can
+		be determined by simply typing "autosave".  The name of the
+		"checkpoint" file is "autosave.tmp".
+
+   Examples:	autosave 50    Set the checkpointing level to 50
+			       alterations.
+		auto	       Determine the current checkpoint level.
+		autosave 0     Turn off checkpointing.
+::::BELL
+
+   Syntax:	BELl <column>
+
+   Description: The BELL command will cause the editor to issue an audible
+		alarm (a beep) whenever the cursor moves from column <column>
+		into column <column>+1.  If <column> is not specified then the
+		current setting is displayed.
+
+   Example:	bell 72
+
+		This will cause the editor to issue an audible alarm (a beep)
+		whenever the cursor moves from column 72 into column 73.
+::::BYE
+
+   Syntax:	BYE
+
+   Description: The bye command is used to leave the current workspace.  The
+		next workspace is entered.  If there are no more workspaces
+		then the editor returns to the system.
+
+		If the workspace has been altered but not stored in a file
+		since the alteration then the user is so informed and must
+		either save the workspace in a file or use the quit command.
+::::CANCEL
+
+   Syntax:	CANcel
+
+   Description: The cancel command is used to exit from the editor without
+		saving any workspaces.
+
+		If any workspace has been altered but not stored in a file
+		since the alteration then the workspace will be lost.
+::::CHANGE
+
+   Syntax:	<line-range>Change/text1/text2/
+		<line-range>Changen/text1/text2/
+		<line-range>Change*/text1/text2/
+		<line-id>Change
+
+   Description: There are two fundamental types of change commands available in
+		the editor.  The first, illustrated by the first three models
+		above, changes the text denoted by "text1" to the text denoted
+		by "text2" in all the lines denoted by the <line-range>.  The
+		first form changes only the first occurrence of "text1" to
+		"text2", whereas the second and third change the nth and all
+		occurrences, respectively.  The second type of change command,
+		illustrated by the fourth model above, allows screen editing of
+		the current line.
+
+   Examples:	c/a/b	    Change the first occurrence of "a" to "b"
+			    in the current line.
+		c*/y/z	    Change all occurrences of "y" to  "z" in
+			    the current line.
+		.,$c*/ctr/counter
+			    Change all occurrences of "ctr" to "counter"
+			    from the current line to the end of the file.
+		c/abc/abc%/def
+			    Change the first occurrence of "abc" to
+			    "abc/def" in the current line.
+		c/disk/%&=%&
+			    Change the first occurrence of "disk" to
+			    "disk=disk" in the current line.
+::::CONFIG
+
+   Syntax:	CONFIG <program-name>
+
+   Description: This program may be used to configure the WATCOM Editor or
+		other WATCOM software.	The program is interactive and uses
+		pull-down menus for option selection.  See the appropriate
+		User's Guide for detailed information on configuration options.
+
+   Examples:	CONFIG WEDIT
+		CONFIG WPAS
+::::CSET
+
+   Syntax:	CSET <colour-mode-options>
+
+   Description: This program may be used to set screen colour and mode.
+		To run from the editor, type "SYS CSET etc.".  CSET was
+		written by WATCOM Systems Inc. and is provided on the
+		editor diskette.
+
+   Examples:	CSET BACK BLUE FORE YELLO BORD RED MODE CO80
+		    Set background colour to blue, foreground colour
+		    to yellow, border colour to red, and mode to
+		    25 X 80 colour.
+		CSET BACK MAG FORE LT. GREEN BORD BROWN MODE CO40
+		    Set background colour to magenta, foreground colour
+		    to light green, border colour to brown, and mode to
+		    25 X 40 colour.
+		CSET
+		    Set colours and mode interactively using pop-down
+		    menus.
+
+   Note:	Foreground and background colours may also be changed using the
+		editor's function keys F13 (foreground) and F14 (background).
+::::CUT
+
+   Syntax:	<line-range>CUT <ws-name>
+		<line-range>CUT
+
+   Description: The cut command moves all the lines specified by <line-range>
+		into the workspace specified by <ws-name>.  The previous
+		contents of the destination workspace are destroyed.  If
+		<line-range> is not specified then only the current line is
+		moved.	If <ws-name> is not specified then the "scrap"
+		workspace (".scrap.") is assumed.  It is illegal to "cut" any
+		part of the current workspace into the current workspace.
+
+   Examples:	cut temp    Move the current line into the workspace
+			    named "temp".  The previous contents of the
+			    workspace named "temp" are lost.
+		.,.+2cut    Move the 3 lines identified by the line-range
+			    into the "scrap" workspace.  The previous
+			    contents of the "scrap" workspace are lost.
+::::DATE
+
+   Syntax:	DATe
+
+   Description: The date command displays the current date and time.
+::::DELETE
+
+   Syntax:	<line-range>Delete
+
+   Description: The delete command deletes all lines in the specified line
+		range.
+
+   Examples:	*d	    Delete all lines from the current workspace.
+		1,10d	    Delete lines 1 through 10 inclusive from
+			    the workspace.  Line 11 becomes line 1,
+			    line 12 becomes line 2, etc.
+		*/note/d    Delete all lines containing the string "note".
+::::DIRECTORY
+
+   Syntax:	DIrectory <directory-name>
+		DIrectory <directory-name>  >  <file-name>
+
+   Description: The directory command lists the names of all the files that
+		reside in the specified directory.  Any valid system
+		directory specification is permitted.  DOS path ("\") and
+		global filename characters ("*" and "?") are permitted
+		within the directory name specification.  A "?" in the
+		directory name indicates that any character can occupy that
+		position.  A "*" means that any character can occupy that
+		position and all remaining positions in the directory
+		filename or extension.	If <file-name> is also specified
+		then the directory listing is placed in the named file.
+
+   Examples:	di	      List the current default directory.
+		di b:*.pas    List all file names with a file extension
+			      of "pas" that reside on the diskette in
+			      the B drive.
+		di c:pascal   List the sub-directory "pascal" of the "C:"
+			      disk.
+		di > LPT1:    List the default directory to the printer.
+		di a: > directry.dat
+			      List the directory of the "A:" disk to a
+			      file called "directry.dat".
+::::EDIT
+
+   Syntax:	Edit <file-name>
+
+   Description: The edit command allows you to edit another file or workspace.
+		If <file-name> is specified then the editor searches all of
+		your workspaces for a corresponding name.  If it does not find
+		a workspace with the specified name then it attempts to
+		locate a file on disk storage by that name and copy it into a
+		new workspace.	The new workspace is given the name that you
+		specified.
+
+   Example:	ed demo   Edit a file named "demo".  Create a workspace named
+			  "demo" and, if a file with that name exists, copy
+			  the contents of that file into the workspace.
+::::ERASE
+
+   Syntax:	ERAse <file-name>
+
+   Description: The erase command causes the named file to be deleted from the
+		disk.  DOS path ("\") and global filename characters ("*" and
+		"?") may be used to specify the names of files to be deleted.
+		The pattern matching used by the erase command is the same as
+		that used by DOS.  Caution should be used when specifying
+		global filename characters since many files may be deleted.
+		To see which files will be affected, use the directory
+		command together with the filename specification.
+
+   Examples:	erase demo    Remove the file "demo".
+		era *.tst     Remove from the DOS default disk all files
+			      that have a file extension of "tst".
+		eras b:*.old  Remove from the DOS "B:" disk all files
+			      that have a file extension of "old".
+::::EXIT
+
+   Syntax:	EXit <file-name>
+
+   Description: The exit command copies all the lines in the current
+		workspace into the file specified by <file-name>.  If a
+		filename is not specified then the current workspace name is
+		assumed.  In the latter case, if the current filename is not
+		defined (i.e.  ".no_name."), an error message is issued and
+		the contents of the workspace are not stored on disk.
+
+		If the file is written successfully then the current
+		workspace is removed from the computer's memory.  The editor
+		will move to the next workspace in the list as shown by the
+		show command.
+
+   Examples:	ex demo     Put the entire workspace into the file name "demo".
+			    If the file "demo" exists, the editor will ask
+			    you to confirm the replacement of the file.  If
+			    the file is successfully written then move to
+			    another workspace if there is one; otherwise
+			    return to the system.
+		exit	    Put the entire workspace into a file whose name is
+			    the same as the workspace name.  The previous
+			    contents of a file on disk with that same name
+			    are lost.  If successful then move to another
+			    workspace if there is one; otherwise return to
+			    the system.
+::::FILL
+
+   Syntax:	<line-range>Fill <lm> <rm> <in>
+
+   Description: The fill command causes the text within the specified line
+		range to be "filled out" between the left and right margins.
+		Essentially all the "words" (a word is any text separated by
+		one or more spaces) within the specified line range are
+		placed on one or more lines such that each line contains as
+		many words as will fit between the left and right margins.
+		The left and right margins and indentation for the first
+		line may be specified in the fill command.
+
+   Examples:	.,+2f 10 60 5
+
+		Fill the current line and the next two lines using a left
+		margin of 10 and a right margin of 60.	The first line of the
+		resulting lines will be indented right of the left margin by 5
+		columns.
+
+		.,+/end./f
+
+		Fill all lines from the current line up to the line containing
+		the string "end." using the currently established left margin,
+		right margin and indentation settings.
+
+		.,+/(2)/-1f 8 50 -4
+
+		Fill all lines from the current line up to the line preceding
+		the line containing the string "(2)" using a left margin of 8
+		and a right margin of 50. The first line of the resulting
+		lines will be indented left of the left margin by 4 columns.
+::::GET
+
+   Syntax:	<line-id>Get <file-name>
+
+   Description: The get command causes the entire contents of the specified
+		file to be inserted following the line specified by
+		<line-id>.  A filename must be specified.  The get command
+		provides a convenient way of merging the contents of a
+		second file with the one that you are editing.
+
+   Examples:	$g demo       Insert the file named "demo" after the
+			      last line in the current workspace.
+		get example   Insert the file name "example" after the
+			      current line in the workspace.
+::::HELP
+
+   Syntax:	Help <topic>
+
+   Description: The help command may be used to obtain help on a particular
+		topic.	If no <topic> is specified then a default topic is
+		displayed.  This will include a list of the available topics.
+
+   Examples:	help	   List the default help topic on the screen.
+		help edit  Help on the "edit" command is requested. Provided
+			   that the "help" file is accessible, the "help"
+			   topic will be displayed upon the screen.
+		help ac    Help on the topic "ac" is requested.  If no help is
+			   available on that topic, a message similar to the
+			   following is displayed.
+
+			   wedit.hlp - Topic not found. Lines transferred = 0
+
+			   For help on editor commands, unique short forms may
+			   be used.  If the short form is ambiguous, help is
+			   presented on the first topic found that matches.
+::::I/O ROUTINES
+Input/Output
+
+    append( f <, filename > )
+		initializes file f for writing by positioning it at end-of-file
+
+    close( f )
+		closes the file denoted by the file parameter f
+
+    eof( f ) : boolean
+		returns true or false depending upon whether file f is
+		positioned at end-of-file
+
+    eoln( f ) : boolean
+		returns true or false depending upon whether file f is
+		positioned at end-of-line
+
+    get( f )
+		advances the window for file f to the next element and sets
+		f@ to the new element
+
+    getcursor( row, column )
+		assigns the current cursor position to row and column
+
+    iocheck( check )
+		disables or enables checking for errors on I/O operations
+
+    ioerrmsg( str )
+		returns any error message text associated with the last I/O
+		operation
+
+    iostatus : integer
+		returns the status of the last I/O operation
+
+    page( f )
+		positions the textfile f at top-of-page
+
+    poscursor( row, column )
+		positions the cursor at row and column
+
+    prompt( str, ... )
+		displays str, leaving the cursor at the end of the line, and
+		then performs readln( ... )
+
+    put( f )
+		writes the value of f@ to the file f
+
+    read( f, ... )
+		reads items from the file f and assigns them to the
+		corresponding variables in the parameter list
+
+    readln( f, ... )
+		reads items from the textfile f, assigns them to the
+		corresponding variables in the parameter list and then
+		advances to the next line in the file
+
+    rename( oldname, newname )
+		renames file oldname to newname
+
+    reset( f <, filename > )
+		initializes file f for reading
+
+    rewrite( f <, filename > )
+		initializes the file f for writing
+
+    scratch( filename )
+		erases file filename
+
+    setnext( f, record )
+		positions the file f at the record denoted by record
+
+    update( f <, filename > )
+		initializes the file f for reading and writing (that is,
+		"update" mode)
+
+    write( f, ... )
+		writes the specified values to the file f
+
+    writeln( f, ... )
+		writes the specified values to the textfile f and then writes
+		a "newline" marker
+
+Keyed Files
+
+    createkey( f <, filename > )
+		creates keyed file f
+
+    deletekey( f )
+		deletes the current record from the keyed file f
+
+    getkey( f, key )
+		retrieves the key associated with the record just read from the
+		keyed file f
+
+    setnextkey( f, key, <, old > )
+		positions the keyed file f to the record with the specified key
+
+    setrelkey( f, key, relation )
+		positions the keyed file f to a record relative to the specified
+		key
+::::IBM PC SPECIFIC ROUTINES
+IBM PC Specific Procedures and Functions
+
+    askmode : integer
+		returns the current BIOS mode setting
+
+    background( colour )
+		sets the background to the specified colour
+
+    border( colour )
+		sets the border to the specified colour
+
+    colormap( colour1, colour2 )
+		sets palette colour1 to the specified colour2
+
+    foreground( colour )
+		sets the foreground to the specified colour
+
+    mode <( new_mode )> : integer
+		returns and optionally sets the logical display mode
+
+    palette( palet )
+		sets the palette to the specified value
+
+    setmode( mode )
+		sets the BIOS video mode to the specified value
+
+    shell( string ) : integer
+		executes the DOS command in string
+
+    width <( new_width )> : integer
+		returns and optionally sets the display width
+::::INPUT
+
+   Syntax:	<line-id>Input <text>
+		<line-id>Input
+
+   Description: The input command is used to enter text into the current
+		workspace from the keyboard.  If a <line-id> is specified
+		then text is entered after that line.  If text follows the
+		command, it is inserted into the workspace and the editor
+		remains in "command" mode.  If no text follows the command
+		then the editor enters line insertion or "input" mode.
+		Subsequent text is entered into the file until a line
+		containing only a period (".") is entered.
+
+		If, while in input mode, any function key, cursor up/down
+		key, or page up/down key is pressed, the editor will switch
+		you from input mode to screen editing mode.  To return to the
+		command line in this case, press the "Screen/Command"
+		function key.
+
+   Examples:	i	    Enter input mode just after the current line.
+		3i	    Enter input mode after the third line in
+			    the current workspace.
+		i This text is inserted after the current line.
+			    The text following the command "i" is inserted
+			    into the workspace after the current line.	The
+			    single space before the word "This" is not
+			    considered to be a part of the input text.
+::::LIST
+
+   Syntax:	<line-range>
+
+   Description: Text may be viewed ("listed") simply by specifying the range
+		of text to be listed.  In other words, the "list" command is
+		the default command if no other is given.  The current line
+		is set to the last line in the line range.
+
+		In the special case where <line-range> is not specified
+		(i.e., the "return" key is pressed), the next line in the
+		workspace is displayed (and becomes the new current line).
+
+   Examples:	*	    List the entire workspace.	The current line
+			    becomes $.
+		1	    List the first line and set the current line to
+			    that line.
+		1,.	    List all lines from the first line to the current
+			    line.  The current line remains the same.
+::::MACHINE INTERFACING
+Machine Interfacing Functions and Procedures
+
+    address( variable ) : integer
+		returns the machine address of variable
+
+    bitread( bitnumber, address ) : boolean
+		returns true if the indicated bit is on in the byte at address,
+		and false otherwise
+
+    bitreset( bitnumber, address )
+		turns off the indicated bit in the byte at address
+
+    bitset( bitnumber, address )
+		turns on the indicated bit in the byte at address
+
+    intr( int_number, regs )
+		performs software interrupt int_number with the registers
+		containing the values in regs
+
+    peek( address ) : 0..255
+		returns the byte at address
+
+    poke( address, value )
+		stores value at memory location address
+
+    segment <( i )> : integer
+		returns and optionally sets the segment address used as a
+		base for address parameters
+
+    sysfunc( address, ... ) : integer
+		invokes the machine-language function at address
+
+    sysproc( address, ... )
+		invokes the machine-language procedure at address
+
+    worksize : integer
+		returns the number of bytes available for working storage
+::::MARGIN
+
+   Syntax:	MARgin <mar>
+
+   Description: The margin command allows you to set the left margin of the
+		text to be displayed in the editing window.  For example, if
+		the margin is set to 10 then columns 10, 11, 12, etc. are
+		displayed in the window.  Text to the left of column 10 will
+		not be displayed.  The margin command allows you to select
+		which portion of the lines in the workspace is to be
+		displayed.
+
+   Examples:	margin +9   Adjust the left margin up by 9.
+		margin -12  Adjust the left margin down by 12.
+		marg 15     Set the left margin to 15.
+::::MATHEMATICAL FUNCTIONS
+Mathematical Functions
+
+    sin( x )
+		yields the sine of x radians
+
+    cos( x )
+		yields the cosine of x radians
+
+    tan( x )
+		yields the tangent of x radians
+
+    arcsin( x )
+		yields the arc-sine of x (in radians)
+
+    arccos( x )
+		yields the arc-cosine of x (in radians)
+
+    arctan( x )
+		the arc-tangent of x (in radians)
+
+    arctan2( y, x )
+		yields the arc-tangent of y/x (in radians)
+
+    ln( x )
+		yields the natural logarithm of x
+
+    exp( x )
+		yields e raised to the power of x
+
+    sqrt( x )
+		yields the square root of x
+
+    abs( x )
+		yields the absolute value of x
+
+    sqr( x )
+		yields the square of x
+
+    trunc( x )
+		converts x to an integer value by truncation
+
+    round( x )
+		rounds x to the nearest integer value
+::::MISCELLANEOUS ROUTINES
+Dynamic Variable Procedures
+
+    new( x )
+		creates a variable of the type to which x points
+
+    dispose( x )
+		destroys the variable to which x points
+
+Ordinal Functions
+
+    ord( x )
+		returns the ordinal position of x as an integer
+
+    chr( x )
+		converts the integer x to the corresponding character value
+
+    succ( x )
+		returns the next element in the ordering defined by the
+		type of x
+
+    pred( x )
+		returns the preceding element in the ordering defined by the
+		type of x
+
+Random Number Functions and Procedures
+
+    initrandom( seed, modulus )
+		uses seed to initialize the random number generator so that
+		numbers are generated in the range 0..(modulus-1)
+
+    random : integer
+		returns a random integer value
+
+Time and Date
+
+    datestr( str )
+		assigns a string containing the date to str
+
+    time : real
+		returns the number of seconds since midnight
+
+    timestr( str )
+		assigns a string containing the current time of day to str
+
+Miscellaneous
+
+    checkoff
+		disables the uninitialized variable checking
+
+    checkon
+		enables the uninitialized variable checking (default)
+
+    odd( x ) : Boolean
+		returns true if the integer value x is an odd number,
+		otherwise returns false
+
+    pause
+		invokes the interactive debugger under program control
+::::MSG
+
+   Syntax:	Msg <message>
+
+   Description: The msg command allows you to change the text that is displayed
+		in the second message line of the screen.  Normally this line
+		displays a function key help line.  This line may be changed to
+		display any message you like.  This command is most useful when
+		employed with the editor's "profile" feature (see also the
+		description of the "@" command).
+
+   Examples:	msg Meeting on Tuesday at 3:00 with Anne
+			    Place a new message on the message line.
+		m Assignment due tomorrow, Nov. 12
+			    Place a new message on the message line.
+::::NAME
+
+   Syntax:	Name <ws-name>
+
+   Description: The name command sets or displays the current workspace name
+		which the put and exit commands use as the default filename.
+		When no <ws-name> is specified the current workspace name is
+		displayed.  When <ws-name> is specified, the current workspace
+		name is changed.  Note: The names of all workspaces may be
+		displayed using the show command.
+
+   Examples:	name xref   The current workspace name is changed to "xref".
+		name	    The current workspace name is displayed.
+::::PAGE
+
+   Syntax:	PAGe <ps> <tm> <bm> <in>
+
+   Description: The page command sets or displays the current "page"
+		parameters which are used by the print command.
+		<ps> The "page-size" parameter is the total number of lines
+		     on a page.  It is a measure of the total number of
+		     lines that could be printed on a page.  For example, an
+		     11 inch page with a spacing of 6 lines per inch is 66
+		     lines long.
+		<tm> The "top-margin" parameter specifies the number of
+		     blank lines that are to appear at the top of each
+		     printed page.
+		<bm> The "bottom-margin" parameter specifies the number of
+		     blank lines that are to appear at the bottom of each
+		     printed page.
+		<in> The "indent" parameter specifies the number of blank
+		     columns that are to appear to the left of the printed
+		     text.
+		Note: The page command is not available in the editor
+		incorporated with the language interpreters.  It is only
+		available in the WATCOM Editor.
+
+   Examples:	page 66 6 5 10
+			The page is 66 lines long.  A top margin of 6 blank
+			lines and a bottom margin of 5 blank lines is
+			desired.  All printed lines are indented by 10 spaces.
+::::PASTE
+
+   Syntax:	<line-id>PASte <ws-name>
+		<line-id>PASte
+
+   Description: The paste command causes the entire contents of the specified
+		workspace to be inserted following the line specified by
+		<line-id>.  If <line-id> is not specified then the current
+		line is assumed.  If no workspace name is specified then the
+		"scrap" workspace (".scrap.") is assumed.  The contents of the
+		specified (source) workspace are unchanged.  It is illegal to
+		"paste" the current workspace into the current workspace.
+
+   Examples:	$pas buffer   Insert a copy of the workspace named "buffer"
+			      after the last line in the current workspace.
+		paste	      Insert a copy of the contents of the "scrap"
+			      workspace after the current line.
+		paste	      Insert a second copy of the contents of the
+			      "scrap" workspace after the current line.
+::::PF
+
+   Syntax:	PF <number> <text>
+
+   Description: The pf command allows the user to set up to 10 programmable
+		function keys.	The programmable function keys are Alt/F1
+		through Alt/F10.  <number> is a number from 1 to 10.
+		<text> is a string of text.  It may contain special
+		control sequences which are converted to single character
+		values.  Control sequences must take one of the following
+		forms:
+		<acc> where "acc" is a valid mnemonic for the 32 ASCII
+		      control codes.
+		<ddd> where "ddd" is a valid decimal number representing a
+		      value from 0 to 255.
+		<$hh> where "hh" is a valid hexadecimal number representing
+		      a value from "00" to "FF".
+		The string of text associated with a programmable function
+		key is produced by depressing the "Alt" key and then the
+		appropriate function key.  If a programmable function key is
+		not defined then a beeping sound is produced by the computer.
+		The current settings of the 10 programmable functions keys is
+		shown by pressing the "PF Help" function key.
+
+   Examples:	pf 1 exit<cr>
+		     Sets the Alt/F1 key combination to produce the string
+		     "exit" followed by a carriage return.
+		pf 2 Procedure(<32>
+		     Sets the Alt/F2 key combination to produce the string
+		     "Procedure(" followed by a blank.
+::::PLAY
+
+   Syntax:	<line-range>PLAy <begin>
+
+   Description: The "play" command plays all the lines specified by the
+		<line-range>.  Any line beginning with an "!" character is
+		treated as a comment and is not played.  The optional keyword
+		"begin" may be specified in order to reset the style,
+		tempo, octave, note length, and accidentals back to their
+		defaults.
+
+::::PRINT
+
+   Syntax:	<line-range>PRInt <file-name>
+
+   Description: The print command copies all the lines specified by
+		<line-range> into the file specified by <file-name>.  If
+		<line-range> is not specified then the entire file is copied
+		(equivalent to "*print <file-name>").  If <file-name> is not
+		specified then the printer is assumed.
+
+		Special control sequences, found in any lines, are
+		converted to single byte values before being transmitted to
+		the device or file.  Control sequences must take one of the
+		following forms:
+		<acc> where "acc" is a valid mnemonic for the 32 ASCII
+		      control codes.
+		<ddd> where "ddd" is a valid decimal number representing a
+		      value from 0 to 255.
+		<$hh> where "hh" is a valid hexadecimal number representing
+		      a value from "00" to "FF".
+
+		Note: The print command is not available in the editor
+		incorporated with the language interpreters.  It is only
+		available in the WATCOM Editor.
+
+   Examples:	print nov1484.let
+			    Print all lines into the file named
+			    "nov1484.let".  If the file "nov1484.let"
+			    exists, the editor will ask you to confirm the
+			    replacement of the file.  The previous contents
+			    of the file named "nov1484.let" will be lost.
+		.,.+2print  Print the 3 lines identified by the line-range
+			    to the printer.
+		print	    Print all lines to the printer.
+		print con   Print all lines to the screen.
+::::PUT
+
+   Syntax:	<line-range>Put <file-name>
+
+   Description: The put command copies all the lines specified by <line-range>
+		into the file specified by <file-name>.  If <line-range> is not
+		specified then the entire workspace is copied (equivalent to
+		"*p <file-name>").  If <file-name> is not specified then the
+		current workspace name is used and hence must be defined (i.e.,
+		it must not be ".no_name.").
+
+   Examples:	p demo	    Put the entire workspace into the file named
+			    "demo".  If the file "demo" exists, the editor
+			    will ask you to confirm the replacement of the
+			    file.
+		put	    Put the entire workspace into a file whose name
+			    is the same as the workspace name.	The previous
+			    contents of a file on disk with that same name
+			    are lost.
+		.,.+2p temp Put the 3 lines identified by the line-range
+			    into the file named "temp".  If the file "temp"
+			    exists, the editor will ask you to confirm the
+			    replacement of the file.
+::::QUIT
+
+   Syntax:	QUIT
+
+   Description: The quit command is used to abandon the current workspace.
+		The current workspace is removed from the computer's memory
+		and the next workspace is entered.  If there are no more
+		workspaces then the editor returns to the invoking system.
+		If the workspace has been altered and not stored in a file
+		since the alteration then the user is not informed.  This
+		command is provided as a means of leaving a workspace after
+		it has been modified without storing the modified workspace
+		in a file.
+::::RENAME
+
+   Syntax:	REName <file-spec-1> <file-name-2>
+
+   Description: The rename command causes the file specified by <file-spec-1>
+		to have its name changed to <file-name-2>.  DOS path ("\") and
+		global filename characters ("*" and "?") may be used to
+		specify one or more files to be renamed.
+
+   Examples:	ren test oldtest
+			    Rename the file "test" to the name "oldtest".
+		ren b:mark.* grade.*
+			    Rename all files on the DOS "B:" disk drive that
+			    have a filename of "mark" to have a filename
+			    starting with "grade".
+::::RUN
+
+   Syntax:	RUN
+
+   Description: When the editor is being used in conjunction with a language
+		processor, the run command executes the program.  When used
+		in the editor alone, the run command causes the editor to
+		process the commands in the "profile" file (see also the
+		description of the "@" command).
+::::SEARCH
+
+   Syntax:	/<search-string>/
+		+/<search-string>/
+		-/<search-string>/
+
+   Description: A line containing a specific string of text may be located
+		by specifying a search string.	There are three general ways
+		to locate a line that contains a specific string.  They are:
+
+		/string/  Locate the first line in the workspace containing
+			  the text "string".
+		+/string/ Locate the next occurrence of the text "string"
+			  following the current line.
+		-/string/ Locate the previous occurrence of the text
+			  "string" before the current line.
+
+		The trailing "/" is optional but must be present if a
+		command is specified following the search command.
+
+   Examples:	/text/	    Locate the first line in the workspace containing
+			    the string "text".
+		+/computer/ Locate the next line (following the current
+			    line) in the workspace containing the string
+			    "computer".
+		+/next/ change*/line/lines
+			    Locate the next line in the workspace containing
+			    the string "next" and change all occurrences of
+			    "line" to "lines" in that line.
+::::SHOW
+
+   Syntax:	SHow
+
+   Description: The show command displays the names of all workspaces
+		currently being edited.  The "scrap" workspace is denoted by
+		the name ".scrap.".  An unnamed workspace is denoted by
+		".no_name.".  The current workspace is indicated by the ">"
+		symbol to the left of the name.
+
+   Examples:	show	    test.dat
+			    test1.dat
+			    .scrap.
+			   >scroll.asm
+			    srxoff.asm
+::::STRING MANIPULATION
+String Manipulation Functions and Procedures
+
+     htoi( str ) : integer
+		returns the value of the hexadecimal number found in str
+
+     itoh( value, str )
+		formats the integer in value as a hexadecimal number in str
+
+     ltrim( str )
+		removes leading blanks from str
+
+     rtos( value, str <, decimal > )
+		formats the real number value into the string str
+
+     rtrim( str )
+		removes trailing blanks from str
+
+     stor( str ) : real
+		returns the value of the real number found in str
+
+     strconcat( str1, str2 )
+		concatenates str2 to str1
+
+     strdelete( string, length, offset )
+		removes length characters from string beginning at index offset
+
+     strinsert( str1, str2, offset )
+		inserts str2 into str1 beginning at index offset
+
+     strlen( string ) : integer
+		returns the current length of string
+
+     strrpt( str1, str2, n )
+		assigns n concatenated repetitions of str2 to str1
+
+     strscan( str1, str2 ) : integer
+		searches str1 for an occurrence of str2, returning the index of
+		the first matching character, or zero
+
+     strsize( string ) : integer
+		returns the upper bound of the index type of string
+
+     substr( string, length, offset, dest )
+		copies length characters from string (beginning at index offset)
+		to the string variable dest
+::::SYSTEM
+
+   Syntax:	SYStem <command>
+
+   Description: The system command may be used to run other commands or
+		programs without destroying the editor environment.  If a
+		<command> is entered, that command is executed by the
+		operating system and control returns to the editor.  If
+		<command> is omitted, DOS is invoked.  Commands may be
+		entered until a DOS "EXIT" command is entered.	The "EXIT"
+		command terminates DOS and returns control to the editor.
+		Note: There must be enough unused memory in the computer to
+		run the specified program or DOS.
+
+   Examples:	sys cset.com  Attempt to run the program "cset.com".
+		sys	      Attempt to invoke DOS.
+		sys chdir asmsrc
+			      Change the current directory to "asmsrc".
+			      DOS will be invoked to execute the "chdir"
+			      command.
+::::TABSET
+
+   Syntax:	TABset <tab-1> <tab-2> <tab-3> ... <tab-n>
+
+   Description: The TABSET command sets or displays the current tab stops.
+		You may define a different set of tab stops while using the
+		editor.  Up to 15 tab stops may be defined.  Tab stops apply to
+		particular columns of the text in the workspace; not physical
+		columns on the screen.	It is therefore possible to set tab
+		stops as high as 134.  When tabbing to a column which is not
+		currently displayed on the screen, the editor will scroll text
+		to the left or right depending on the direction of the tab.
+
+		The tab settings can be restored to the default of one
+		every eight columns by setting a single tab stop of 0.
+
+   Examples:	tab 1 7 11 15 19 23
+
+		This command will redefine the default tab stops (but only
+		while you are using the editor).  When you return to DOS, they
+		will revert back to the default.  Additional tab stops or other
+		ones can be defined according to preference but all tab stops
+		must be defined in one use of the "tabset" command (i.e., you
+		can neither add or remove individual tab stops; they must all
+		be set at the same time).
+
+		tab 0
+
+		Reset the tab stops back to the default (e.g., 1, 9, 17,
+		etc.). The word "Default" is displayed in the message area.
+::::TIME
+
+   Syntax:	TIMe
+
+   Description: The time command is identical to the date command except
+		that only the time is displayed.
+::::WATCOM
+
+			Problems, Suggestions, etc.
+			ßßßßßßßßßßßßßßßßßßßßßßßßßßß
+
+      Although a significant amount of testing has gone into this product,
+      errors in the software may be encountered.  You may also discover errors
+      or omissions in the documentation.  If you find any problems or have some
+      good suggestions, we would like to hear from you.
+
+      You can contact us by writing to:
+		WATCOM Systems Inc.,
+		415 Phillip Street,
+		Waterloo, Ontario,
+		CANADA	   N2L 3X2
+::::WTALK
+
+   Syntax:	WTALK <terminal-options>
+
+   Description: This program may be used to communicate with host computer
+		systems over the serial port.  It emulates a "dumb" ASCII
+		terminal.  To run from the editor, type "SYS WTALK etc."
+		WTALK was written by WATCOM Systems Inc. and is provided on
+		the editor diskette.
+
+   Examples:	WTALK TERM COM 1 SPEED 9600 PARITY NONE WORD 8 ECHO REMOTE
+		    Set serial port 1 speed to 9600, parity to none, word
+		    length to 8 bits, remote echo and enter terminal emulation.
+		WTALK
+		    Set communication options interactively using pull-down
+		    menus and/or enter terminal emulation.
+::::~~~DEFAULT
+
+   Help is available on the following topics. To obtain help on a
+   particular topic, enter a command of the following form:
+
+	HELP topic
+
+Editor topics:
+	#	    =		?	    @		APPend
+	AUTosave    BELl	BYE	    CANcel	Change
+	CUT	    DATe	Delete	    DIrectory	Edit
+	ERAse	    EXit	Fill	    Get 	Help
+	Input	    list	MARgin	    Msg 	Name
+	PAGe	    PASte	PF	    PLAy	PRInt
+	QUIT	    REName	RUN	    search	SHow
+	SYStem	    TABset	TIMe
+
+Pascal topics:
+	Mathematical Functions		    String Manipulation
+	I/O Routines			    Machine Interfacing
+	IBM PC Specific Routines	    Miscellaneous Routines
+
+Miscellaneous topics:
+	CONFIG	    CSET	WATCOM	    WTALK
+
+Examples:    help edit
+	     help @
+	     help math

@@ -1,0 +1,102 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1BSTOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?BST08                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?BST16                  ; Located at 1:0010h Type = 1
+
+CODE    CSEG
+
+
+?BST08: mov     dh,al
+        mov     dl,00h
+        push    bx
+        mov     bh,[bx]
+        mov     bl,00h
+        call    @j1                       ; Large jump translated into short
+        pop     bx
+        mov     [bx],dh
+        ret
+?BST16: push    bx
+        mov     al,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     bh,[bx]
+        mov     bl,al
+        call    @j1                       ; Large jump translated into short
+        pop     bx
+        mov     [bx],dl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        ret
+@j1:    push    bx
+        mov     bx,0FFFFh
+        mov     al,11h
+        sub     al,cl
+        mov     cl,al
+@j2:    dec     cl
+        jz      @j3
+        shl     bx,1
+        jmps    @j2
+@j3:    mov     al,bh
+        and     al,dh
+        mov     dh,al
+        mov     al,bl
+        and     al,dl
+        mov     dl,al
+        mov     bp,sp
+        xchg    bx,[bp]
+@j4:    inc     cl
+        dec     ch
+        jz      @j5
+        mov     al,bh
+        rcl     al,1
+        mov     al,bl
+        rcl     al,1
+        mov     bl,al
+        mov     al,bh
+        rcl     al,1
+        mov     bh,al
+        jmps    @j4
+@j5:    mov     al,cl
+        pop     cx
+        lahf
+        xchg    al,ah
+        push    ax
+        mov     al,ch
+        not     al
+        and     al,bh
+        or      al,dh
+        mov     dh,al
+        mov     al,cl
+        not     al
+        and     al,bl
+        or      al,dl
+
+        mov     dl,al
+        pop     cx
+@j6:    dec     ch
+        jnz     @j7
+        ret
+@j7:    mov     al,dl
+        rcr     al,1
+        mov     al,dh
+        rcr     al,1
+        mov     dh,al
+        mov     al,dl
+        rcr     al,1
+        mov     dl,al
+        jmps    @j6
+
+
+        END
+
+

@@ -1,0 +1,33 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FC44S'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FC44C:NEAR
+        EXTRN           ?FS44:NEAR
+
+        PUBLIC          ?FC44S                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FC44S: mov     bx,sp
+        inc     bx
+        inc     bx
+        mov     dx,0004h
+        add     dx,bx
+        call    ?FS44
+        pop     ax
+        add     sp,+008h
+        push    ax
+        push    cx
+        push    dx
+        jmp     ?FC44C
+
+
+        END
+
+

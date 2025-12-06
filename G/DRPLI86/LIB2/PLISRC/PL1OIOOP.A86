@@ -1,0 +1,57 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1OIOOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?OIOPR:NEAR
+
+        PUBLIC          ?OIOOP                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     rw      1
+@d2     rw      1
+
+
+CODE    CSEG
+
+
+?OIOOP: mov     @d1,bx
+        pop     cx
+        mov     bx,0000h
+        lahf
+        add     bx,sp
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     @d2,bx
+        mov     bx,offset @d1
+        push    cx
+        call    ?OIOPR
+        pop     cx
+        mov     bx,000Ah
+        lahf
+        add     bx,sp
+        sahf
+        mov     dl,[bx]
+        mov     dh,00h
+        lahf
+        inc     dx
+        sahf
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     sp,bx
+        push    cx
+        ret
+
+
+        END
+
+

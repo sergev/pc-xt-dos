@@ -1,0 +1,54 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1KEYOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?KEYPR:NEAR
+
+        PUBLIC          ?KEYOP                  ; Located at 2:0000h Type = 1
+        PUBLIC          ?KEYTO                  ; Located at 2:0014h Type = 1
+
+DATA    DSEG
+
+
+@d1     dw      offset @d3
+@d2     dw      offset @d4
+
+@d3     rb      1
+@d4     rw      1
+@d5     rb      1
+
+
+CODE    CSEG
+
+
+?KEYOP: xor     al,al
+        mov      @d5,al
+        dec     al
+        mov      @d3,al
+        mov     @d4,bx
+        mov     bx,offset @d1
+        jmp     ?KEYPR
+?KEYTO: push    bx
+        xor     al,al
+        mov      @d3,al
+        mov      @d5,al
+        mov     bx,offset @d1
+        call    ?KEYPR
+        mov     bx,@d4
+        xchg    bx,dx
+        pop     bx
+        mov     [bx],dl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        ret
+
+
+        END
+
+

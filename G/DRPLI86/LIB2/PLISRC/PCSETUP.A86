@@ -1,0 +1,265 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PCSETUP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?CONSP, ?FPBSTK
+
+
+        EXTRN           ?ZEROD:NEAR
+        EXTRN           ?JTABLE:ABS
+
+        PUBLIC          ?STACK                  ; Located at 3:003Bh Type = 4
+        PUBLIC          ?BEGIN                  ; Located at 3:0041h Type = 4
+        PUBLIC          ?RECLST                 ; Located at 3:0043h Type = 4
+        PUBLIC          ?DFDRV                  ; Located at 3:0045h Type = 3
+        PUBLIC          ?CMEMRY                 ; Located at 3:0046h Type = 0
+        PUBLIC          ?MEMRY                  ; Located at 3:0048h Type = 4
+        PUBLIC          ?START                  ; Located at 4:0000h Type = 1
+        PUBLIC          ?ADDIO                  ; Located at 4:0080h Type = 1
+        PUBLIC          ?SUBIO                  ; Located at 4:0098h Type = 1
+        PUBLIC          ?STOPX                  ; Located at 4:016Eh Type = 1
+        PUBLIC          ?ERMSG                  ; Located at 4:0186h Type = 1
+        PUBLIC          ?BDOS                   ; Located at 4:0190h Type = 1
+
+?CONSP  DSEG    common
+
+
+@CSP1   rs      00021h
+
+
+?FPBSTK DSEG    common
+
+
+@FS1    rw      1
+@FS3    rs      00011h
+
+
+DATA    DSEG
+
+
+insuf_msg db    00Dh,00Ah,'Insufficient Memory$'
+inv_msg db      00Dh,00Ah,'Invalid I/O List'
+end_msg db      00Dh,00Ah,'End of Execution$'
+
+?STACK  rw      1
+@D1     rw      1
+@D2     rw      1
+?BEGIN  rw      1
+?RECLST rw      1
+?DFDRV  rb      1
+?CMEMRY rw      1
+?MEMRY  rw      1
+
+
+CODE    CSEG
+
+
+?START: mov     al,01h
+        xchg    al,cs: @C1
+        or      al,al
+        jnz     @J11
+        cld
+        sub     ax,ax
+        mov      @D2,ax
+        mov      @D1,ax
+        mov      ?RECLST,ax
+        mov      @CSP1,al
+        mov      @FS3,al
+        push    ds
+        sub     bx,bx
+        mov     ds,bx
+        mov     word ptr [bx],offset @J28
+        mov     word ptr [bx]+002h,cs
+        pop     ds
+        pop     cx
+        mov     ax, ?MEMRY
+        add     ax,0400h
+        jc      @J9
+        mov      ?STACK,ax
+        mov     bx,ds
+        mov     ss,bx
+        mov     sp,ax
+        mov     es,bx
+        mov     dx,offset ?STOPX
+        push    dx
+        push    cx
+        inc     ax
+        and     al,0FEh
+        mov      ?BEGIN,ax
+        mov     bx,word ptr .6
+        sub     bx,ax
+        jbe     @J9
+        cmp     bx,+008h
+        jnc     @J10
+@J9:    mov     dx,offset insuf_msg
+        jmp     ?ERMSG
+@J10:   mov     bx,word ptr .6
+        sub     bx,+004h
+        mov     [bx],ax
+        inc     byte ptr [bx]
+        mov     word ptr [bx]+002h,0000h
+        xchg    ax,bx
+        mov     word ptr [bx],0000h
+        mov     [bx]+002h,ax
+        mov     cl,19h
+        call    ?BDOS
+        inc     al
+
+        mov      ?DFDRV,al
+@J11:   ret
+@C1     db      000h
+?ADDIO: push    bx
+        dec     bx
+        dec     bx
+        mov     dx,@D2
+        mov     [bx],dx
+        pop     bx
+        mov     @D2,bx
+        mov     bx,@D1
+        inc     bx
+        mov     @D1,bx
+        ret
+?SUBIO: xchg    bx,dx
+        mov     bx,@D1
+        mov     ch,bh
+        mov     cl,bl
+        mov     bx,offset @D2
+@J12:   test    cx,cx
+        jnz     @J13
+        ret
+@J13:   mov     al,[bx]
+        cmp     al,dl
+        jz      @J14
+        jmp     @J26
+@J14:   inc     bx
+        or      al,[bx]
+        jnz     @J15
+        ret
+@J15:   mov     al,[bx]
+        dec     bx
+        cmp     al,dh
+        jz      @J16
+        jmp     @J26
+@J16:   xchg    bx,dx
+        push    bx
+        dec     bx
+        dec     bx
+        mov     cx,[bx]
+        pop     bx
+        xchg    bx,dx
+        mov     [bx],cx
+        mov     bx,@D1
+        dec     bx
+        mov     @D1,bx
+        mov     si,dx
+        mov     al,[si]
+        or      al,al
+        jnz     @J17
+        jmp     @J24                      ; Large jump translated into short
+@J17:   cmp     al,03h
+        jc      @J18
+        jmp     @J25                      ; Large jump translated into short
+@J18:   mov     cx,0000h
+        dec     al
+        jnz     @J19
+        mov     bx,002Bh
+        add     bx,dx
+
+        mov     al,[bx]
+        and     al,7Fh
+        mov     cl,al
+        mov     al,[bx]
+        rcl     al,1
+        inc     bx
+        mov     al,[bx]
+        rcl     al,1
+        mov     ch,al
+@J19:   mov     bx,002Fh
+        add     bx,dx
+        inc     dx
+@J20:   mov     al,ch
+        or      al,al
+        jnz     @J22
+        mov     al,cl
+        or      al,al
+        jz      @J23
+        push    bx
+        add     bx,cx
+        mov     al,80h
+        sub     al,cl
+        mov     cl,al
+@J21:   mov     byte ptr [bx],1Ah
+        inc     bx
+        dec     cl
+        jnz     @J21
+        pop     bx
+        inc     ch
+@J22:   dec     ch
+        push    cx
+        push    bx
+        mov     cx,0080h
+        add     bx,cx
+        mov     bp,sp
+        xchg    bx,[bp]
+        push    dx
+        xchg    bx,dx
+        mov     cl,1Ah
+        call    ?BDOS                     ; Large jump translated into short
+        pop     dx
+        push    dx
+        mov     cl,15h
+        call    ?BDOS                     ; Large jump translated into short
+        pop     dx
+        pop     bx
+        pop     cx
+        or      al,al
+        jnz     @J23
+        jmp     @J20                      ; Large jump translated into short
+@J23:   mov     cl,10h
+        call    ?BDOS                     ; Large jump translated into short
+@J24:   xor     al,al
+        dec     al
+        ret
+@J25:   xor     al,al
+        ret
+@J26:   dec     cx
+        mov     al,[bx]
+        inc     bx
+        mov     bh,[bx]
+        mov     bl,al
+        dec     bx
+        dec     bx
+        jmp     @J12
+?STOPX: mov     ax, @D1
+
+        or      ax,ax
+        jz      @J27
+        mov     bx,@D2
+        call    ?SUBIO
+        jnz     ?STOPX
+        mov     dx,offset inv_msg
+        jmps    ?ERMSG
+@J27:   mov     dx,offset end_msg
+?ERMSG: mov     cl,09h
+        call    ?BDOS                     ; Large jump translated into short
+        sub     cx,cx
+        call    ?BDOS                     ; Large jump translated into short
+?BDOS:  mov     al,cl
+        sub     ah,ah
+        add     al,al
+        mov     si,ax
+        mov     ah,al
+        push    es
+        call    WORD PTR ?JTABLE[si]
+        pop     es
+        ret
+@J28:   mov     al,03h
+        jmp     ?ZEROD
+
+
+        END
+
+

@@ -1,0 +1,29 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FPSHF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?FPSHF                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FPSHF: mov     ah,al
+@j1:    shr     dx,1
+        rcr     bh,1
+        dec     ah
+        jnz     @j1
+@j2:    shl     bh,1
+        rcl     dx,1
+        dec     ax
+        jnz     @j2
+        ret
+
+
+        END
+
+

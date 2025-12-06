@@ -1,0 +1,74 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FROUN'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+        EXTRN           ?FP40:NEAR
+        EXTRN           ?FPSHF:ABS
+        EXTRN           ?FA44:ABS
+
+        PUBLIC          ?FROUN                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FROUN: cmp     al,19h
+        jl      @j1
+        ret
+@j1:    cmp     al,00h
+        jg      @j2
+        mov     al,01h
+@j2:    cbw
+        push    ax
+        mov     bx,0004h
+        add     bx,sp
+        call    ?FU40
+        mov     si,cx
+        mov     di,dx
+        pop     cx
+        push    ax
+        push    bx
+        mov     ax,8000h
+        xor     bx,bx
+        cmp     cx,+00Fh
+        jnbe    @j3
+        shr     ax,cl
+        jmps    @j4
+@j3:    xchg    ax,bx
+        sub     cl,10h
+        shr     bx,cl
+@j4:    add     di,bx
+        adc     si,ax
+        pop     cx
+        jnc     @j5
+        rcr     si,1
+        rcr     di,1
+        inc     cx
+        shr     ax,1
+        rcr     bx,1
+@j5:    shl     bx,1
+        rcl     ax,1
+        sub     bx,+001h
+        sbb     ax,0000h
+        not     ax
+        not     bx
+        and     ax,si
+        and     bx,di
+        mov     dx,ax
+        pop     ax
+        call    ?FP40
+        pop     bx
+        pop     ax
+        pop     ax
+        push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

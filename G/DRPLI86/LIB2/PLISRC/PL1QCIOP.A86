@@ -1,0 +1,78 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QCIOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?CNVER:NEAR
+
+        PUBLIC          ?QCIOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?QCIOP: pop     bp
+        mov     di,sp
+        xor     bx,bx
+        mov     cl,al
+        mov     ch,bh
+        mov     al,20h
+        repz    scasb
+        jnz     @j1
+        jcxz    @j9
+@j1:    dec     di
+        inc     cx
+        mov     al,[di]
+        cmp     al,2Dh
+        jz      @j2
+        cmp     al,2Bh
+        jnz     @j3
+@j2:    inc     di
+        dec     cx
+        jcxz    @j10
+@j3:    push    ax
+        mov     si,000Ah
+        mov     ax,bx
+        mov     bl,[di]
+        jmp     @j5                       ; Large jump translated into short
+@j4:    cmp     bl,20h
+        jz      @j7
+@j5:    cmp     bl,30h
+        jc      @j10
+        cmp     bl,39h
+        jnbe    @j10
+        imul    si
+        jo      @j10
+        and     bl,0Fh
+        add     ax,bx
+        jno     @j6
+        cmp     ax,8000h
+        jnz     @j10
+        pop     ax
+        cmp     al,2Dh
+        jnz     @j10
+        mov     ax,8000h
+        push    ax
+@j6:    inc     di
+        mov     bl,[di]
+        loop    @j4
+@j7:    mov     bx,ax
+        pop     ax
+        cmp     al,2Dh
+        jnz     @j8
+        neg     bx
+@j8:    xor     dx,dx
+        mov     al,20h
+        repz    scasb
+        jnz     @j10
+@j9:    mov     al,bl
+        mov     sp,di
+        jmp     bp
+@j10:   jmp     ?CNVER
+
+
+        END
+
+

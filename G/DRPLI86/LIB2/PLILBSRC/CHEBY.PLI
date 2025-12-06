@@ -1,0 +1,23 @@
+ ?cheby: proc(arg1, arg2, parm_table) returns(float bin(24));
+ dcl arg1               float bin(24);
+ dcl arg2               fixed bin(7);
+ dcl parm_table(0:1)    float bin(24);
+ dcl i                  fixed bin(7);
+ dcl (temp2, temp1, temp3) float bin(24);
+ dcl float_0            float bin(24) static init(0);
+ dcl ?fpex2           entry(fixed bin(7), float bin(24)) returns(float bin(24));
+ dcl fixed_m1           fixed bin(15) static init(-1);
+ dcl ex2_arg            fixed bin(7) based;
+ 
+ temp1 = float_0;
+ temp2 = parm_table(arg2);
+ do i = arg2 - 1 to 0 by -1;
+    temp3 = temp1;
+    temp1 = temp2;
+    temp2 = arg1 * temp1 - temp3 + parm_table(i);
+    end;
+ 
+
+ return(?fpex2(addr(fixed_m1)->ex2_arg,temp2-temp3));
+ end ?cheby;
+

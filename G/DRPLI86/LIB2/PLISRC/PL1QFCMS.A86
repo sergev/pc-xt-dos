@@ -1,0 +1,221 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QFCMS'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?FU40:NEAR
+
+        PUBLIC          ?QFCMS                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?UDV10                  ; Located at 1:00FAh Type = 1
+        PUBLIC          ?UML10                  ; Located at 1:0133h Type = 1
+        PUBLIC          ?UADOP                  ; Located at 1:0148h Type = 1
+        PUBLIC          ?USLOP                  ; Located at 1:0163h Type = 1
+
+CODE    CSEG
+
+
+?QFCMS: cbw
+        pop     cx
+        sub     sp,ax
+        mov     bp,sp
+        push    cx
+        push    ax
+        mov     cx,3000h
+        push    cx
+        mov     word ptr [bp],3020h
+        mov     byte ptr [bp]+002h,2Eh
+        sub     al,07h
+        jz      @j2
+@j1:    mov     [bp]+003h,ch
+        inc     bp
+        dec     al
+        jnz     @j1
+@j2:    mov     word ptr [bp]+003h,2B45h
+        mov     [bp]+005h,ch
+        mov     [bp]+006h,ch
+        call    ?FU40
+        mov     bp,cx
+        or      bp,dx
+        jnz     @j3
+        pop     ax
+        pop     ax
+        ret
+@j3:    push    bx
+        or      al,al
+        jz      @j4
+        mov     bp,sp
+        mov     byte ptr [bp]+008h,2Dh
+@j4:    call    @j23
+@j5:    pop     ax
+        push    ax
+        shl     ax,1
+        jnc     @j6
+        call    ?UML10
+        jmps    @j5
+@j6:    pop     bx
+        push    bx
+        push    cx
+        push    dx
+        dec     bx
+@j7:    inc     bx
+        call    @j23
+        jnc     @j7
+        pop     dx
+        pop     cx
+        cmp     bx,+01Fh
+        jnc     @j8
+        call    ?UML10
+        jmps    @j6
+@j8:    pop     ax
+        push    ax
+        cmp     al,18h
+        jbe     @j9
+        call    ?UDV10
+        jmps    @j8
+@j9:    add     dx,+041h
+        jnc     @j10
+        inc     cx
+        jns     @j10
+
+        call    @j23
+@j10:   call    ?USLOP
+        pop     ax
+@j11:   cmp     al,18h
+        jz      @j12
+        call    @j23
+        inc     ax
+        jmps    @j11
+@j12:   sub     ax,ax
+        push    ax
+        push    ax
+        mov     bl,18h
+@j13:   mov     bp,sp
+        call    ?USLOP
+        mov     dl,04h
+@j14:   mov     al,[bp]
+        adc     al,al
+        daa
+        mov     [bp],al
+        inc     bp
+        dec     dl
+        jnz     @j14
+        dec     bl
+        jnz     @j13
+        mov     bp,000Ah
+        add     bp,sp
+        mov     ch,08h
+@j15:   dec     ch
+        call    @j24
+        jz      @j15
+        mov     cl,ch
+@j16:   inc     bp
+        mov     al,[bp]
+        cmp     al,2Eh
+        jz      @j16
+        cmp     al,45h
+        jz      @j18
+        call    @j24
+        add     al,30h
+        mov     [bp],al
+        dec     ch
+        jns     @j16
+@j17:   inc     bp
+        mov     al,[bp]
+        cmp     al,45h
+        jnz     @j17
+@j18:   pop     dx
+        pop     dx
+        pop     ax
+        add     al,cl
+        jns     @j19
+        neg     al
+        mov     byte ptr [bp]+001h,2Dh
+@j19:   mov     byte ptr [bp]+002h,2Fh
+@j20:   sub     al,0Ah
+        inc     byte ptr [bp]+002h
+        jnc     @j20
+        add     al,3Ah
+
+        mov     [bp]+003h,al
+        pop     ax
+        ret
+?UDV10: mov     bp,sp
+        inc     word ptr [bp]+004h
+        sub     word ptr [bp]+002h,+004h
+        push    cx
+        push    dx
+        call    @j23                      ; Large jump translated into short
+        call    ?UADOP                    ; Large jump translated into short
+        push    cx
+        push    dx
+        call    @j23                      ; Large jump translated into short
+        call    @j23                      ; Large jump translated into short
+        call    @j23                      ; Large jump translated into short
+        call    @j23                      ; Large jump translated into short
+        call    ?UADOP                    ; Large jump translated into short
+        push    cx
+        push    dx
+        mov     dl,dh
+        mov     dh,cl
+        mov     cl,ch
+        sub     ch,ch
+        call    ?UADOP                    ; Large jump translated into short
+        push    cx
+        push    dx
+        mov     dx,cx
+        sub     cx,cx
+        call    ?UADOP                    ; Large jump translated into short
+        ret
+?UML10: mov     bp,sp
+        dec     word ptr [bp]+004h
+        add     word ptr [bp]+002h,+003h
+        push    cx
+        push    dx
+        call    @j23                      ; Large jump translated into short
+        call    @j23                      ; Large jump translated into short
+        call    ?UADOP                    ; Large jump translated into short
+        ret
+?UADOP: pop     ax
+        pop     di
+        pop     si
+        push    ax
+        add     dx,di
+        jnc     @j21
+        inc     cx
+@j21:   add     cx,si
+        jns     @j22
+        call    @j23                      ; Large jump translated into short
+        mov     bp,sp
+        inc     word ptr [bp]+004h
+@j22:   ret
+@j23:   shr     cx,1
+        rcr     dx,1
+        ret
+?USLOP: shl     dx,1
+        rcl     cx,1
+        ret
+@j24:   mov     al,ch
+        shr     al,1
+        cbw
+        pushf
+        mov     bx,0004h
+
+        add     bx,sp
+        add     bx,ax
+        popf
+        mov     al,[bx]
+        jnc     @j25
+        ror     al,1
+        ror     al,1
+        ror     al,1
+        ror     al,1
+@j25:   and     al,0Fh
+        ret
+
+
+        END
+
+

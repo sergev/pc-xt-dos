@@ -1,0 +1,38 @@
+ sqrt: proc(arg) returns(float bin(24));
+ dcl arg         float bin(24);
+ dcl hold_arg    float bin(24);
+ dcl ?fpex2      entry (fixed bin(7), float bin(24)) returns(float bin(24));
+ dcl float_0     float bin(24) static init(0);
+ dcl float_1     float bin(24) static init(1);
+ dcl fixed_2     fixed bin(15) static init(2);
+ dcl float_4     float bin(24) static init(4);
+ dcl fixed_m2    fixed bin(15) static init(-2);
+ dcl float_2v12  float bin(24) static init(2.12);
+ dcl float_1d3   float bin(24) static init(.3333333);
+ dcl fixed_m1    fixed bin(15) static init(-1);
+ dcl temp1       float bin(24);
+ dcl (j, i)      fixed bin(7);
+ dcl ex2_arg     fixed bin(7) based;
+ 
+ hold_arg = arg;
+ if hold_arg < float_0 then
+     signal error(3);
+ if hold_arg = float_0 then
+    return(float_0);
+ i = 0;
+ do while(hold_arg < float_1);
+    i = i - 1;
+    hold_arg = ?fpex2(addr(fixed_2)->ex2_arg,hold_arg);
+    end;
+ do while(hold_arg > float_4);
+    i = i + 1;
+    hold_arg = ?fpex2(addr(fixed_m2)->ex2_arg, hold_arg);
+    end;
+ temp1 = float_1d3 * (hold_arg + float_2v12);
+ do j = 1 to 3;
+    temp1 = ?fpex2(addr(fixed_m1)->ex2_arg,temp1+hold_arg/temp1);
+    end;
+
+ return(?fpex2(i,temp1));
+ end sqrt;
+

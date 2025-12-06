@@ -1,0 +1,26 @@
+ ?gncpr: proc returns(bit(8));
+ dcl chr1     bit(8);
+ dcl ?rdbyte  entry(ptr, bit(8)) returns(bit(1));
+ dcl 1 ?fpb   external,
+       2 fill1(2)  bit(16),
+       2 line_pos  fixed bin(15),
+       2 fill2(3)  bit(16),
+       2 chr2      bit(8),
+       2 fill3(33) bit(8);
+
+ if chr2 = '00'b4 then do;
+     if ^(?rdbyte(addr(?fpb), chr1)) then
+         chr1 = '1a'b4;
+     end;
+ else do;
+     chr1 = chr2;
+     chr2 = '00'b4;
+     end;
+ if chr1 >= '20'b4 then
+     line_pos = line_pos + 1;
+ if chr1 = '0d'b4 then
+     line_pos = 1;
+ return(chr1);
+
+ end ?gncpr;
+

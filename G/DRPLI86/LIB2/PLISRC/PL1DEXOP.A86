@@ -1,0 +1,57 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DEXOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DMUOP:NEAR
+
+        PUBLIC          ?DEXOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DEXOP: mov     si,sp
+        inc     si
+        inc     si
+        or      al,al
+        jnz     @j1
+        mov     di,si
+        mov     ax,0001h
+        stosw
+        mov     cx,0003h
+        xor     ax,ax
+        repz    stosw
+        ret
+@j1:    push    ax
+        sub     sp,+008h
+        mov     di,sp
+        call    @j4                       ; Large jump translated into short
+@j2:    mov     bp,sp
+        dec     byte ptr [bp]+008h
+        jz      @j3
+        mov     si,000Ch
+        add     si,sp
+        sub     sp,+008h
+        mov     di,sp
+        call    @j4                       ; Large jump translated into short
+        call    ?DMUOP
+        jmps    @j2
+@j3:    mov     si,sp
+        mov     di,000Ch
+        add     di,sp
+        call    @j4                       ; Large jump translated into short
+        mov     sp,si
+        pop     ax
+        ret
+
+@j4:    mov     cx,0004h
+        repz    movsw
+        ret
+
+
+        END
+
+

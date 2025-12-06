@@ -1,0 +1,43 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1SMCCM'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?SMVCM                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?SMCCM                  ; Located at 1:0003h Type = 1
+
+CODE    CSEG
+
+
+?SMVCM: mov     cl,[si]
+        inc     si
+?SMCCM: cmp     al,cl
+        jnc     @j1
+        mov     cl,al
+@j1:    push    ax
+        mov     dl,al
+        sub     dl,cl
+        sub     ch,ch
+        shr     cx,1
+        jnc     @j2
+        movsb
+@j2:    jcxz    @j3
+        repz    movsw
+@j3:    mov     cl,dl
+        shr     cx,1
+        mov     ax,2020h
+        jnc     @j4
+        stosb
+@j4:    jcxz    @j5
+        repz    stosw
+@j5:    pop     ax
+        ret
+
+
+        END
+
+

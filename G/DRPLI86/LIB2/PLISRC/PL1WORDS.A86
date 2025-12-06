@@ -1,0 +1,111 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1WORDS'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?ALLOP:NEAR
+
+        PUBLIC          TOTWDS                  ; Located at 2:0000h Type = 1
+        PUBLIC          MAXWDS                  ; Located at 2:0006h Type = 1
+        PUBLIC          ALLWDS                  ; Located at 2:006Ch Type = 1
+        PUBLIC          STKSIZ                  ; Located at 2:0083h Type = 1
+
+CODE    CSEG
+
+
+TOTWDS: call    @j1                       ; Large jump translated into short
+        xchg    bx,dx
+        ret
+MAXWDS: call    @j1                       ; Large jump translated into short
+        mov     bh,ch
+        mov     bl,cl
+        ret
+@j1:    mov     cx,0000h
+        mov     dh,ch
+        mov     dl,cl
+        mov     bx,?BEGIN
+@j2:    mov     al,[bx]
+        rcr     al,1
+        jnc     @j4
+@j3:    inc     bx
+        inc     bx
+        mov     al,[bx]
+        inc     bx
+        mov     bh,[bx]
+        mov     bl,al
+        or      al,bh
+        jnz     @j2
+        ret
+@j4:    push    bx
+        push    dx
+        inc     bx
+        inc     bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        inc     bx
+        mov     al,dl
+        sub     al,bl
+        mov     dl,al
+        mov     al,dh
+        sbb     al,bh
+        jnc     @j5
+        pop     dx
+        pop     bx
+        mov     bx,0FFFFh
+        mov     dh,bh
+        mov     dl,bl
+        ret
+@j5:    rcr     al,1
+        mov     dh,al
+        mov     al,dl
+        rcr     al,1
+        mov     dl,al
+        sub     al,cl
+        mov     al,dh
+        sbb     al,ch
+        jc      @j6
+        mov     cl,dl
+        mov     ch,dh
+@j6:    pop     bx
+        add     bx,dx
+        xchg    bx,dx
+        pop     bx
+        jmp     @j3                       ; Large jump translated into short
+ALLWDS: mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+
+        mov     dh,[bx]
+        xchg    bx,dx
+        shl     bx,1
+        jmp     ?ALLOP
+STKSIZ: mov     bx,?STACK
+        xchg    bx,dx
+        mov     bx,0000h
+        add     bx,sp
+        mov     al,dl
+        sub     al,bl
+        mov     bl,al
+        mov     al,dh
+        sbb     al,bh
+        mov     bh,al
+        ret
+
+        dseg
+        extrn ?begin:word
+        extrn ?stack:word
+
+        END
+
+

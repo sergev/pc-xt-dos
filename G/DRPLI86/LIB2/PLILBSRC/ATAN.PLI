@@ -1,0 +1,49 @@
+ atan: proc(arg) returns(float bin(24));		
+ dcl arg                 float bin(24);
+ dcl parm_table(0:10)    float bin(24) static init
+ (  1.76274725,
+    -.10589292,
+     .011135842,
+    -.001381195,
+     .00018574297,
+    -.000026215195,
+     .0000038210365,
+    -.0000005699186,
+     .00000008648878,
+    -.000000013303384,
+     .0000000020685058);
+ dcl float_0             float bin(24) static init(0);
+ dcl float_1             float bin(24) static init(1);
+ dcl float_1v57079625    float bin(24) static init(1.57079625);
+ dcl float_m1            float bin(24) static init(-1);
+ dcl float_m1v57079625   float bin(24) static init(-1.57079625);
+ dcl fixed_2             fixed bin(15) static init(2);
+ dcl float_2             float bin(24) static init(2);
+ dcl table_limit         fixed bin(15) static init(10);
+ dcl byte                fixed bin(7)  based;
+ dcl hold_arg            float bin(24);
+ dcl (temp1, temp2)      float bin(24);
+ dcl i                   fixed bin(7);
+ dcl ?fpex2           entry(fixed bin(7), float bin(24)) returns(float bin(24));
+ dcl ?cheby           entry(float bin(24), fixed bin(7), (0:10) float bin(24))
+                               returns(float bin(24));
+ 
+ hold_arg = arg;
+ i= 1;
+ temp1 = float_0;
+ if hold_arg > float_1 then do;
+     i = -1;
+     temp1 = float_1v57079625;
+     hold_arg = float_1 / hold_arg;
+     end;
+ else if hold_arg < float_m1 then do;
+     i = 1;
+     temp1 = float_m1v57079625;
+     hold_arg = float_m1 / hold_arg;
+     end;
+ temp2 = hold_arg;
+ hold_arg = ?fpex2(addr(fixed_2)->byte,hold_arg) * hold_arg - float_2;
+ return(temp1 + i * temp2
+           * ?cheby(hold_arg, addr(table_limit)->byte,parm_table));
+ end atan;
+

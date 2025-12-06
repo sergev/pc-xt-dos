@@ -1,0 +1,39 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DADOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DOVER:NEAR
+
+        PUBLIC          ?DADOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DADOP: mov     si,sp
+        inc     si
+        inc     si
+        mov     cx,0008h
+        mov     di,si
+        add     di,cx
+@j1:    lodsb
+        adc     al,[di]
+        daa
+        stosb
+        loop    @j1
+        and     al,0F0h
+        jz      @j2
+        cmp     al,90h
+        jz      @j2
+        jmp     ?DOVER
+@j2:    pop     dx
+        mov     sp,si
+        jmp     dx
+
+
+        END
+
+

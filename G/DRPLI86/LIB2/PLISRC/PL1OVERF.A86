@@ -1,0 +1,43 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1OVERF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SIGNAL:NEAR
+
+        PUBLIC          ?OVERF                  ; Located at 2:0000h Type = 1
+        PUBLIC          ?UNDER                  ; Located at 2:0004h Type = 1
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+        dw      offset @d3
+        dw      offset @d4
+        dw      offset @d5
+
+@d2     rb      1
+@d3     rb      1
+@d4     dw      00000h
+@d5     dw      00000h
+
+
+CODE    CSEG
+
+
+?OVERF: mov     ch,02h
+        jmps    @j1
+?UNDER: mov     ch,03h
+@j1:    mov      @d3,al
+        mov     al,ch
+        mov      @d2,al
+        mov     bx,offset @d1
+        jmp     ?SIGNAL
+
+
+        END
+
+

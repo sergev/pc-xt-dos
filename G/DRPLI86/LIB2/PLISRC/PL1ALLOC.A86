@@ -1,0 +1,287 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1ALLOC'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?ERMSG:NEAR
+        EXTRN           ?SIGNAL:NEAR
+
+        PUBLIC          ?ALLOP                  ; Located at 2:0000h Type = 1
+        PUBLIC          ?FREOP                  ; Located at 2:00B0h Type = 1
+
+CODE    CSEG
+
+
+?ALLOP: inc     bx
+        mov     al,bl
+        and     al,0FEh
+        mov     cl,al
+        mov     ch,bh
+        mov     bx,?BEGIN
+@j8:    mov     al,[bx]
+        rcr     al,1
+        jnc     @j10
+@j9:    inc     bx
+        inc     bx
+        mov     al,[bx]
+        inc     bx
+        mov     bh,[bx]
+        mov     bl,al
+        or      al,bh
+        jnz     @j8
+        mov     bx,offset @D1
+        jmp     ?SIGNAL
+
+DATA    DSEG
+        EXTRN           ?begin:word
+
+@D1     dw      offset @D2
+        dw      offset @D3
+        dw      offset @D4
+        dw      offset @D5
+@D2     db      000h
+@D3     db      007h
+@D4     db      000h
+        db      000h
+@D5     dw      offset @D6
+@D6     db      ' Free Space Exhausted',000h
+
+code    cseg    $
+@j10:   push    bx
+        inc     bx
+        inc     bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        inc     bx
+        mov     al,dl
+        sub     al,bl
+        mov     dl,al
+        mov     al,dh
+        sbb     al,bh
+        mov     dh,al
+        jnc     @j11
+        jmp     @j23
+@j11:   mov     al,dl
+        sub     al,cl
+        mov     dl,al
+        mov     al,dh
+        sbb     al,ch
+        mov     dh,al
+        pop     bx
+        jc      @j9
+        inc     byte ptr [bx]
+        mov     al,dh
+        or      al,al
+        jnz     @j12
+        mov     al,dl
+        cmp     al,06h
+        jc      @j13
+@j12:   push    bx
+        inc     bx
+        inc     bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        inc     bx
+        add     bx,cx
+        xchg    bx,dx
+        mov     bp,sp
+        xchg    bx,[bp]
+        push    bx
+        inc     bx
+        inc     bx
+        mov     [bx],dl
+        inc     bx
+        mov     [bx],dh
+        xchg    bx,dx
+        pop     dx
+        mov     [bx],dl
+        inc     bx
+        mov     [bx],dh
+        inc     bx
+        xchg    bx,dx
+        mov     bp,sp
+        xchg    bx,[bp]
+        xchg    bx,dx
+        mov     [bx],dl
+        inc     bx
+        mov     [bx],dh
+        dec     bx
+        dec     bx
+        dec     bx
+        xchg    bx,dx
+        mov     al,[bx]
+        and     al,01h
+        mov     [bx],dl
+        or      al,[bx]
+        mov     [bx],al
+        lahf
+        inc     bx
+        sahf
+
+        mov     [bx],dh
+        pop     bx
+@j13:   lahf
+        inc     bx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        ret
+?FREOP: mov     al,bl
+        or      al,bh
+        jnz     @j14
+        ret
+@j14:   xchg    bx,dx
+        mov     bx,?BEGIN
+        mov     al,bl
+        sub     al,dl
+        mov     al,bh
+        sbb     al,dh
+        jc      @j15
+        jmp     @j22
+@j15:   mov     bx,word ptr .6
+        mov     al,dl
+        sub     al,bl
+        mov     al,dh
+        sbb     al,bh
+        jc      @j16
+        jmp     @j22
+@j16:   xchg    bx,dx
+        lahf
+        dec     bx
+        sahf
+        mov     ch,[bx]
+        lahf
+        dec     bx
+        sahf
+        mov     cl,[bx]
+        lahf
+        dec     bx
+        sahf
+        mov     dh,[bx]
+        lahf
+        dec     bx
+        sahf
+        dec     byte ptr [bx]
+        mov     dl,[bx]
+        mov     al,dl
+        rcr     al,1
+        jnc     @j17
+        jmp     @j23
+@j17:   mov     al,dl
+        sub     al,bl
+        mov     al,dh
+        sbb     al,bh
+        jc      @j18
+        jmp     @j23
+@j18:   mov     al,bl
+        sub     al,cl
+        mov     al,bh
+        sbb     al,ch
+        jc      @j19
+        jmp     @j23                      ; Large jump translated into short
+@j19:   mov     al,dl
+        or      al,dh
+
+        jz      @j20
+        mov     si,dx
+        mov     al,[si]
+        rcr     al,1
+        jc      @j20
+        mov     bl,cl
+        mov     bh,ch
+        mov     al,[bx]
+        and     al,01h
+        mov     [bx],dl
+        or      al,[bx]
+        mov     [bx],al
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        xchg    bx,dx
+        lahf
+        inc     bx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],cl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],ch
+@j20:   mov     si,cx
+        mov     al,[si]
+        rcr     al,1
+        jnc     @j21
+        ret
+@j21:   mov     bl,cl
+        mov     bh,ch
+        mov     cl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     ch,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     al,[bx]
+        rcr     al,1
+        jnc     @j23
+        mov     [bx],cl
+        inc     byte ptr [bx]
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],ch
+        lahf
+        dec     bx
+        sahf
+        xchg    bx,dx
+        mov     bl,cl
+        mov     bh,ch
+        lahf
+        inc     bx
+        sahf
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        ret
+@j22:   mov     dx,offset @D7
+        jmp     ?ERMSG
+@j23:   mov     dx,offset @D8
+
+        jmp     ?ERMSG
+
+
+data    dseg    $
+@D7     db      00Dh,00Ah,'FREE Request Out-of-Range$'
+@D8     db      00Dh,00Ah,'Free Space Overwrite$'
+
+
+        END
+
+

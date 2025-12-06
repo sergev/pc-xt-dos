@@ -1,0 +1,165 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DDVOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?ZEROD:NEAR
+
+        PUBLIC          ?DMODF                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?DDVOP                  ; Located at 1:0004h Type = 1
+
+CODE    CSEG
+
+
+?DMODF: mov     bl,01h
+        jmps    @j1
+?DDVOP: xor     bl,bl
+@j1:    mov     di,sp
+        inc     di
+        inc     di
+        call    @j10
+        jnz     @j3
+        or      bl,bl
+        jz      @j2
+        ret     0008h
+@j2:    inc     al
+        jmp     ?ZEROD
+@j3:    pop     dx
+        mov     si,sp
+        mov     di,0FFF8h
+        add     di,sp
+        mov     sp,di
+        push    dx
+        push    bx
+        mov     bx,di
+        mov     bp,si
+        mov     cx,0008h
+        repz    movsw
+        mov     cx,0004h
+        xor     ax,ax
+        repz    stosw
+        call    @j11
+        push    dx
+        mov     bx,bp
+        call    @j11
+        push    dx
+        mov     cx,0010h
+        mov     di,0FFF8h
+        add     di,bp
+@j4:    push    cx
+        mov     bx,bp
+        call    @j17
+@j5:    mov     bx,di
+        mov     dx,0008h
+        add     dx,bp
+        call    @j15
+        mov     bx,dx
+        dec     bx
+        inc     byte ptr [bp]
+        mov     al,[bx]
+        test    al,al
+        jns     @j5
+        dec     byte ptr [bp]
+        mov     bx,di
+        mov     si,0008h
+        add     si,bp
+        mov     cx,0008h
+        clc
+@j6:    mov     al,[si]
+        adc     al,[bx]
+        daa
+        mov     [si],al
+
+        inc     si
+        inc     bx
+        loop    @j6
+        pop     cx
+        loop    @j4
+        pop     dx
+        pop     ax
+        push    ax
+        xor     ah,dh
+        jz      @j7
+        call    @j12                      ; Large jump translated into short
+        mov     di,bx
+        call    @j10                      ; Large jump translated into short
+        jz      @j7
+        mov     bx,0008h
+        mov     dx,bp
+        sub     dx,bx
+        add     bx,bp
+        mov     di,dx
+        call    @j15                      ; Large jump translated into short
+        mov     si,di
+        mov     di,0008h
+        add     di,bp
+        mov     cx,0004h
+        repz    movsw
+@j7:    pop     ax
+        test    ah,ah
+        jns     @j8
+        mov     bx,0008h
+        add     bx,bp
+        call    @j12                      ; Large jump translated into short
+@j8:    pop     ax
+        test    al,al
+        jnz     @j9
+        mov     cx,0004h
+        mov     si,bp
+        mov     di,0008h
+        add     di,bp
+        repz    movsw
+@j9:    ret     0010h
+
+@j10:   mov     cx,0004h
+        xor     ax,ax
+        repz    scasw
+        ret
+@j11:   mov     dh,[bx]+007h
+        and     dh,0F0h
+        jns     @j14
+@j12:   mov     cx,0008h
+        clc
+@j13:   mov     al,ch
+        sbb     al,[bx]
+        das
+        mov     [bx],al
+        inc     bx
+        loop    @j13
+@j14:   ret
+
+@j15:   mov     cx,0008h
+        clc
+        xchg    di,dx
+@j16:   mov     al,[di]
+
+        sbb     al,[bx]
+        das
+        mov     [di],al
+        inc     di
+        inc     bx
+        loop    @j16
+        xchg    di,dx
+        ret
+@j17:   mov     cx,0010h
+        xor     al,al
+        mov     dh,04h
+@j18:   mov     dl,[bx]
+        mov     ah,dl
+        mov     si,cx
+        mov     cl,dh
+        shl     ax,cl
+        mov     cx,si
+        mov     al,dl
+        mov     [bx],ah
+        inc     bx
+        loop    @j18
+        ret
+
+
+        END
+
+

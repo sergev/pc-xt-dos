@@ -1,0 +1,38 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1ZEROD'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SIGNAL:NEAR
+
+        PUBLIC          ?ZEROD                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@D1     dw      offset @D2
+        dw      offset @D3
+        dw      offset @D4
+        dw      offset @D5
+@D2     db      004h
+@D3     db      001h
+@D4     db      000h
+        db      000h
+@D5     db      000h
+        db      000h
+
+
+CODE    CSEG
+
+
+?ZEROD: mov      @D3,al
+        mov     bx,offset @D1
+        jmp     ?SIGNAL
+
+
+        END
+
+

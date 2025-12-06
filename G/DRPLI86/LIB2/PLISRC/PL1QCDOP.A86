@@ -1,0 +1,128 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QCDOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?CNVER:NEAR
+        EXTRN           ?QDDOP:NEAR
+        EXTRN           ?DNGOP:NEAR
+
+        PUBLIC          ?QCDOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?QCDOP: mov     di,sp
+        inc     di
+        inc     di
+        xor     cl,cl
+        push    cx
+        mov     ah,cl
+        mov     cx,ax
+        mov     al,20h
+        repz    scasb
+        jnz     @j1
+        jcxz    @j3
+@j1:    dec     di
+        inc     cx
+        mov     al,[di]
+        cmp     al,2Dh
+        jz      @j2
+        cmp     al,2Bh
+        jnz     @j4
+@j2:    inc     di
+        dec     cx
+        jcxz    @j7
+        jmps    @j4
+@j3:    pop     bx
+        mov     bl,01h
+        push    bx
+@j4:    push    ax
+        mov     al,ah
+        mov     bx,ax
+        cwd
+        mov     bp,dx
+        mov     si,bp
+        jcxz    @j13
+@j5:    mov     al,[di]
+        cmp     al,2Eh
+        jnz     @j6
+        pop     ax
+        test    ah,ah
+        jnz     @j7
+        inc     ah
+        push    ax
+        jmps    @j11
+@j6:    cmp     al,20h
+        jz      @j12
+        cmp     al,30h
+        jc      @j7
+        cmp     al,39h
+        jbe     @j8
+@j7:    jmp     ?CNVER
+@j8:    and     al,0Fh
+        push    cx
+        mov     cl,04h
+@j9:    clc
+        rcl     bx,1
+        rcl     si,1
+        rcl     bp,1
+        rcl     dx,1
+        loop    @j9
+        pop     cx
+        test    dh,0F0h
+        jnz     @j7
+        or      bl,al
+        pop     ax
+        test    ah,ah
+        jz      @j10
+        inc     ah
+@j10:   push    ax
+        push    bx
+        mov     bx,sp
+        mov     byte ptr [bx]+004h,0FFh
+
+        pop     bx
+@j11:   inc     di
+        loop    @j5
+        jmps    @j13
+@j12:   repz    scasb
+        jnz     @j7
+@j13:   dec     di
+        dec     di
+        push    di
+        mov     di,sp
+        push    dx
+        push    bp
+        push    si
+        push    bx
+        cmp     byte ptr [di]+004h,01h
+        jz      @j14
+        jc      @j7
+        cmp     byte ptr [di]+002h,2Dh
+        jnz     @j14
+        call    ?DNGOP
+@j14:   mov     si,sp
+        add     si,+006h
+        mov     di,[si]+002h
+        mov     al,[si]+007h
+        mov     bx,[si]+008h
+        mov     dl,[si]+005h
+        mov     cx,0004h
+        std
+        repz    movsw
+        cld
+        mov     [di],bx
+        mov     sp,di
+        dec     dl
+        js      @j15
+        sub     al,dl
+@j15:   jmp     ?QDDOP
+
+
+        END
+
+

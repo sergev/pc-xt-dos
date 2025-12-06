@@ -1,0 +1,259 @@
+(************************************************************************
+*                                                                       *
+* file name :  demop.src                                                *
+*                                                                       *
+* purpose   :  demonstration program for PASCAL interfacing to GSX      *
+*              PASCAL MTPLUS and MT+86                                  *
+*                                                                       *
+*              declares five gsx parameter arrays for -                 *
+*              control, integer in, points in, integer out, points out  *
+*                                                                       *
+* calls     :  gsx (ptsout, intout, ptsin, intin, contrl)               *
+*              Note the calling order of the 5 parameter arrays         * 
+*                                                                       *
+* to link   :  linkmt demop,gsxpascl,trancend,fpreals,paslib/s/d:7900   *
+*                                                                       *
+* history   :  08 aug 1983  RK                                          *
+*                                                                       *
+*************************************************************************)
+
+program demop ;
+
+(* declare global types and constants for GSX *)
+
+const
+    OPEN_CMD		= 1 ;
+    CLOSE_CMD		= 2 ;
+    CLEAR_CMD        	= 3 ;
+
+    PLINE_CMD		= 6 ;
+    TEXT_CMD         	= 8 ; 
+    FILAREA_CMD		= 9 ;
+    GDP_CMD		= 11 ;
+
+    TEXT_HGT_CMD	= 12 ;
+
+    LINE_STYL_CMD   	= 15 ;
+    FILL_STYL_CMD	= 23 ;
+    FILL_INDX_CMD	= 24 ;
+
+    MAX_CNTL_VALS	= 10 ;
+    MAX_INTIN_VALS	= 80 ;
+    MAX_INTOUT_VALS	= 45 ;
+    MAX_PTS_VALS	= 100;
+			
+type
+    cntrl_array	 = array [ 1..MAX_CNTL_VALS ] of integer ;
+    intin_array  = array [ 1..MAX_INTIN_VALS ] of integer; 
+    intout_array = array [ 1..MAX_INTOUT_VALS ] of integer;
+    ptsin_array  = array [ 1..MAX_PTS_VALS ] of integer;
+    ptsout_array = array [ 1..MAX_PTS_VALS ] of integer;
+
+    i_point = record 
+		x, y : integer
+	      end ; (* i_point record *)
+
+    i_rectangle = record
+		left, right, bottom, top : integer
+	    end ; (* i_rectangle record *)
+
+var
+    contrl :	cntrl_array ;	(* global arrays for calling gsx *)
+    intin :	intin_array ;
+    intout :    intout_array ;
+    ptsin :     ptsin_array ;
+    ptsout :    ptsout_array ;
+    cur_dev :	integer;
+    ch :        char ;
+
+(* gsx procedure tools *)
+
+external procedure Gsx( var ptsout : 	ptsout_array ;
+			var intout :	intout_array ;
+			var ptsin  :	ptsin_array  ;
+			var intin  :	intin_array  ;
+			var contrl: 	cntrl_array  ) ;
+
+
+(* draw text with current attributes *)
+procedure draw_text( x, y : integer ; s : string ) ;
+var 
+    i : integer ;
+begin
+    contrl[ 1 ] := TEXT_CMD ;
+    contrl[ 2 ] := 1 ;
+    contrl[ 4 ] := length( s ) ;
+    ptsin[ 1 ] := x ;
+    ptsin[ 2 ] := y ;
+    for i := 1 to length( s ) do
+	intin[ i ] := ord( s[ i ] ) ;
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure show_text *)
+
+
+(* load ptsin with rectangle (5) points *)
+procedure draw_rect( rect : i_rectangle ) ;
+begin
+    contrl[ 1 ] := PLINE_CMD ;
+    contrl[ 2 ] := 5 ;
+    with rect do
+	begin    
+	ptsin[ 1 ] := left ;
+	ptsin[ 2 ] := bottom ;
+	ptsin[ 3 ] := right ;
+	ptsin[ 4 ] := bottom ;
+	ptsin[ 5 ] := right ;
+	ptsin[ 6 ] := top ;
+	ptsin[ 7 ] := left ;
+	ptsin[ 8 ] := top ;
+	ptsin[ 9 ] := left ;
+	ptsin[10 ] := bottom ;
+	end ; (* with *)
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure draw_rect *)
+
+
+(* show bar with current attributes *)
+procedure Bar( rect : i_rectangle ) ;
+begin
+    contrl[ 1 ] := GDP_CMD ;
+    contrl[ 2 ] := 2 ;		(* 2 points in ptsin *)
+    contrl[ 4 ] := 0 ;		(* 0 points in intin *)
+    contrl[ 6 ] := 1 ;		(* 1 = bar GDP *)
+    with rect do
+	begin
+	ptsin[ 1 ] := left ;
+	ptsin[ 2 ] := bottom ;
+	ptsin[ 3 ] := right ;
+	ptsin[ 4 ] := top ;
+	end ; (* with *)
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure Bar *)
+
+
+procedure draw_bar ( lowx, wide : integer ) ;
+var
+    i_rect : i_rectangle ;
+    i : integer ;
+begin
+    for i := 1 to 6 do
+    begin
+	with i_rect do
+	    begin
+	    left   := lowx ;
+	    bottom := lowx ;
+	    right  := lowx + wide ;
+	    top    := lowx + wide ;
+	    end ;
+	set_attrib(fill_indx_cmd, i) ;  (* set fill index *)
+	bar( i_rect ) ;			(* bar fill *)
+	lowx := lowx + (wide div 2) ;
+    end ; (* for i *)
+end ; (* procedure draw_bar *)
+
+
+procedure set_txt_hgt( height : integer ) ;
+begin
+    contrl[ 1 ] := TEXT_HGT_CMD ;
+    contrl[ 2 ] := 1 ;
+    ptsin[ 1 ]  := 0 ;
+    ptsin[ 2 ]  := height ;
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure set_txt_hgt *)     
+
+
+procedure draw_line(x1, y1, x2, y2 : integer ) ;
+begin
+    contrl[ 1 ] := PLINE_CMD ;
+    contrl[ 2 ] := 2 ;
+    ptsin[ 1 ] := x1 ;
+    ptsin[ 2 ] := y1 ;
+    ptsin[ 3 ] := x2 ;
+    ptsin[ 4 ] := y2 ;
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure draw_line *)
+
+
+procedure set_attrib( cmd, attribute : integer ) ; (* use something else if *)
+begin						   (* want to get set style *)
+    contrl[ 1 ] := cmd ;			   (* back from gsx *)
+    contrl[ 2 ] := 0 ;
+    intin[ 1 ]  := attribute ;
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure set_attrib *)
+
+
+procedure draw_border ;
+var
+    i_rect : i_rectangle ;
+begin
+    with i_rect do
+	begin
+	left   := 0 ;
+	bottom := 0  ;
+	right  := 32767 ;
+	top    := 32767 ;
+	end ;
+    Draw_rect( i_rect ) ;	(* rectangle around screen limits *)
+end ; (* procedure draw_border *)
+
+
+procedure exit_gsx ;
+begin
+    contrl[ 1 ] := CLOSE_CMD ;
+    contrl[ 2 ] := 0 ;
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure exit_gsx *)
+
+
+procedure clear_it ;
+begin
+    contrl[ 1 ] := CLEAR_CMD ;
+    contrl[ 2 ] := 0 ;
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure clear_it *)
+
+
+procedure open_wk( dev_no : integer ) ;
+var
+   i : integer ;		(* to load intin with defaults *)
+begin
+    contrl[ 1 ] := OPEN_CMD ;
+    contrl[ 2 ] := 0 ;		(* no input coordinates *)
+    contrl[ 4 ] := 10 ;		(* 10 integers in intin array *)
+    intin[ 1 ] := dev_no ;
+    for i := 2 to 10 do
+        intin[ i ] := 1 ;	(* default attributes *)
+    gsx( ptsout, intout, ptsin, intin, contrl ) ;
+end ; (* procedure open_wk *)
+
+
+procedure init_gsx ;
+begin
+    writeln( 'Which output device- ' ) ;
+    writeln( '1  - CRT' ) ;
+    writeln( '11 - Plotter' ) ;
+    writeln( '21 - Printer' ) ;
+    write( '? ' ) ;
+    readln( cur_dev ) ;
+    open_wk( cur_dev ) ;
+end ; (* procedure init_gsx *)
+
+
+begin (* main program *)
+    Init_gsx ;				(* Initialize graphics device *)
+    Clear_it ;				(* clear display screen *)
+    Draw_border ;			(* outline display area *)
+    Set_attrib (line_styl_cmd, 3) ;	(* set line style *)
+    Draw_line (0, 0, 32767, 32767) ;	(* draw a diagonal line *)
+    Set_txt_hgt (1000) ;		(* set character height *)
+    Draw_text (16383, 16383, 'Pascal-GSX Demo') ;	(* output text *)
+    Set_attrib (fill_styl_cmd, 2) ;	(* set fill style *)
+    Draw_bar (1200, 1200) ;		(* draw bars *)
+    Set_attrib (fill_styl_cmd, 3) ;	(* set fill style *)
+    Draw_bar (21968, 1200) ;		(* draw bars *)
+    readln (ch) ;			(* wait for a key stroke *)
+    Exit_gsx ;				(* exit graphics *)
+end. (* main program *)
+
+

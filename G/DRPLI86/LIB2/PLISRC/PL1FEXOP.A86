@@ -1,0 +1,68 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FEXOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?IE20N:ABS
+        EXTRN           ?IAB15:NEAR
+        EXTRN           ?FM44L:NEAR
+        EXTRN           ?FD44S:NEAR
+
+        PUBLIC          ?FEX07                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?FEX15                  ; Located at 1:0003h Type = 1
+
+CODE    CSEG
+
+
+?FEX07: cbw
+        mov     bx,ax
+?FEX15: mov     cx,8100h
+        sub     dx,dx
+        or      bx,bx
+        jnz     @j1
+        pop     bx
+        pop     ax
+        pop     ax
+        push    cx
+        push    dx
+        jmp     bx
+@j1:    pushf
+        call    ?IAB15
+@j2:    push    bx
+        mov     bx,0006h
+        add     bx,sp
+        push    cx
+        push    dx
+        call    ?FM44L
+        pop     dx
+        pop     cx
+        pop     bx
+        dec     bx
+        jnz     @j2
+        popf
+        pop     bx
+        pop     ax
+        pop     ax
+        jns     @j3
+        push    bx
+        mov     ax,8100h
+        push    ax
+        sub     ax,ax
+        push    ax
+        push    cx
+        push    dx
+        call    ?FD44S
+        pop     dx
+        pop     cx
+        pop     bx
+@j3:    push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

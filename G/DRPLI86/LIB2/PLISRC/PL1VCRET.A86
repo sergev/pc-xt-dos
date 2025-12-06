@@ -1,0 +1,36 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1VCRET'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?VCRET                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?VCRET: pop     si
+        mov     cl,al
+        sub     ch,ch
+        jcxz    @j1
+        mov     si,sp
+        add     si,cx
+        push    word ptr [si]
+        mov     di,si
+        dec     si
+        inc     di
+        std
+        repz    movsb
+        cld
+        pop     bx
+        pop     cx
+        push    bx
+@j1:    ret
+
+
+        END
+
+

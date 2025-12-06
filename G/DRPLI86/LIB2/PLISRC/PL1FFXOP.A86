@@ -1,0 +1,50 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FFXOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?EXP:NEAR
+        EXTRN           ?LOG:NEAR
+        EXTRN           ?FM44R:NEAR
+
+        PUBLIC          ?FFXOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?FFXOP: mov     bp,sp
+        cmp     byte ptr [bp]+009h,00h
+        jnz     @j1
+        test    byte ptr [bp]+004h,80h
+        js      @j1
+        ret     0004h
+@j1:    add     bp,+006h
+        push    bp
+        mov     bx,sp
+        call    ?LOG
+        mov     bx,0008h
+        add     bx,sp
+        call    ?FM44R
+        mov     bx,sp
+        push    bx
+        mov     bx,sp
+        call    ?EXP
+        pop     dx
+        pop     cx
+        add     sp,+008h
+        pop     bx
+        pop     ax
+        pop     ax
+        pop     ax
+        pop     ax
+        push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

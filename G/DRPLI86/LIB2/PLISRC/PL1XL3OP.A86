@@ -1,0 +1,98 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1XL3OP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?XL3OP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?XL3OP: pop     bx
+        lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        push    bx
+        mov     bx,0002h
+        add     bx,sp
+        mov     ch,bh
+        mov     cl,bl
+        mov     dl,al
+        mov     dh,00h
+        add     bx,dx
+        inc     bx
+        inc     bx
+        push    bx
+        inc     bx
+        mov     dl,[bx]
+        mov     dh,00h
+        inc     bx
+        add     bx,dx
+        pop     dx
+        mov     byte ptr [bx],00h
+@j1:    mov     al,[bx]
+        inc     byte ptr [bx]
+        inc     bx
+        cmp     al,[bx]
+        dec     bx
+        jc      @j2
+        jmp     @j7                       ; Large jump translated into short
+@j2:    push    cx
+        push    bx
+        inc     bx
+        inc     bx
+        add     al,bl
+        mov     bl,al
+        jnc     @j3
+        inc     bh
+@j3:    mov     al,[bx]
+        push    bx
+        push    dx
+        mov     bh,ch
+        mov     bl,cl
+        inc     bx
+        mov     cl,[bx]
+        inc     cl
+        inc     bx
+        mov     dx,0000h
+@j4:    dec     cl
+        jz      @j6
+        cmp     al,[bx]
+        jz      @j5
+        inc     dx
+        inc     bx
+        jmps    @j4
+@j5:    pop     bx
+        push    bx
+        inc     bx
+        mov     al,dl
+        cmp     al,[bx]
+        mov     al,20h
+        jnc     @j6
+        inc     bx
+        add     bx,dx
+        mov     al,[bx]
+@j6:    pop     dx
+        pop     bx
+        mov     [bx],al
+        pop     bx
+        pop     cx
+        jmp     @j1                       ; Large jump translated into short
+@j7:    pop     dx
+        mov     sp,bx
+        pop     ax
+        xchg    al,ah
+
+        sahf
+        xchg    bx,dx
+        jmp     bx
+
+
+        END
+
+

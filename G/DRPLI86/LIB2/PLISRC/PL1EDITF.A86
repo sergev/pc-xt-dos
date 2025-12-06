@@ -1,0 +1,209 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1EDITF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?FPBSTK, ?FMTS
+
+
+        EXTRN           ?SIGNAL:NEAR
+
+        PUBLIC          ?EDITF                  ; Located at 3:0000h Type = 1
+        PUBLIC          ?GNFMT                  ; Located at 3:0005h Type = 1
+
+?FPBSTK DSEG    common
+
+
+@fs1    rw      1
+@fs2    rw      1
+        rs      0000fh
+
+
+DATA    DSEG
+
+
+@d1     dw      offset @d2
+        dw      offset @d3
+        dw      offset @fs1
+        dw      offset @d4
+@d2     db      000h
+@d3     db      005h
+@d4     dw      offset @d5
+@d5     db      ' Format Overflow',000h
+
+@d6     rs      000A0h
+
+
+CODE    CSEG
+
+
+?EDITF: xchg    bx,dx
+        jmp     @j11
+?GNFMT: call    @j13
+        mov     dl,[bx]
+        call    @j14
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        mov     si,dx
+        mov     al,[si]
+        cmp     al,81h
+        jz      @j8
+        cmp     al,80h
+        jnz     @j6
+        call    @j11                      ; Large jump translated into short
+        jmps    ?GNFMT
+@j6:    xchg    bx,dx
+        inc     bx
+        mov     ch,[bx]
+        push    bx
+        cmp     al,03h
+        jnc     @j7
+        pop     bx
+        inc     bx
+        mov     cl,[bx]
+        push    bx
+        cmp     al,02h
+        jnz     @j7
+        pop     bx
+        lahf
+        inc     bx
+        sahf
+        push    bx
+        push    dx
+        mov     dl,[bx]
+        mov     dh,00h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        pop     dx
+@j7:    lahf
+        inc     bx
+        sahf
+        xchg    bx,dx
+        mov     [bx],dh
+        lahf
+        dec     bx
+        sahf
+        mov     [bx],dl
+        pop     bx
+        ret
+
+@j8:    inc     dx
+        push    dx
+        inc     bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        dec     bx
+        dec     bx
+        mov     [bx],dh
+        dec     bx
+        mov     [bx],dl
+        mov     dx,0004h
+        add     bx,dx
+        mov     al,[bx]
+        or      al,al
+        pop     cx
+        jnz     @j9
+        jmp     ?GNFMT                    ; Large jump translated into short
+@j9:    dec     byte ptr [bx]
+        jz      @j10
+        jmp     ?GNFMT                    ; Large jump translated into short
+
+@j10:   call    @j13                      ; Large jump translated into short
+        dec     byte ptr [bx]
+        mov     dl,[bx]
+        call    @j14                      ; Large jump translated into short
+        mov     [bx],cl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],ch
+        jmp     ?GNFMT
+@j11:   lahf
+        inc     dx
+        sahf
+        mov     si,dx
+        mov     al,[si]
+        lahf
+        inc     dx
+        sahf
+        mov     cl,al
+        push    dx
+        call    @j13                      ; Large jump translated into short
+        inc     byte ptr [bx]
+        mov     al,[bx]
+        cmp     al,20h
+        jnc     @j12
+        mov     dl,al
+        call    @j14                      ; Large jump translated into short
+        pop     dx
+        mov     [bx],dl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],dh
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],cl
+        ret
+
+@j12:   mov     bx,offset @d1
+        jmp     ?SIGNAL
+
+@j13:   mov     bx,@fs2
+        dec     bl
+        mov     bh,00h
+        mov     dx,offset @f1
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        ret
+
+@j14:   mov     dh,00h
+        mov     bx,offset @d6
+        lahf
+        add     bx,dx
+        sahf
+        lahf
+        add     bx,dx
+        sahf
+        lahf
+        add     bx,dx
+        sahf
+        lahf
+        add     bx,dx
+        sahf
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        ret
+
+
+?FMTS   DSEG   common
+
+
+@f1     rs      00008h
+
+
+        END
+
+

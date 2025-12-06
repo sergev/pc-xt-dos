@@ -1,0 +1,364 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1RAND'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?BDOS:NEAR
+
+        PUBLIC          ?RFSIZ                  ; Located at 2:00FEh Type = 1
+        PUBLIC          ?RRFCB                  ; Located at 2:01A8h Type = 1
+        PUBLIC          ?RWFCB                  ; Located at 2:01ACh Type = 1
+; thirty-one numbered labels
+
+DATA    DSEG
+
+
+@d1     rw      1
+@d2     rb      1
+@d3     rw      1
+@d4     rb      1
+@d5     rb      1
+@d6     rb      1
+
+
+CODE    CSEG
+
+
+@j1:    mov     cl,0Ch
+        call    ?BDOS
+        mov     al,bl
+        mov     bx,offset @d6
+        mov     byte ptr [bx],0FFh
+        cmp     al,20h
+        jnc     @j2
+        ret
+@j2:    inc     byte ptr [bx]
+        ret
+@j3:    mov     cl,1Ah
+        mov     dx,0080h
+        call    ?BDOS
+        ret
+@j4:    mov     al,0FFh
+        mov      @d5,al
+        or      al,al
+        ret
+@j5:    mov     bx,@d3
+        mov     dx,0021h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        inc     byte ptr [bx]
+        jz      @j6
+        ret
+@j6:    lahf
+        inc     bx
+        sahf
+        inc     byte ptr [bx]
+        jz      @j7
+        ret
+@j7:    lahf
+        inc     bx
+        sahf
+        inc     byte ptr [bx]
+        ret
+@j8:    push    bx
+        mov     al,[bx]
+        inc     bx
+        mov     cl,[bx]
+        inc     bx
+        mov     ch,[bx]
+        inc     bx
+        sub     al,[bx]
+        mov     al,cl
+        inc     bx
+        sbb     al,[bx]
+        mov     al,ch
+        inc     bx
+        sbb     al,[bx]
+        pop     bx
+        ret
+@j9:    mov     al, @d5
+        or      al,al
+        jz      @j10
+        ret
+@j10:   mov     bx,@d3
+        xchg    bx,dx
+        mov     bx,0021h
+        add     bx,dx
+        mov     al, @d4
+        cmp     al,15h
+        jz      @j11
+
+        call    @j8                       ; Large jump translated into short
+        jc      @j11
+        jmp     @j4                       ; Large jump translated into short
+@j11:   mov     al, @d6
+        or      al,al
+        jnz     @j12
+        ret
+@j12:   mov     al,[bx]
+        and     al,7Fh
+        mov     ch,al
+        mov     al,[bx]
+        rcl     al,1
+        inc     bx
+        mov     al,[bx]
+        rcl     al,1
+        mov     cl,al
+        cmp     al,3Fh
+        jnc     @j14
+        inc     bx
+        mov     al,[bx]
+        or      al,al
+        jnz     @j14
+        mov     bx,0020h
+        add     bx,dx
+        mov     [bx],ch
+        mov     bx,000Ch
+        add     bx,dx
+        mov     al,cl
+        sub     al,[bx]
+        jnz     @j13
+        ret
+@j13:   push    cx
+        push    dx
+        mov     cl,10h
+        call    ?BDOS
+        pop     dx
+        pop     cx
+        mov     bx,000Ch
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     [bx],cl
+        mov     cl,0Fh
+        call    ?BDOS
+        inc     al
+        jnz     @j15
+        inc     al
+        ret
+@j14:   call    @j4
+        ret
+@j15:   xor     al,al
+        ret
+@j16:   mov     al,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     cl,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     ch,[bx]
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],al
+        lahf
+
+        inc     bx
+        sahf
+        mov     [bx],cl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],ch
+        ret
+?RFSIZ: push    bx
+        call    @j3
+        call    @j1
+        mov     al,[bx]
+        or      al,al
+        pop     dx
+        jnz     @j17
+        push    dx
+        mov     cl,23h
+        call    ?BDOS
+        pop     dx
+        mov     bx,0021h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        call    @j16                      ; Large jump translated into short
+        ret
+@j17:   mov     bx,000Ch
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     byte ptr [bx],3Fh
+        push    bx
+        push    dx
+        mov     cx,0000h
+        push    cx
+        mov     cl,11h
+@j18:   call    ?BDOS
+        pop     cx
+        inc     al
+        jz      @j21
+        dec     al
+        and     al,03h
+        add     al,al
+        add     al,al
+        add     al,al
+        add     al,al
+        add     al,al
+        add     al,0Ch
+        mov     dl,al
+        mov     dh,00h
+        mov     bx,0080h
+        add     bx,dx
+        mov     al,ch
+        cmp     al,[bx]
+        jc      @j19
+        jnz     @j20
+@j19:   mov     ch,[bx]
+        mov     dx,0003h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+
+        mov     cl,[bx]
+@j20:   push    cx
+        mov     cl,12h
+        jmps    @j18
+@j21:   pop     dx
+        pop     bx
+        xor     al,al
+        mov     [bx],al
+        mov     al,ch
+        rcr     al,1
+        mov     ch,al
+        mov     al,00h
+        rcr     al,1
+        add     al,cl
+        mov     cl,al
+        mov     al,00h
+        adc     al,ch
+        mov     ch,al
+        mov     bx,0024h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     [bx],cl
+        lahf
+        inc     bx
+        sahf
+        mov     [bx],ch
+        lahf
+        inc     bx
+        sahf
+        mov     byte ptr [bx],00h
+        ret
+?RRFCB: mov     ch,14h
+        jmps    @j22
+?RWFCB: mov     ch,15h
+@j22:   mov     @d1,bx
+        xchg    bx,dx
+        mov     @d3,bx
+        mov      @d2,al
+        mov     al,ch
+        mov      @d4,al
+        call    @j1
+        xor     al,al
+        mov      @d5,al
+@j23:   call    @j3
+        mov     bx,offset @d2
+        mov     al,[bx]
+        dec     byte ptr [bx]
+        or      al,al
+        jnz     @j24
+        jmp     @j31
+@j24:   call    @j9
+        jz      @j25
+        dec     al
+        jnz     @j27
+        mov     al, @d4
+        cmp     al,15h
+        jnz     @j27
+
+        mov     cl,16h
+        mov     bx,@d3
+        xchg    bx,dx
+        call    ?BDOS
+        inc     al
+        jnz     @j25
+        call    @j4
+        jmps    @j27
+@j25:   mov     bx,@d1
+        xchg    bx,dx
+        mov     cl,1Ah
+        call    ?BDOS
+        mov     al, @d4
+        mov     cl,al
+        mov     bx,@d3
+        xchg    bx,dx
+        mov     al, @d6
+        or      al,al
+        jnz     @j26
+        mov     al,cl
+        add     al,0Dh
+        mov     cl,al
+@j26:   call    ?BDOS
+        or      al,al
+        jz      @j29
+        mov     al, @d4
+        cmp     al,14h
+        jz      @j27
+        jmp     @j4
+@j27:   mov     bx,@d1
+        mov     cl,80h
+        xor     al,al
+@j28:   mov     [bx],al
+        lahf
+        inc     bx
+        sahf
+        dec     cl
+        jnz     @j28
+@j29:   call    @j5
+        mov     al, @d5
+        or      al,al
+        jnz     @j30
+        mov     bx,@d3
+        mov     dx,0021h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        call    @j8
+        jc      @j30
+        call    @j16
+
+@j30:   mov     bx,@d1
+        mov     dx,0080h
+        lahf
+        add     bx,dx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        mov     @d1,bx
+        jmp     @j23
+@j31:   mov     al, @d5
+        not     al
+        or      al,al
+        ret
+
+
+        END
+
+

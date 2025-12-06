@@ -1,0 +1,9 @@
+ tan: proc(arg) returns(float bin(24));
+ dcl arg         float bin(24);
+ dcl temp        float bin(24);
+ temp = cos(arg);
+ if temp = 0 then
+    signal error(3);
+ return(sin(arg)/temp);
+ end tan;
+

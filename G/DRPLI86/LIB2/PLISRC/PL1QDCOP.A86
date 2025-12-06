@@ -1,0 +1,82 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QDCOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?QDCOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?QDCOP: mov     dl,al
+        mov     dh,ch
+        mov     cx,0005h
+        mov     si,sp
+        sub     sp,+012h
+        mov     di,sp
+        repz    movsw
+        mov     word ptr [di],3030h
+        sub     si,+01Ah
+        mov     bh,20h
+        test    byte ptr [si]+007h,80h
+        jz      @J2
+        xor     bx,bx
+        mov     cl,08h
+@j1:    mov     al,bh
+        sbb     al,[bx+si]
+        das
+        mov     [bx+si],al
+        inc     bx
+        loop    @j1
+        mov     bh,2Dh
+@J2:    mov     bp,0010h
+        inc     di
+        mov     ah,30h
+        mov     cx,0F04h
+@j3:    mov     bl,[si]
+        call    @j8                       ; Large jump translated into short
+        jz      @j4
+        shr     bl,cl
+        inc     si
+        call    @j8                       ; Large jump translated into short
+        jnz     @j3
+@j4:    dec     di
+        mov     cx,0011h
+@j5:    cmp     byte ptr [di],2Eh
+        jnz     @j6
+        dec     di
+        mov     byte ptr [di],30h
+        jmps    @j7
+@j6:    cmp     byte ptr [di],30h
+        jnz     @j7
+        mov     byte ptr [di],20h
+        inc     di
+        loop    @j5
+@j7:    dec     di
+        mov     [di],bh
+        mov     al,dl
+        mov     cx,001Ah
+        sub     cl,al
+        pop     bx
+        add     sp,cx
+        jmp     bx
+@j8:    mov     al,ch
+        and     al,bl
+        or      al,ah
+        mov     [bp+di],al
+        dec     dh
+
+        jnz     @j9
+        dec     bp
+        mov     byte ptr [bp+di],2Eh
+@j9:    dec     bp
+        ret
+
+
+        END
+
+

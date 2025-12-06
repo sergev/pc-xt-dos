@@ -1,0 +1,42 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1IMDOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?IMDOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?IMDOP: or      bx,bx
+        jnz     @j1
+        xchg    bx,dx
+        ret
+@j1:    push    dx
+        mov     al,bh
+        xor     al,dh
+        pushf
+        mov     ax,dx
+        cwd
+        idiv    bx
+        or      dx,dx
+        jz      @j3
+        popf
+        jns     @j2
+        dec     ax
+@j2:    imul    bx
+        pop     bx
+        sub     bx,ax
+        ret
+@j3:    add     sp,+004h
+        xor     bx,bx
+        ret
+
+
+        END
+
+

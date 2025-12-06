@@ -1,0 +1,41 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DLDOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?DLDOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DLDOP: cbw
+        inc     ax
+        inc     ax
+        shr     ax,1
+        mov     cx,ax
+        mov     si,bx
+        pop     bx
+        mov     dx,0008h
+        sub     sp,dx
+        mov     di,sp
+        sub     dx,cx
+        repz    movsb
+        dec     si
+        lodsb
+        mov     cx,dx
+        jcxz    @j2
+        or      al,al
+        mov     al,99h
+        js      @j1
+        sub     al,al
+@j1:    repz    stosb
+@j2:    jmp     bx
+
+
+        END
+
+

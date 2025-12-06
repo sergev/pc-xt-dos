@@ -1,0 +1,156 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1RECOV'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?CONSP, ?FPBSTK, ?FPB
+
+
+        EXTRN           ?FREOP:NEAR
+        EXTRN           ?QIOOP:NEAR
+
+        PUBLIC          ?RSBLK                  ; Located at 5:0000h Type = 1
+        PUBLIC          ?RECOV                  ; Located at 5:0046h Type = 1
+        PUBLIC          ?OFCOP                  ; Located at 5:009Fh Type = 1
+data    dseg
+        extrn ?reclst:word
+
+?CONSP  DSEG    common
+
+
+@cs1    rb      1
+@cs2    rs      00020h
+
+
+?FPBSTK DSEG    common
+
+
+@fs1    rw      1
+@fs2    rs      00011h
+
+
+?FPB    DSEG    common
+
+
+@f1     rs      0000Fh
+@f2     rs      0001Fh
+
+
+CODE    CSEG
+
+
+?RSBLK: push    bx
+        lahf
+        xchg    al,ah
+        push    ax
+        mov     bx,?RECLST
+        mov     al,bh
+        or      al,bl
+        jz      @j3
+        push    bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        xchg    bx,dx
+        mov     ?RECLST,bx
+        xchg    bx,dx
+        inc     bx
+        inc     bx
+        inc     bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        inc     bx
+        mov     cl,[bx]
+        inc     bx
+        mov     ch,[bx]
+@j1:    mov     al,ch
+        or      al,cl
+        jz      @j2
+        dec     cx
+        inc     bx
+        mov     al,[bx]
+        mov     si,dx
+        mov     [si],al
+        inc     dx
+        jmps    @j1
+@j2:    pop     bx
+        call    ?FREOP
+@j3:    pop     ax
+        xchg    al,ah
+        sahf
+        pop     bx
+        ret
+?RECOV: mov     bx,?RECLST
+        mov     al,bh
+        or      al,bl
+        jz      @j4
+        push    bx
+        mov     dl,[bx]
+        inc     bx
+        mov     dh,[bx]
+        inc     bx
+        mov     cl,[bx]
+        inc     bx
+        mov     ch,[bx]
+        mov     bx,0004h
+        add     bx,sp
+        mov     al,cl
+        sub     al,bl
+        mov     al,ch
+        sbb     al,bh
+        pop     bx
+        jnc     @j4
+        xchg    bx,dx
+        mov     ?RECLST,bx
+        xchg    bx,dx
+        call    ?FREOP
+        jmps    ?RECOV
+@j4:    mov     al, @fs2
+
+        or      al,al
+        jz      @j5
+        mov     bx,0002h
+        add     bx,sp
+        xchg    bx,dx
+        mov     bx,offset @f2
+        mov     al,dl
+        sub     al,[bx]
+        mov     al,dh
+        inc     bx
+        sbb     al,[bx]
+        jc      @j5
+        call    ?QIOOP
+        jmps    @j4
+@j5:    mov     bx,0001h
+        jmps    @j6
+?OFCOP: mov     bx,0002h
+@j6:    add     bx,sp
+        xchg    bx,dx
+@j7:    mov     al, @cs1
+        or      al,al
+        jnz     @j8
+        ret
+@j8:    mov     cl,al
+        mov     ch,00h
+        mov     bx,offset @cs2
+        dec     cx
+        add     bx,cx
+        add     bx,cx
+        mov     al,dl
+        sub     al,[bx]
+        inc     bx
+        mov     al,dh
+        sbb     al,[bx]
+        jnc     @j9
+        ret
+@j9:    mov     bx,offset @cs1
+        dec     byte ptr [bx]
+        jmps    @j7
+
+
+        END
+
+

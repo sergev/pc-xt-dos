@@ -1,0 +1,32 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1QDDOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?QDDOP                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+        EXTRN           ?QDDSR:ABS
+        EXTRN           ?QDDSL:ABS
+
+
+?QDDOP: or      al,al
+        jnz     @j1
+        ret
+@j1:    mov     bx,word ptr ?QDDSL
+        jns     @j2
+        neg     al
+        mov     bx,word ptr ?QDDSR
+@j2:    cmp     al,0Fh
+        jbe     @j3
+        mov     al,0Fh
+@j3:    jmp     bx
+
+
+        END
+
+

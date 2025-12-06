@@ -1,0 +1,41 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1WRCHR'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+DGROUP  GROUP   ?CNCOL
+
+
+        EXTRN           ?BDOS:NEAR
+
+        PUBLIC          ?WRCHR                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?WRCHR: mov     bx,@cc1
+        mov     al,dl
+        cmp     al,20h
+        jnc     @j1
+        cmp     al,0Dh
+        jnz     @j2
+        mov     bx,0000h
+@j1:    lahf
+        inc     bx
+        sahf
+        mov     @cc1,bx
+@j2:    mov     cl,02h
+        jmp     ?BDOS
+
+
+?CNCOL  DSEG    common
+
+
+@cc1    dw      00001h
+
+
+        END
+
+

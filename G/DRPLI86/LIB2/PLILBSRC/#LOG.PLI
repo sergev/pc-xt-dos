@@ -1,0 +1,53 @@
+ ?log: proc(arg) returns(float bin(24));
+ dcl arg         float bin(24);
+ dcl parm_table(0:5) float bin(24) static init(.6862915,.0067341785,
+      .00011894142,.00000250093475,.0000000572605,.0000000013791205);
+ dcl float_zero   float bin(24) static init(0);
+ dcl fixed_zero   fixed bin(15) static init(0);
+ dcl signal_3     bit(8) static init('03'b4);
+ dcl temp2       float bin(24);
+ dcl hold_arg    float bin(24);
+ dcl temp1       float bin(24);
+ dcl float_half  float bin(24) static init(.5);
+ dcl float_1     float bin(24) static init(1);
+ dcl fixed_1     fixed bin(15) static init(1);
+ dcl float_2     float bin(24) static init(2);
+ dcl fixed_m1    fixed bin(15) static init(-1);
+ dcl float_3     float bin(24) static init(3);
+ dcl fixed_2     fixed bin(15) static init(2);
+ dcl c5          float bin(24) static init(.6931472);
+ dcl ?signal     entry(fixed bin(15),bit(8),ptr,ptr);
+ dcl ?fpex2     entry(fixed bin(7), float bin(24)) returns(float bin(24));
+ dcl errmsg     char(17) external;
+ dcl ex2_arg    fixed bin(7) based;
+
+ hold_arg = arg;
+ if hold_arg <= float_zero then 
+     call ?signal(fixed_zero,signal_3,null,addr(errmsg));
+ temp1 = float_zero;
+ do while(hold_arg <= float_half);
+     temp1 = temp1 - float_1;
+     hold_arg = ?fpex2(addr(fixed_1)->ex2_arg,hold_arg);
+     end;
+ do while(hold_arg >= float_2);
+     temp1 = temp1 + float_1;
+     hold_arg = ?fpex2(addr(fixed_m1)->ex2_arg,hold_arg);
+     end;
+ temp2 = float_3 * (hold_arg - float_1)/(hold_arg + float_1); 
+ hold_arg = temp2*?fpex2(addr(fixed_2)->ex2_arg,temp2) - float_2;
+ dcl temp3       float bin(24);
+ dcl temp4       float bin(24);
+ dcl temp5       float bin(24);
+ temp3 = float_zero;
+ temp4 = float_zero;
+ dcl i           fixed bin(3);
+ do i = 5 to 0 by -1;
+     temp5 = temp4;
+     temp4 = temp3;
+     temp3 = (hold_arg * temp4) - temp5 + parm_table(i);
+     end;
+
+
+ return(temp1*c5+temp2*(temp3-temp4));
+ end ?log;
+

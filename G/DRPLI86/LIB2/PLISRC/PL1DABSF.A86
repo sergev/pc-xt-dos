@@ -1,0 +1,25 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1DABSF'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?DNGOP:NEAR
+
+        PUBLIC          ?DABSF                  ; Located at 1:0000h Type = 1
+
+CODE    CSEG
+
+
+?DABSF: mov     bx,sp
+        cmp     byte ptr [bx]+009h,90h
+        jnc     @j1
+        ret
+@j1:    jmp     ?DNGOP
+
+
+        END
+
+

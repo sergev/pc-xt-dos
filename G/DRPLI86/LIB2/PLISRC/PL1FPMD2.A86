@@ -1,0 +1,67 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1FPMD2'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SIGNAL:NEAR
+
+        PUBLIC          ?FPEX2                  ; Located at 2:0000h Type = 1
+
+DATA    DSEG
+
+
+@d1     dw      offset @d3
+        dw      offset @d5
+        dw      offset @d6
+        dw      offset @d7
+@d2     dw      offset @d4
+        dw      offset @d5
+        dw      offset @d6
+        dw      offset @d7
+@d3     db      002h
+@d4     db      003h
+@d5     db      080h
+@d6     db      000h
+        db      000h
+@d7     db      000h
+        db      000h
+
+
+CODE    CSEG
+
+
+?FPEX2: mov     si,[bx]
+        mov     al,[si]
+        mov     bx,[bx]+002h
+        mov     dx,[bx]
+        mov     cx,[bx]+002h
+        rol     cx,1
+        or      ch,ch
+        jz      @j3
+        or      al,al
+        js      @j1
+        add     al,ch
+        jnc     @j4
+        mov     bx,offset @d1
+        jmps    @j2
+@j1:    add     al,ch
+        jc      @j4
+        mov     bx,offset @d2
+@j2:    call    ?SIGNAL
+@j3:    sub     dx,dx
+        sub     cx,cx
+        mov     al,ch
+@j4:    mov     ch,al
+        ror     cx,1
+        pop     bx
+        push    cx
+        push    dx
+        jmp     bx
+
+
+        END
+
+

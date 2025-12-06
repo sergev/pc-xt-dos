@@ -1,0 +1,54 @@
+ ?pncpr: proc(arg);
+ dcl arg           bit(8);
+ dcl byte          bit(8) based;
+ dcl ?pagop   entry();
+ dcl ?wrbyte  entry(ptr, bit(8)) returns(bit(1));
+ dcl ?signal  entry(fixed bin(15), bit(8), ptr, ptr) returns(bit(1));
+ dcl 1 ?fpb   external,
+       2 fill1(2)  bit(16),
+       2 line_pos  fixed bin(15),
+       2 oopos     fixed bin(15),
+       2 olpos     fixed bin(15),
+       2 fill2     fixed bin(15),
+       2 mark1     bit(1),
+       2 fill4(10) bit(8),
+       2 mark2     fixed bin(15),
+       2 fill5(21) bit(8);
+ dcl 1 ?filat external,
+       2 open      bit(1),
+       2 fill1     bit(1),
+       2 whatever3 bit(1),
+       2 fill2(5)  bit(8),
+       2 chr1      bit(1);
+ dcl 1 ?fpbstk static external,
+       2 something ptr,
+       2 fill1     ptr init(null),
+       2 fill2(15) bit(8);
+
+ if ^(?wrbyte(addr(?fpb),arg)) then do;
+     if ?signal(5,'02'b4,something,null) then;
+     end;
+ else if open then
+     if arg >= '20'b4 then
+         line_pos = line_pos + 1;
+     else if arg = '0d'b4 then
+         line_pos = 1;
+     else if chr1 then   
+         if addr(arg)->byte = '0c'b4 then do;
+             olpos = olpos + 1;
+             oopos = 1;
+             end;
+         else if addr(arg)->byte = '0a'b4 then do;
+             oopos = oopos + 1;
+             if oopos <= 0 then 
+                 oopos = 1;
+             if oopos = mark2 + 1 then do;
+                 if ^(?signal(8,'01'b4,something,null)) then
+                     call ?pagop;
+                 mark1 = '1'b;
+                 end;
+             end;
+ return;
+
+ end ?pncpr;
+

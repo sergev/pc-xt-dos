@@ -1,0 +1,324 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PCOVLAY'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?SIGNAL:NEAR
+        EXTRN           ?PCDOS:NEAR
+        EXTRN           ?BDOS:NEAR
+
+        PUBLIC          ?OVLA0                  ; Located at 2:0000h Type = 1
+        PUBLIC          ?OVLAY                  ; Located at 2:0032h Type = 1
+
+DATA    DSEG
+        EXTRN           ?DFDRV:BYTE
+        EXTRN           ?MEMRY:WORD
+        EXTRN           ?CMEMRY:WORD
+
+@D1     db      000h
+@D2     db      '        OVR'
+
+@D3     rw      1
+@D4     rs      00013h
+@D5     rw      1
+@D6     rw      1
+@D7     dw      00000h
+
+@D8     rs      00050h
+@D9     rw      1
+@D10    rw      2
+@D11    rw      1
+@D12    rw      2
+@D13    rw      1
+@D14    db      000h
+@D15    dw      offset @D16
+        dw      offset @D17
+        dw      offset @D18
+        dw      offset @D19
+@D16    db      000h
+
+@D17    rb      1
+@D18    db      000h
+        db      000h
+@D19    dw      offset @D20
+@D20    db      0FFh
+        db      'OVERLAY, '
+
+@D21    rs      00016h
+@D22    db      000h
+@D23    db      008h,'NO FILE '
+@D24    db      009h,'DRIVE   '
+@D25    db      00Ah,'SIZE    '
+@D26    db      00Bh,'NESTING '
+@D27    db      00Ch,'READ    '
+
+
+CODE    CSEG
+
+
+?OVLA0: pop     si
+        test    byte ptr @D14,01h
+        mov     byte ptr @D14,00h
+        jnz     @J28
+        push    bx
+        cld
+        push    ds
+        pop     es
+        mov     di,offset @D2
+        mov     cx,0008h
+@J26:   lods    cs:byte ptr [si]
+        call    @J53
+        stosb
+        loop    @J26
+        mov     al, ?DFDRV
+        mov      @D1,al
+        call    @J33                      ; Large jump translated into short
+        jc      @J27
+        call    @J36                      ; Large jump translated into short
+@J27:   pop     bx
+@J28:   jmp     @D13
+?OVLAY: mov     al, ?DFDRV
+        mov     si,[bx]
+        cmp     byte ptr [si]+001h,3Ah
+        jnz     @J29
+        mov     al,[si]
+        call    @J53
+        sub     al,40h
+        inc     si
+        inc     si
+@J29:   push    ds
+        pop     es
+        mov     di,offset @D1
+        stosb
+        mov     cx,0008h
+@J30:   lodsb
+        call    @J53
+        stosb
+        loop    @J30
+        mov     byte ptr @D14,01h
+        mov     si,[bx]+002h
+        test    byte ptr [si],01h
+        jnz     @J31
+        call    @J33                      ; Large jump translated into short
+        jc      @J32
+@J31:   call    @J36                      ; Large jump translated into short
+@J32:   ret
+@J33:   mov     al,05h
+        push    ds
+        pop     es
+        mov     si,offset @D8
+@J34:   mov     di,offset @D2
+        push    si
+        mov     cx,0008h
+
+        repz    cmpsb
+        pop     si
+        jz      @J35
+        add     si,+010h
+        dec     al
+        jnz     @J34
+        ret
+@J35:   stc
+        mov     ax,[si]+008h
+        mov      @D13,ax
+        ret
+@J36:   cmp     byte ptr @D1,11h
+        jnc     @J37
+        mov     dx,offset @D1
+        call    @J55
+        mov     word ptr @D4,0001h
+        mov     word ptr @D5,0000h
+        mov     word ptr @D6,0000h
+        call    @J41                      ; Large jump translated into short
+        mov     bx,0080h
+        mov     si,0000h
+        mov     di,offset @D9
+        mov     dx, ?CMEMRY
+        call    @J38                      ; Large jump translated into short
+        mov     si,0009h
+        mov     di,offset @D11
+        mov     dx, ?MEMRY
+        call    @J38                      ; Large jump translated into short
+        mov     ax, @D9
+        mov      @D13,ax
+        call    @J44                      ; Large jump translated into short
+        mov     bx,offset @D9
+        push    cs
+        pop     dx
+        call    @J40                      ; Large jump translated into short
+        mov     bx,offset @D11
+        push    ds
+        pop     dx
+        call    @J40                      ; Large jump translated into short
+        mov     dx,offset @D1
+        call    @J59
+        ret
+@J37:   jmp     @J64
+@J38:   mov     ax,[bx+si]+003h
+
+        mov     cl,04h
+        shl     ax,cl
+        mov     [di],ax
+        mov     ax,[bx+si]+001h
+        mov     [di]+004h,ax
+        mov     cl,04h
+        shl     ax,cl
+        add     ax,[di]
+        dec     ax
+        mov     [di]+002h,ax
+        cmp     dx,ax
+        jnc     @J39
+        jmp     @J65
+@J39:   ret
+@J40:   mov     @D7,dx
+        push    bx
+        call    @J62
+        pop     bx
+        mov     ax,[bx]+004h
+        mov     cl,04h
+        shl     ax,cl
+        mov     dx,[bx]
+        jmp     @J42                      ; Large jump translated into short
+@J41:   push    ds
+        pop     dx
+        call    @J62
+        mov     dx,0080h
+        mov     ax,0080h
+@J42:   push    ax
+        call    @J61
+        pop     cx
+        mov     dx,offset @D1
+        call    @J60
+        or      al,al
+        jnz     @J43
+        ret
+@J43:   jmp     @J67
+@J44:   mov     cx,0005h
+        mov     bx,offset @D8
+@J45:   cmp     byte ptr [bx],00h
+        jz      @J46
+        mov     si,offset @D9
+        mov     di,0008h
+        call    @J51                      ; Large jump translated into short
+        mov     si,offset @D11
+        mov     di,000Ch
+        call    @J51                      ; Large jump translated into short
+@J46:   add     bx,+010h
+        loop    @J45
+        mov     cx,0005h
+        mov     bx,offset @D8
+@J47:   cmp     byte ptr [bx],00h
+
+        jz      @J48
+        add     bx,+010h
+        loop    @J47
+        jmps    @J50
+@J48:   mov     si,offset @D2
+        mov     di,bx
+        mov     cx,0008h
+        push    ds
+        pop     es
+@J49:   lodsb
+        and     al,7Fh
+        stosb
+        loop    @J49
+        mov     ax, @D9
+        stosw
+        mov     ax, @D10
+        stosw
+        mov     ax, @D11
+        stosw
+        mov     ax, @D12
+        stosw
+        ret
+@J50:   jmp     @J66                      ; Large jump translated into short
+@J51:   mov     ax,[bx+di]+002h
+        cmp     ax,[si]
+        jc      @J52
+        mov     ax,[si]+002h
+        cmp     ax,[bx+di]
+        jc      @J52
+        mov     byte ptr [bx],00h
+@J52:   ret
+@J53:   cmp     al,61h
+        jc      @J54
+        cmp     al,7Bh
+        jnc     @J54
+        and     al,0DFh
+@J54:   ret
+@J55:   mov     di,000Ch
+        add     di,dx
+        mov     cx,0015h
+        push    ds
+        pop     es
+        mov     al,00h
+        repz    stosb
+        call    @J58                      ; Large jump translated into short
+        inc     al
+        jz      @J56
+        ret
+@J56:   jmp     @J63                      ; Large jump translated into short
+@J57:   sub     cx,cx
+        jmp     ?BDOS
+@J58:   mov     cl,0Fh
+        jmp     ?BDOS
+@J59:   mov     cl,10h
+        jmp     ?BDOS
+@J60:   mov     ah,27h
+        jmp     ?PCDOS
+@J61:   mov     cl,1Ah
+        jmp     ?BDOS
+
+@J62:   mov     cl,33h
+        jmp     ?BDOS
+@J63:   mov     si,offset @D23
+        jmps    @J68
+@J64:   mov     si,offset @D24
+        jmps    @J68
+@J65:   mov     si,offset @D25
+        jmps    @J68
+@J66:   mov     si,offset @D26
+        jmps    @J68
+@J67:   mov     si,offset @D27
+@J68:   lodsb
+        mov      @D17,al
+        mov     cx,0008h
+        mov     di,offset @D21
+        push    ds
+        pop     es
+        repz    movsb
+        call    @J69                      ; Large jump translated into short
+        mov     bx,offset @D15
+        call    ?SIGNAL
+        call    @J57                      ; Large jump translated into short
+@J69:   mov     si,offset @D1
+        lodsb
+        or      al,al
+        jnz     @J70
+        mov     al, ?DFDRV
+@J70:   add     al,40h
+        stosb
+        mov     al,3Ah
+        stosb
+        mov     cx,000Bh
+@J71:   lodsb
+        and     al,7Fh
+        cmp     al,20h
+        jz      @J72
+        stosb
+@J72:   dec     cx
+        jz      @J73
+        cmp     cx,+003h
+        jnz     @J71
+        mov     al,2Eh
+        stosb
+        jmps    @J71
+@J73:   ret
+
+
+        END
+
+

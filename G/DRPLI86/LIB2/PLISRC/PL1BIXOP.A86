@@ -1,0 +1,82 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1BIXOP'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+
+        PUBLIC          ?BIX08                  ; Located at 1:0000h Type = 1
+        PUBLIC          ?BIX16                  ; Located at 1:000Ah Type = 1
+
+CODE    CSEG
+
+
+?BIX08: push    dx
+        mov     dh,al
+        mov     dl,00h
+        mov     bh,ch
+        mov     bl,dl
+        pop     cx
+?BIX16: inc     ch
+        dec     ch
+        jnz     @j1
+        jmp     @j10                      ; Large jump translated into short
+@j1:    inc     cl
+        dec     cl
+        jnz     @j2
+        jmp     @j10                      ; Large jump translated into short
+@j2:    xor     al,al
+@j3:    inc     al
+        lahf
+        xchg    al,ah
+        push    ax
+        mov     al,ch
+        cmp     al,cl
+        jnc     @j4
+        jmp     @j9                       ; Large jump translated into short
+@j4:    push    bx
+        push    dx
+        push    cx
+@j5:    shl     bx,1
+        xchg    bx,dx
+        jc      @j6
+        shl     bx,1
+        jc      @j8
+        jmps    @j7
+@j6:    shl     bx,1
+        jnc     @j8
+@j7:    xchg    bx,dx
+        dec     cl
+        jnz     @j5
+        pop     cx
+        pop     dx
+        pop     bx
+        pop     ax
+        xchg    al,ah
+        sahf
+        mov     bl,al
+        mov     bh,00h
+        ret
+@j8:    pop     cx
+        pop     bx
+        pop     dx
+        shl     bx,1
+        xchg    bx,dx
+        dec     ch
+        pop     ax
+        xchg    al,ah
+        sahf
+        jmp     @j3                       ; Large jump translated into short
+@j9:    pop     ax
+        xchg    al,ah
+@j10:   xor     al,al
+        mov     bl,al
+        mov     bh,al
+        ret
+
+
+        END
+
+

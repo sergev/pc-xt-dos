@@ -1,0 +1,76 @@
+; OBJASM version 2.0 released on Jan 3, 1991
+; (C) Copyright 1988,1989,1990,1991 by Robert F. Day.  All rights reserved
+
+        TITLE   'PL1SVBLK'
+
+        ; Compiler:     RASM-86 1.0 01/16/83
+
+
+        EXTRN           ?ALLOP:NEAR
+
+        PUBLIC          ?SVBLK                  ; Located at 2:0000h Type = 1
+data    dseg
+        extrn ?reclst:word
+
+CODE    CSEG
+
+
+?SVBLK: lahf
+        xchg    al,ah
+        push    ax
+        xchg    al,ah
+        push    bx
+        mov     bx,0008h
+        lahf
+        add     bx,cx
+        rcr     si,1
+        sahf
+        rcl     si,1
+        push    dx
+        push    cx
+        call    ?ALLOP
+        xchg    bx,dx
+        mov     bx,?RECLST
+        xchg    bx,dx
+        mov     ?RECLST,bx
+        mov     [bx],dl
+        inc     bx
+        mov     [bx],dh
+        inc     bx
+        xchg    bx,dx
+        mov     bx,000Ah
+        add     bx,sp
+        xchg    bx,dx
+        mov     [bx],dl
+        inc     bx
+        mov     [bx],dh
+        inc     bx
+        pop     cx
+        pop     dx
+        mov     [bx],dl
+        inc     bx
+        mov     [bx],dh
+        inc     bx
+        mov     [bx],cl
+        inc     bx
+        mov     [bx],ch
+@j1:    mov     al,ch
+        or      al,cl
+        jz      @j2
+        dec     cx
+        mov     si,dx
+        mov     al,[si]
+        inc     dx
+        inc     bx
+        mov     [bx],al
+        jmps    @j1
+@j2:    pop     bx
+        pop     ax
+        xchg    al,ah
+        sahf
+        ret
+
+
+        END
+
+
