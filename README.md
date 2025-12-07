@@ -18,7 +18,8 @@ The collection is split into disks:
 * [D](D) - Games
 * [E](E) - Development tools from Borland
 * [F](F) - Development tools from Microsoft
-* [G](G) - Development tools from others
+* [G](G) - Development tools from Digital Research and IBM
+* [H](H) - Development tools from Intel and others
 
 Sources:
 

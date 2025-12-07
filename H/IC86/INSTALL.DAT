@@ -1,0 +1,519 @@
+/*
+ *  iC-86 V4.5 Installation
+ *  Copyright (C) 1990, Intel Corporation.
+*/
+
+@DefineProject
+	@Name = "iC86"
+	@Version = "V4.5"
+    @OutDrive = C
+    @SubDir = "\\INTEL\\IC86\\"
+    @Group = "A" 
+@EndProject
+
+@DefineVars
+    @Dir @DefBaseDir = "\\INTEL\\IC86\\"
+    @Dir @ExaDir = "@DefBaseDir\\EXAMPLES\\"
+    @Dir @IncDir = "@DefBaseDir\\INC\\"
+    @Dir @SysDir = "@IncDir\\SYS\\"
+    @Dir @SrcDir = "@DefBaseDir\\SRC\\"
+    @Dir @LibDir = "@DefBaseDir\\LIBS\\"
+    @Dir @ExFDir = "@ExaDir\\FLAT\\"
+    @Dir @ExIDir = "@ExaDir\\IRMX\\"
+    @Dir @ExMDir = "@ExaDir\\MANUAL\\"
+    @Dir @ExSDir = "@ExaDir\\STARTUP\\"
+    @Integer @NFiles = 20
+    @Integer @NBufs = 30 @EndVars
+
+@Display
+    @Cls
+Thank you for selecting Intel's @Name @Version for use
+in your development project.  If you have any
+questions during or after the installation of this
+product, please call your local Intel sales office or
+1-800-INTEL-4-U for additional assistance.
+
+    @Pause
+@Cls
+This program installs @Name @Version on your computer
+system and verifies the integrity of the distribution
+disks.
+
+You may press the [Esc] key at any time to abort the
+installation.
+
+The installation program asks you several questions
+about your computer system and gives you the option of
+installing only selected parts of @Name (such as the
+header files).
+
+You can come back later and install additional parts
+of @Name if you find you need them.
+
+    @Pause
+
+
+@Cls
+Each question has a default answer. If the default
+answer is acceptable, press the [Enter] key in
+response to the question. Otherwise, modify the
+default shown as needed and press the [Enter] key.
+
+If you make a mistake while typing a response, press
+the [Backspace] key one or more times and then retype
+the response.
+
+    @Pause
+
+@If ((@OSMajor * 100) + @OSMinor < 300)
+    @Cls
+This software is supported on DOS version 3.0 or later
+only. Your operating system appears to be version
+@OSMajor.@OSMinor.
+
+Do you wish to continue the installation?  Press the
+[Esc] key to stop the installation, or any other key
+to continue.
+
+    @Pause
+@Endif
+@Cls
+@If ((@EMMmajor * 10) + @EMMminor >= 32)
+You have @EMMTotal bytes of Expanded Memory (also
+known as LIM memory) installed, and @EMMAvail bytes
+available.  @Name will take advantage of Expanded
+Memory during the compilation process.
+
+    @Pause
+@ElseIf (((@EMMmajor * 10) + @EMMminor) == 0)
+@Name will take advantage of Expanded Memory if it is
+available. Your system does not appear to have any
+Expanded Memory.
+
+    @Pause
+@ElseIf ((@EMMmajor * 10) + @EMMminor < 32)
+@Name requires version 3.2  or  later  of  the
+Expanded  Memory Manager (typically called EMM.SYS)
+installed in your CONFIG.SYS configuration file.  Your
+system has version @EMMmajor.@EMMminor installed.
+
+@Name will not be able to take advantage of your
+Expanded Memory until version 3.2 or later of the
+Expanded Memory Manager is installed.
+
+    @Pause
+@Endif @EndDisplay
+
+@GetOutDrive
+@Cls
+On which disk drive do you wish to install @Name:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Use the [Up Arrow], [Down Arrow], [Pg Up], &  [Pg  Dn]
+keys  to move the bar to the disk drive you wish to
+install to and then press the [Enter] key.
+@EndOutDrive
+
+@Display
+@Cls
+On the next screen you must specify  the  destination subdirectory.
+Most users set this to "@DefBaseDir".  This installation program 
+creates additional subdirectories if needed, based on which parts of 
+the @Name product you choose to install. The following subdirectories
+would be created if you accept "@DefBaseDir" as your destination 
+subdirectory:
+
+    @IncDir         for header files
+    @SysDir     for header files
+    @LibDir        for libraries and startup code
+    @SrcDir         for source files
+
+    @Pause @EndDisplay
+
+@GetSubDir
+@Cls
+Now, you must specify the destination subdirectory.
+You may accept the default "@DefBaseDir" by pressing
+the [Enter] key at the next prompt.
+
+If you decide to type a value in, you can press the
+[Esc] key to erase the default.  Do not include a disk
+name prefix or use quote characters (e.g., type
+"@DefBaseDir", not "C:@DefBaseDir").
+
+@Prompt = "Destination subdirectory ([Enter] = @DefBaseDir)  ?"
+@EndSubDir
+
+@DefineVars
+    @Qstring @InstallDir = "@SubDir"
+    @Qstring @IncludeDir = "@SubDir\\INC" @EndVars
+
+    @Cls
+@Display
+You may install all or selected parts of @Name.  The compiler and 
+header files are basic to the operation of @Name.  Your decision 
+of which @Name runtime libraries to install will depend on the 
+target system for which you are writing programs,  and the memory 
+segmentation models you will be using.
+
+Here is a list of the parts of @Name which may be selected and the 
+approximate number of bytes of disk space they will require:
+
+   Compiler                                 370,000 Bytes
+   Header Files                             150,000   "
+   DOS Runtime Libraries                  1,520,000   "
+   Target Independent Runtime Libraries     930,000   "
+   iRMX-86 Runtime Libraries                670,000   "
+
+All of the @Name runtime libraries support multiple memory 
+segmentation models.  You can install libraries for all memory 
+models, or just for the memory models you'll be using.
+    @Pause
+@EndDisplay
+    @Cls
+@GetGroups
+Select all of the parts of @Name you would like to install.  The
+selection of specific segmentation model support will be done
+later.
+
+
+
+
+
+
+
+
+
+Use the [Up Arrow] & [Down Arrow] keys to move the bar to a selection.
+Press the [Space Bar] to toggle the selection.  When you are satisfied 
+with your selections press the [Enter] key to proceed.
+    @CheckBox
+    @Set C = "The @Name Compiler"
+    @Set H = "The @Name Header Files"
+    @Set S = "The @Name DOS Runtime Libraries"
+    @Set E = "The @Name Target Independent Runtime Libraries"
+    @Set R = "The @Name iRMX-86 Runtime Libraries"
+@EndGroups
+
+@If ('S' [= @Group)
+    @GetGroups
+    @Cls
+The @Name DOS runtime libraries support the small, compact, medium, 
+and large memory segmentation models. 
+
+
+
+
+
+
+
+Use the [Up Arrow] & [Down Arrow] keys to move the bar to a selection.
+Press the [Space Bar] to toggle the selection.  When you are satisfied 
+with your selections press the [Enter] key to proceed.
+
+The DOS libraries allow you to link your @Name programs and run them 
+on DOS.
+
+Select the memory models you wish to install at this time.  The 
+libraries for each memory model require about 390,000 bytes of 
+disk space.
+    @CheckBox
+    @Set T = "The @Name Small   Model Libraries"
+    @Set U = "The @Name Compact Model Libraries"
+    @Set W = "The @Name Medium  Model Libraries"
+    @Set V = "The @Name Large   Model Libraries"
+@EndGroups
+@EndIf
+
+@If ('E' [= @Group)
+    @GetGroups
+    @Cls
+The @Name target independent runtime libraries support the small, 
+compact, medium, and large memory segmentation models. 
+
+
+
+
+
+
+
+
+
+Use the [Up Arrow] & [Down Arrow] keys to move the bar to a selection.
+Press the [Space Bar] to toggle the selection.  When you are satisfied 
+with your selections press the [Enter] key to proceed.
+
+These library files include the ANSI C run-time functions and selected 
+functions defined by POSIX, SVID, and other sources.  Select the memory 
+models you wish to install at this time.  The libraries for each memory 
+model require about 240,000 bytes of disk space.
+    @CheckBox
+    @Set I = "The @Name Small   Model Libraries"
+    @Set J = "The @Name Compact Model Libraries"
+    @Set K = "The @Name Medium  Model Libraries"
+    @Set F = "The @Name Large   Model Libraries"
+@EndGroups
+@EndIf
+
+@If ('R' [= @Group)
+    @GetGroups
+    @Cls
+The @Name iRMX-86 runtime libraries support the compact and large 
+memory segmentation models. 
+
+
+
+
+
+
+
+
+
+Use the [Up Arrow] & [Down Arrow] keys to move the bar to a selection.
+Press the [Space Bar] to toggle the selection.  When you are satisfied 
+with your selections press the [Enter] key to proceed.
+
+These library files allow you to link your @Name programs and run them 
+on iRMX-86.  The libraries for each memory model require about 340,000 
+bytes of disk space.
+    @CheckBox
+    @Set M = "The @Name Compact Model Libraries"
+    @Set L = "The @Name Large   Model Libraries"
+@EndGroups
+@EndIf
+
+@Display
+    @Cls
+This installation program checks your CONFIG.SYS file to verify that 
+the number of accessible FILES is at least @NFiles and the number of 
+available BUFFERS is at least @NBufs.  If changes are necessary, the 
+installation program creates a file CONFIG.NEW with the correct 
+settings and places it in C:\.
+
+This installation also checks your AUTOEXEC.BAT file for 
+definitions of the variables :INCLUDE:, which should be set to 
+@OutDrive:@IncludeDir, and PATH, which should include 
+@OutDrive:@InstallDir.  If changes are necessary, the installation 
+program creates an AUTOEXEC.NEW file with these definitions and 
+places it in C:\.
+
+    @Pause @EndDisplay
+
+@SetConfig
+    @DiskProto
+    @Files = 20
+    @Buffers = 30 
+@EndConfig
+
+@SetAutoexec
+     @DiskProto
+@If ('C' [= @Group )
+     @Path = "@OutDrive:@InstallDir"
+@EndIf
+@If ('H' [= @Group )
+     @Verbatim "rem -- :INCLUDE: is  used  to  locate iC-86  header files"
+     @SetReplace(":INCLUDE:","@OutDrive:@IncludeDir")
+@EndIf
+@EndAutoexec
+
+@DefineDisk @Label="Disk 1 of 2"
+	@Label = "Disk #1"
+
+	@BeginLib IC86.001
+		@File LOCKING.H @Group H @Size 333 @Out INC\SYS\LOCKING.H
+		@File STAT.H @Group H @Size 3991 @Out INC\SYS\STAT.H
+		@File TYPES.H @Group H @Size 1060 @Out INC\SYS\TYPES.H
+		@File UTIME.H @Group H @Size 564 @Out INC\SYS\UTIME.H
+		@File ASSERT.H @Group H @Size 582 @Out INC\ASSERT.H
+		@File BIOS.H @Group H @Size 5386 @Out INC\BIOS.H
+		@File CONIO.H @Group H @Size 627 @Out INC\CONIO.H
+		@File CTYPE.H @Group H @Size 2358 @Out INC\CTYPE.H
+		@File DIRECT.H @Group H @Size 767 @Out INC\DIRECT.H
+		@File DOS.H @Group H @Size 8078 @Out INC\DOS.H
+		@File ERRNO.H @Group H @Size 2760 @Out INC\ERRNO.H
+		@File FCNTL.H @Group H @Size 1011 @Out INC\FCNTL.H
+		@File FILEIO3.H @Group H @Size 796 @Out INC\FILEIO3.H
+		@File FLOAT.H @Group H @Size 6065 @Out INC\FLOAT.H
+		@File I186.H @Group H @Size 1016 @Out INC\I186.H
+		@File I286.H @Group H @Size 3530 @Out INC\I286.H
+		@File I386.H @Group H @Size 2930 @Out INC\I386.H
+		@File I486.H @Group H @Size 566 @Out INC\I486.H
+		@File I8086.H @Group H @Size 337 @Out INC\I8086.H
+		@File I86.H @Group H @Size 5208 @Out INC\I86.H
+		@File IO.H @Group H @Size 1680 @Out INC\IO.H
+		@File LIMITS.H @Group H @Size 1775 @Out INC\LIMITS.H
+		@File LINT.H @Group H @Size 3074 @Out INC\LINT.H
+		@File LOCALE.H @Group H @Size 1098 @Out INC\LOCALE.H
+		@File MATH.H @Group H @Size 3540 @Out INC\MATH.H
+		@File PROCESS.H @Group H @Size 2068 @Out INC\PROCESS.H
+		@File REENT.H @Group H @Size 3426 @Out INC\REENT.H
+		@File RMXC.H @Group H @Size 41607 @Out INC\RMXC.H
+		@File RMXERR.H @Group H @Size 11354 @Out INC\RMXERR.H
+		@File SEARCH.H @Group H @Size 531 @Out INC\SEARCH.H
+		@File SETJMP.H @Group H @Size 399 @Out INC\SETJMP.H
+		@File SHARE.H @Group H @Size 348 @Out INC\SHARE.H
+		@File SIGNAL.H @Group H @Size 2422 @Out INC\SIGNAL.H
+		@File STDARG.H @Group H @Size 603 @Out INC\STDARG.H
+		@File STDDEF.H @Group H @Size 646 @Out INC\STDDEF.H
+		@File STDIO.H @Group H @Size 5310 @Out INC\STDIO.H
+		@File STDLIB.H @Group H @Size 5514 @Out INC\STDLIB.H
+		@File STRING.H @Group H @Size 3022 @Out INC\STRING.H
+		@File TIME.H @Group H @Size 1860 @Out INC\TIME.H
+		@File UDI.H @Group H @Size 6339 @Out INC\UDI.H
+		@File UNISTD.H @Group H @Size 623 @Out INC\UNISTD.H
+		@File UTIL.AH @Group H @Size 11533 @Out INC\UTIL.AH
+		@File _ALLOC.H @Group H @Size 1089 @Out INC\_ALLOC.H
+		@File _CLIB.H @Group H @Size 1323 @Out INC\_CLIB.H
+		@File _DOS.H @Group H @Size 1677 @Out INC\_DOS.H
+		@File _MATH.H @Group H @Size 2364 @Out INC\_MATH.H
+		@File CLIBC.LIB @Group J @Size 140385 @Out LIBS\CLIBC.LIB
+		@File CLIBNFC.LIB @Group J @Size 88400 @Out LIBS\CLIBNFC.LIB
+		@File CSTEMBC.OBJ @Group J @Size 534 @Out LIBS\CSTEMBC.OBJ
+		@File CLIBL.LIB @Group F @Size 143534 @Out LIBS\CLIBL.LIB
+	@EndLib
+@EndDisk
+
+
+@DefineDisk
+	@Label = "Disk #2"
+
+	@BeginLib IC86.002
+		@File CLIBL.LIB @Group F @Size 1 @AppendTo LIBS\CLIBL.LIB
+		@File CLIBNFL.LIB @Group F @Size 91130 @Out LIBS\CLIBNFL.LIB
+		@File CSTEMBL.OBJ @Group F @Size 512 @Out LIBS\CSTEMBL.OBJ
+		@File CLIBM.LIB @Group K @Size 139125 @Out LIBS\CLIBM.LIB
+		@File CLIBNFM.LIB @Group K @Size 86984 @Out LIBS\CLIBNFM.LIB
+		@File CSTEMBM.OBJ @Group K @Size 546 @Out LIBS\CSTEMBM.OBJ
+		@File CLIBS.LIB @Group I @Size 137816 @Out LIBS\CLIBS.LIB
+		@File CLIBNFS.LIB @Group I @Size 85978 @Out LIBS\CLIBNFS.LIB
+	@EndLib
+@EndDisk
+
+
+@DefineDisk
+	@Label = "Disk #3"
+
+	@BeginLib IC86.003
+		@File CLIBNFS.LIB @Group I @Size 1 @AppendTo LIBS\CLIBNFS.LIB
+		@File CSTEMBS.OBJ @Group I @Size 539 @Out LIBS\CSTEMBS.OBJ
+		@File CRMX1C.LIB @Group M @Size 186447 @Out LIBS\CRMX1C.LIB
+		@File CRMXNF1C.LIB @Group M @Size 135027 @Out LIBS\CRMXNF1C.LIB
+		@File CSTRMXC.OBJ @Group M @Size 878 @Out LIBS\CSTRMXC.OBJ
+		@File CRMX1L.LIB @Group L @Size 192101 @Out LIBS\CRMX1L.LIB
+		@File CRMXNF1L.LIB @Group L @Size 140262 @Out LIBS\CRMXNF1L.LIB
+	@EndLib
+@EndDisk
+
+
+@DefineDisk
+	@Label = "Disk #4"
+
+	@BeginLib IC86.004
+		@File CRMXNF1L.LIB @Group L @Size 1 @AppendTo LIBS\CRMXNF1L.LIB
+		@File CSTRMXL.OBJ @Group L @Size 924 @Out LIBS\CSTRMXL.OBJ
+		@File CDOSC.LIB @Group U @Size 214516 @Out LIBS\CDOSC.LIB
+		@File CDOSNFC.LIB @Group U @Size 163096 @Out LIBS\CDOSNFC.LIB
+		@File CSTDOSC.OBJ @Group U @Size 743 @Out LIBS\CSTDOSC.OBJ
+		@File CDOSL.LIB @Group V @Size 219545 @Out LIBS\CDOSL.LIB
+	@EndLib
+@EndDisk
+
+
+@DefineDisk
+	@Label = "Disk #5"
+
+	@BeginLib IC86.005
+		@File CDOSL.LIB @Group V @Size 1 @AppendTo LIBS\CDOSL.LIB
+		@File CDOSNFL.LIB @Group V @Size 167706 @Out LIBS\CDOSNFL.LIB
+		@File CSTDOSL.OBJ @Group V @Size 779 @Out LIBS\CSTDOSL.OBJ
+		@File CDOSM.LIB @Group W @Size 211344 @Out LIBS\CDOSM.LIB
+		@File CDOSNFM.LIB @Group W @Size 159768 @Out LIBS\CDOSNFM.LIB
+	@EndLib
+@EndDisk
+
+
+@DefineDisk
+	@Label = "Disk #6"
+
+	@BeginLib IC86.006
+		@File CDOSNFM.LIB @Group W @Size 1 @AppendTo LIBS\CDOSNFM.LIB
+		@File CSTDOSM.OBJ @Group W @Size 782 @Out LIBS\CSTDOSM.OBJ
+		@File CDOSS.LIB @Group T @Size 209051 @Out LIBS\CDOSS.LIB
+		@File CDOSNFS.LIB @Group T @Size 157778 @Out LIBS\CDOSNFS.LIB
+		@File CSTDOSS.OBJ @Group T @Size 727 @Out LIBS\CSTDOSS.OBJ
+		@File CLIB87.LIB @Group TUVWIJFKML @Size 841 @Out LIBS\CLIB87.LIB
+		@File _CREATE.C @Group C @Size 6228 @Out SRC\_CREATE.C
+		@File _SEMAPHO.C @Group C @Size 1505 @Out SRC\_SEMAPHO.C
+		@File CSTART.ASM @Group C @Size 6029 @Out SRC\CSTART.ASM
+		@File IC86.EXE @Group C @Size 333884 @Out IC86.EXE
+	@EndLib
+@EndDisk
+
+
+@DefineDisk
+	@Label = "Disk #7"
+
+	@BeginLib IC86.007
+		@File IC86.EXE @Group C @Size 1 @AppendTo IC86.EXE
+	@EndLib
+@EndDisk
+
+@Finish
+@Cls
+Now that you've installed Intel's @Name  @Version, please take the 
+time to register your product with us by completing the enclosed 
+registration card and returning it to us.
+
+This registration card ensures that you are notified of any changes 
+or new product releases of this product.  If you would like additional 
+information on Intel's Total Development Solution, or if you would
+like a copy of our Tools Catalog, in  the  U.S. please call the 
+following number:
+
+In the U.S.:    1-800-874-6835
+
+In the U.S., you may also wish to access the Intel Development Tools 
+Electronic Bulletin Board at:
+
+                1-503-693-1335.
+    @Pause
+@Cls
+
+
+Outside the U.S., please call one of the following
+numbers:
+
+Australia:      61-2975-3300      Italy:          392-892-00950
+Belgium:        32-2245-2323      Israel:         972-3-548-3222
+Brazil:         551-128-75899     Japan:          81-29847-8522
+Canada:         416-675-2105      Korea:          822-784-5879
+China, PRC:     861-500-4850      Puerto Rico:    809-733-8616
+England:        44-793-696000     Singapore:      652-507-811
+Finland:        358-054-4644      Spain:          341-308-2552
+France:         331-3057-7222     Sweden:         468-734-0100
+Germany:        498-903-2025      Switzerland:    411-860-6262
+Holland:        311-040-71111     Taiwan:         886-2-514-4200
+Hong Kong:      852-584-44555
+India:          91-812-215773      
+Ireland:        3531-623-1311
+    
+     
+
+    @Pause
+@ChDir "@SubDir"
+@System      "echo       @Name       @Version       --
+DOS
+>>@OutDrive:@InstallDir\\version" @EndFinish
