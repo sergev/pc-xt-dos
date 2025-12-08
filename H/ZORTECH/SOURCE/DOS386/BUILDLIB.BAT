@@ -1,0 +1,2 @@
+set CFLAGS=-DMSDOS
+make

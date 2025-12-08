@@ -1,0 +1,44 @@
+## Makefile for C++ Tools Sample Programs
+## Copyright Zortech Ltd 1990
+## written by Steve Teale.
+## modified by NGE
+## modified by DJB 26/6/91
+
+## Usage:
+## make 
+## MODEL may be omitted for the small model.
+
+##################    OS/2    #################
+INC = ..\include
+LIB = ..\..\plib
+## MODEL can be s, c, m, or l
+MODEL =s
+ZTC = ztc -d__OS2__
+E = exe
+LINK=$(ZTC) -m$(MODEL) $*.obj  
+
+###############################################
+
+
+.cpp.$(E) :
+    $(ZTC) $* -m$(MODEL) -i$(INC) cppt$(MODEL).lib+zl$(MODEL).lib
+    
+all : sltest.$(E) gsltest.$(E) qstest.$(E) setest.$(E) vmatest.$(E) vmstest.$(E)\
+bintest.$(E) bvtest.$(E) settest.$(E) dirtest.$(E) dltest.$(E)\
+dyntest.$(E) etest0.$(E) etest1.$(E) etest2.$(E) fntest.$(E) hashtest.$(E)\
+int20tst.$(E) prime1.$(E) linttest.$(E) prime2.$(E) montest.$(E)\
+mnntest.$(E)  texttest.$(E) timetest.$(E) wintest.$(E)\
+bucktst1.$(E) bucktst2.$(E) scrntst.$(E) mentest.$(E) btest.$(E) scroltst.$(E)\
+ntest.$(E) tuit.$(E) hashtest.$(E) bintest.$(E) 
+
+tuit.$(E) : tuit.cpp tuispec.cpp
+	$(ZTC) $? -m$(MODEL) -c -i$(INC) 
+    $(LINK) tuispec.obj cppt$(MODEL).lib+zl$(MODEL).lib
+
+hashtest.$(E) : hashtest.cpp ws.cpp
+	$(ZTC) $? -m$(MODEL) -c -i$(INC) 
+    $(LINK) ws.obj cppt$(MODEL).lib+zl$(MODEL).lib
+
+bintest.$(E) : bintest.cpp ws.cpp
+	$(ZTC) $? -m$(MODEL) -c -i$(INC) 
+    $(LINK) ws.obj cppt$(MODEL).lib+zl$(MODEL).lib

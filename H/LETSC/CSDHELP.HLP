@@ -1,0 +1,24 @@
+%BFUNCTION%N   %BKEY%N       %BACTION%N
+%RProgram%N   %R  F7   %N  Enter program window. This is the window usually shown
+		   while the program is running.
+%RSource %N   %R  F8   %N  Enter source window, where the program source is shown.
+
+%R Eval  %N   %R  F9   %N  Enter evaluation window, where C expressions are evaluated.
+
+%RHistory%N   %R  F10  %N  Enter history window, where a log of traced statements
+		   and expressions is shown.
+%R Help  %N   %R  F6   %N  Display helpful information, or return to debugger
+		   if already in the help window (as you are now).
+%R Exit  %N   %Rshift F1%N Exit the debugger.
+	%BThe keys below are not accepted in the program window.%N
+%R  Beg  %N   %R  Home %N  Go to beginning of display; in the source window
+		   this is the first line of the first source file.
+%R  End  %N   %R  End  %N  Go to the end of the display; in the source window
+		   this is the last line of the last source file.
+%R  Out  %N   %R ^[ %N    In the source window go to the statement from which the
+		   current function was called.
+%R In %N      %R ^Z %N    Go back to the statement from which you went %R Out %N.
+			%RPage%N %RPage%N
+	Move about with	%RUp  %N %RDown%N %R ^X %N %R ^Y %N (up, down arrows).
+	For more on the following commands, press the corresponding key:
+%RTrace <F3>%N %RRun <F4>%N %REval <F9>%N %RFind <F1>%N %RInsert <Ins>%N %RDelete%N %RSelect <F2>%N

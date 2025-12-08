@@ -1,0 +1,48 @@
+#
+# BC functions for
+# assorted calculations involving compound interest and regular payments
+#
+scale=10	# scale can be reduced for more speed and less accuracy
+
+# compute regular (e.g. mortgage) payments on principal p, at interest rate i,
+# compounded each period, amortized over a term of t periods.
+# e.g. monthly payments on $10,000, at 11.5% per annum, over 5 years, is:
+#	m(10000, .115/12, 5*12)
+# Note conversion of interest and term to months.
+
+define m(p, i, t) {
+	r = (i+1)^t
+	return (p*i*r/(r-1))
+}
+
+# compute net present value of an annuity paying m on each of t periods,
+# given an interest rate of i.
+# e.g. principal required to finance annuity paying $1000/month for
+# 5 years, with interest compounded monthly at 11.5% per annum is:
+#	p(1000, .115/12, 5*12)
+
+define p(m, i, t) {
+	r = (i+1)^t
+	return (m*(r-1)/r/i)
+}
+
+# compute required regular contributions s to a savings plan, to accumulate
+# to a total value of v after t contributions, given an interest rate i.
+# e.g. monthly contributions required to accumulate $100000 after 5 years,
+# with interest compounded monthly at 11.5% per annum is:
+#	s(100000, .115/12, 5*12)
+
+define s(v, i, t) {
+	return (v*i/(i+1)/((i+1)^t-1))
+}
+
+# compute final value v of savings plan making regular contributions of
+# s at the beginning of each of t periods, given an interest rate of i.
+# (This is really just the sum of a geometric progression.)
+# e.g. final value of savings plan depositing $1000/month for
+# 5 years, with interest compounded monthly at 11.5% per annum is:
+#	v(1000, .115/12, 5*12)
+
+define v(s, i, t) {
+	return (s*(i+1)*((i+1)^t-1)/i)
+}

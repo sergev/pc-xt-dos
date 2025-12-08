@@ -1,0 +1,26 @@
+%BFUNCTION%N   %BKEY%N       %BACTION%N
+%RInsert %N    %RIns %N      Insert a blank line above the current line and make it
+		     current.  This is only permitted in the evaluation window.
+%RDelete %N    %R Del %N     Delete a range of lines in the current window.
+       		     This works in the evaluation and history windows only.
+	%BThe command is terminated by one of the following:%N
+%R  UP   %N    %R ^X  %N      Delete the current line and move up one line.
+
+%R DOWN  %N    %R ^Y  %N      Delete the current line and move down one line.
+
+%R  Beg %N     %RHome%N      Delete from the current line to the beginning of the
+		     display.
+
+%R  End  %N    %R End %N     Delete from the current line to the end of the display.
+
+%RCancel %N    %R  F5   %N   Cancel the %R Delete %N command.
+
+	If you get an "out of space" message in the evaluation window,
+	it may be necessary to remove part of the display to free space
+	for new expressions.
+	If the debugger is re-reading the disk for each new screen of source,
+	removing several lines of history or evaluation may free enough space
+	for more source buffers, eliminating the extra disk activity.
+
+Press %R Help <F6> %N to return to the debugger.
+

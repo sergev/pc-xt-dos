@@ -1,0 +1,91 @@
+		The Zortech C++ OS/2 Compiler
+
+Copyright (c) 1991 Symantec Corporation. All rights reserved
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of the OS/2 compiler. You should read this file before continuing.
+-----------------------------------
+Version : V3.0r4 Release
+Date	: October 15, 1991
+
+-----------------------------------
+OS/2 VERSIONS SUPPORTED
+This compiler supports OS/2 versions 1.x only.
+We plan to support OS/2 2.0 in the future.
+-----------------------------------
+SAMPLE PROGRAMS
+The OS/2 sample programs can be found in the directory SAMPLE\PMEXAM.
+-----------------------------------
+ICON FILES
+ZTC.ICO and ZWB.ICO are provided in the PBIN directory. These should be
+picked up automatically when the executables are installed in the program
+manager.
+-----------------------------------
+ERROR IN PM SOFTSET
+There is an error in the Presentation Manager Softset include file
+BSEDEV.H. Change the line #ifndef INCL_MOU to read #ifdef INCL_MOU.
+-----------------------------------
+ERROR IN COMPILER GUIDE
+Section 17.2:
+	1. it says to use the -W flag to compile PM applications.
+	This is false, do *NOT* use -W for PM applications.
+	Using it will case the ZW?.LIB files to be linked in instead
+	of the OS/2 libraries.
+	2. If a function is declared as _pascal, it needs to appear
+	in upper case in the EXPORTS list in the .DEF file. If you
+	do not link with case sensitivity, /NOI, then it is not
+	necessary. An alternative method is to declare the exported
+	functions with the _export keyword.
+	3. ZTC does pass the .DEF file to BLINK.
+	4. The -b is no longer necessary, as it is now the default.
+Section 17.3.3
+	Remove the -W flag from the makefile ZTCPM.MAK.
+-----------------------------------
+	ZORTECH OS/2 MULTITHREADED LIBRARY SUPPORT
+
+This version adds support for multithreaded libraries under OS/2 1.x.
+
+The new functions in the library are:
+	_beginthread()
+	_endthread()
+which are equivalent to the MSC counterparts. We recommend that you
+use these functions to fire off threads, rather than DOSCREATETHREAD(),
+as these functions handle the synchronization necessary for the
+runtime libraries.
+
+To build a multithreaded program, no special libraries are needed.
+We felt that since most OS/2 programs were multithreaded, we dispensed
+with the clumsiness of a separate library, and made the basic libraries
+all multithreaded. The multithreading support is enabled in the
+.h files by the macro:
+	#define _MT	1
+We recommend if you are building multithreading programs, you
+define _MT to 1 (this is compatible with MSC 6 too). Note that
+__OS2__ is also defined. This is because in the future we expect
+multithreading support to appear under many more operating systems,
+so it is best to have a separate #define for it.
+
+Multithreading is supported in all the OS/2 memory models s,m,c,l.
+
+So, to build a multithreaded program:
+
+	ZTC -D__OS2__ -D_MT program
+
+Some performance degradation is impossible to avoid with multithreading
+the libraries. In particular, malloc/free and fputc/fgetc may be
+slower. If you do not intend to do storage allocation in any thread
+other than the primary thread, or the same for stdio, you can get
+rid of the performance penalty by recompiling ALLOC.ASM and FPUTC.ASM
+*without* defining _MT, and then link them in explicitly.
+
+Libraries can be created that can be linked both to multithreading
+OS/2 and to DOS programs without recompiling. Compile them with
+_MT. The OLDSTR?.LIB libraries are built this way.
+
+For examples on how to do multithread synchronization, see PUTENV.C,
+GETENV.ASM, FCLOSE.C, FPUTC.ASM and ALLOC.ASM.
+The other library routines we tried hard to make them reentrant so
+they did not need synchronization. (sprintf is fully reentrant!)
+

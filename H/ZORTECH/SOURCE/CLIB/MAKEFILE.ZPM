@@ -1,0 +1,84 @@
+#_ makefile.rat   Tue May 29 1990   Modified by: Walter Bright */
+# Copyright (C) 1991 by Zortech
+# All Rights Reserved
+# Written by Walter Bright
+
+# makefile for the library ZPM.LIB, the Zortech 286 DOS Extender library,
+# and ZRL.LIB, the Rational Systems library. The library ZRL.LIB is
+# supplied by Rational, and cannot be built with the Zortech sources alone.
+
+# Macros for MSDOS version
+OS=MSDOS
+A=&
+
+MODEL=L
+INC=..\..\INCLUDE
+MASM= masm -ML -Z -D$(OS) -DI8086$(MODEL) -R -DDOS16RM
+ZTC= ztc -c -r -o+space -mr
+
+AOBJ1	=	alloc.obj disp.obj sbrk.obj
+AOBJ2	=	sysint.obj msmouse.obj putenv.obj inter.obj hugeptr.obj
+
+# The following files are only available from Rational Systems
+AOBJ3	=	pml.obj
+COBJ	=	dos16lib.obj
+
+library  : zpm.lib zpmstub.exe
+rational : zrl.lib
+
+zpm.lib : $(AOBJ1) $(AOBJ2) cz.obj zpmapi.lib zpm.cmd
+	del zpm.lib
+	zorlib @zpm.cmd
+
+zrl.lib : $(AOBJ1) $(AOBJ2) $(AOBJ3) $(COBJ) chkstk.obj cr.obj zrl.cmd
+	del zrl.lib
+	zorlib @zrl.cmd
+
+cz.obj : $(INC)\macros.asm c.asm
+	masm -MX -Z -R -DI8086L -DDOS16RM -DSEGEXE c,cz;
+
+cr.obj : $(INC)\macros.asm c.asm
+	masm -MX -Z -R -DI8086L -DDOS16RM c,cr;
+
+zpmstub.exe : zpmstub.c
+	ztc -msi zpmstub -o+space -r -P
+
+.asm.obj:
+	$(MASM) $*;
+
+.c.obj:
+	$(ZTC) $*
+
+zpm.cmd	: makefile.zpm
+	echo zpm >zpm.cmd
+	echo zpm/pagesize:16 >zpm.cmd
+	echo yes >>zpm.cmd
+	echo +$(AOBJ1)$A >>zpm.cmd
+	echo $(AOBJ2)$A >>zpm.cmd
+	echo cz.obj$A >>zpm.cmd
+	echo zpmapi.lib >>zpm.cmd
+	echo zpm.lst >>zpm.cmd
+
+zrl.cmd	: makefile.zpm
+	echo zrl >zrl.cmd
+	echo zrl/pagesize:16 >zrl.cmd
+	echo yes >>zrl.cmd
+	echo +$(AOBJ1)$A >>zrl.cmd
+	echo $(AOBJ2)$A >>zrl.cmd
+	echo $(AOBJ3)$A >>zrl.cmd
+	echo chkstk.obj+cr.obj$A >>zrl.cmd
+	echo $(COBJ) >>zrl.cmd
+	echo zrl.lst >>zrl.cmd
+
+pml.obj : ..\dos16rm\pml.asm
+	$(MASM) -I..\dos16rm ..\dos16rm\pml,pml;
+
+dos16lib.obj: ..\dos16rm\dos16lib.c
+	$(ZTC) ..\dos16rm\dos16lib.c -I..\dos16rm
+
+clean:
+	for %f in ($(AOBJ1)) do del %f
+	for %f in ($(AOBJ2)) do del %f
+	for %f in ($(AOBJ3) cz.obj cr.obj) do del %f
+	for %f in ($(COBJ)) do del %f
+

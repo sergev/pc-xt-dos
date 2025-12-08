@@ -1,0 +1,24 @@
+%BFUNCTION%N   %BKEY%N       %BACTION%N
+%RSelect %N    %R  F2   %N   Select various auxiliary options.
+		%BThe command is terminated by one of the following:%N
+%R Up  %N      %R ^X %N       Move the boundary between the source and evaluation windows
+		     up one line.
+%RDown%N       %R ^Y %N       Move the boundary between the source and evaluation windows
+		     down one line.
+%R L %N        %R L %N       Toggle the listing switch (initially off).
+		     When on, this copies the history log to the printer.
+%RProgram%N    %R F7 %N      Select the program window to be displayed when the
+                     program is running.  When initially invoked, the debugger
+		     selects the program window by default.
+%RSource%N     %R F8 %N      Select the source window to be displayed when the
+		     program is running.  Any program output will be displayed
+		     in the source window.
+%REval%N       %R F9 %N      Select the evaluation window to be displayed when the
+		     program is running.  Any program output will be displayed
+		     in the evaluation window.
+%RHistory%N    %R F10 %N     Select the history window to be displayed while the
+		     program is running.  Any program output will be displayed
+		     in the history window.
+%RCancel%N     %R F5 %N      Cancel the %RSelect %N command.
+ 
+Press %R Help <F6> %N to return to the debugger.

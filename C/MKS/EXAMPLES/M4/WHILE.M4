@@ -1,0 +1,3 @@
+ifdef(`while',, `dnl	while(cond, stat)
+define(`while', `ifelse(eval(($1)!=0),1, `$2`'while($@)')')dnl
+')dnl close ifdef(while, ...

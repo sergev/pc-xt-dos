@@ -1,0 +1,118 @@
+# Generalized C interface; MODIFY for your compiler
+
+# ECHO = 1;			# see compiler/linker commands
+
+# CC options: these are passed through to compiler
+
+Copts = { "-D","-I", "-O","-U","-w" } ;
+
+Model = "s";
+coptions = " ";
+map = "/x ";
+val = 0;
+LibDir = getenv("ROOTDIR") | "\\lib";
+
+Libs = {};
+Srcs = {};
+Objs = {};
+Output = "";
+
+for (i in ARGV)
+do
+	if (substr(i,1,2) == "-m")
+		coptions |= i | " ";
+		Model = substr(i,3,1);
+	elif (i == "-c")
+		compile_only = 1;
+	elif (substr(i,-2) == ".c")
+		Srcs |= i;
+		opath = filepath(substr(i,1,length(i)-1));
+		Objs |= opath[length(opath)-1] | "obj";
+	elif (substr(i,-4) == ".obj")
+		Objs |= i | " ";
+	elif (i == "-o")
+		advance i;
+		Output = i;
+	elif (index(Copts, substr(i,1,2)) != 0)
+		coptions |= i | " ";
+	elif (i == "-M")		# linker map in output.map
+		map = "/m ";
+	elif (substr(i,1,2) == "-L")
+		LibDir = replace(substr(i,3), "/", "\\");
+	elif (substr(i,-4) == ".lib")
+		Libs |= i;
+	elif (i == "-f")
+		FloatLib = "emu";
+	elif (i == "-f87")
+		FloatLib = "fp87";
+	elif (i == "-f-")
+		FloatLib = "";
+	elif (substr(i,1,1) == "-")
+		println gettext("Unknown option:") , i,
+			gettext("(ignored)");
+	else
+		println gettext("Unknown"), i,
+			gettext("(ignored)");
+	fi
+done
+
+if (! Objs)
+	print gettext("No source or object files!\n");
+	exit 1;
+fi
+
+if (Output == "")
+	Output = Objs[0];
+	Mapfile = substr(Output, 1, index(Output,"."));
+	Output = Mapfile | "exe";
+	Mapfile |=  "map";
+fi
+
+# compile all .c files
+for (i in Srcs)
+do
+	val = exec("mycc -c", coptions,  i);
+	if (val)
+		exit val;
+	fi
+done
+if (compile_only || val)
+	exit val;
+fi
+
+# Build linker line
+if (FloatLib != "")
+	FloatLib = LibDir | "\\" | FloatLib | " " | LibDir | "\\math" | Model | " ";
+fi
+
+temp = tempfile("lnk");
+delete temp;
+
+Output = replace(Output, "/", "\\");
+Mapfile = replace(Mapfile, "/", "\\");
+
+print "/c" | map -> temp;				# link options
+print LibDir | "\\c0" | Model | ".obj" -> temp;		# C startup
+
+for (i in Objs)						# object list
+do
+	print "+\n" | replace(i,"/","\\") -> temp;
+done
+
+print ",+\n" , Output , ",+\n" , Mapfile -> temp;	# executable
+
+for (i in Libs)						# user libraries
+do
+	print ",+\n", replace(i, "/", "\\"), "" -> temp;
+done
+
+print ",+\n" | FloatLib -> temp;			# math library
+print LibDir | "\\c" | Model | ".lib\n" -> temp;	# C library
+close temp;
+
+val = exec("mylink @" | replace(temp,"/","\\"));
+delete temp;
+if (val == 127)
+	println gettext("Could not find linker!");
+fi
+exit val;

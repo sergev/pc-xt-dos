@@ -1,0 +1,63 @@
+## Makefile for C++ Tools Sample Programs
+## Copyright Zortech Ltd 1990
+## written by Steve Teale.
+## modified by NGE
+## modified by DJB 26/6/91
+
+## Usage:
+## make 
+## MODEL=x may be omitted for the small model.
+## Make sure the right set of macros are commented in for your
+## system. For PharLap users the targets can be either .exe or
+## .exp files. .exp should be selected for users without
+## BIND386, they are also considerably smaller.
+
+INC = ..\include
+LIB = ..\..\lib
+ZTC =ztc -DMSDOS
+
+################# DOS #################
+LIBTYPE =l
+# MODEL can be s, c, m, l, v, x, z
+MODEL =s
+
+############### PharLap ###############
+# LIBTYPE =p
+# MODEL =p
+
+#Phar Lap Users without BIND386 should swap the comments on the following
+#two macros.
+
+#E = exp
+#LINK=fastlink $*.obj -tc -l 
+E = exe
+LINK=$(ZTC) -m$(MODEL) $*.obj  
+
+###############################################
+
+
+.cpp.$(E) :
+    $(ZTC) $* -m$(MODEL) -i$(INC) -c
+    $(LINK) cppt$(MODEL).lib+z$(LIBTYPE)$(MODEL).lib
+    
+all : sltest.$(E) gsltest.$(E) qstest.$(E) setest.$(E) vmatest.$(E) vmstest.$(E)\
+bintest.$(E) bvtest.$(E) settest.$(E) cetest.$(E) dirtest.$(E) dltest.$(E)\
+dyntest.$(E) etest0.$(E) etest1.$(E) etest2.$(E) fntest.$(E) hashtest.$(E)\
+int20tst.$(E) prime1.$(E) ivtest.$(E) linttest.$(E) prime2.$(E) montest.$(E)\
+mnntest.$(E) rtctest.$(E) texttest.$(E) timetest.$(E) wintest.$(E)\
+bucktst1.$(E) bucktst2.$(E) scrntst.$(E) mentest.$(E) btest.$(E) scroltst.$(E)\
+ntest.$(E) tuit.$(E) hashtest.$(E) bintest.$(E) 
+
+tuit.$(E) : tuit.cpp tuispec.cpp
+    $(ZTC) $? -m$(MODEL) -c -i$(INC)
+    $(LINK) tuispec.obj cppt$(MODEL).lib+z$(LIBTYPE)$(MODEL).lib
+
+
+hashtest.$(E) : hashtest.cpp ws.cpp
+    $(ZTC) $? -m$(MODEL) -c -i$(INC)
+    $(LINK) ws.obj cppt$(MODEL).lib+z$(LIBTYPE)$(MODEL).lib
+
+
+bintest.$(E) : bintest.cpp ws.cpp
+    $(ZTC) $? -m$(MODEL) -c -i$(INC)
+    $(LINK) ws.obj cppt$(MODEL).lib+z$(LIBTYPE)$(MODEL).lib

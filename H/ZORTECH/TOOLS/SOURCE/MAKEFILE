@@ -1,0 +1,105 @@
+# MAKEFILE for C++ Tools Libraries
+# Copyright (C) Zortech Ltd. 1988 - 1990
+# All Rights Reserved
+# Written by Steve Teale (9/28/88)
+# Modified 10/12/89
+# Modified 11/21/90
+# Modified 11/26/90 DJB
+
+# use
+# make MODEL=x
+# where x = S, M, C, L, V (not OS/2) (if S MODEL may be ommited)
+
+MODEL=S
+OS=__MSDOS__
+CFLAGS=-m$(MODEL) -D$(OS)
+MASM=masm -Z -MX -DI8086$(MODEL) -R -D$(OS)
+INC=..\include
+A=&
+
+A1 = bcdlow.obj lintlow.obj memx.obj
+
+CPP1 = bitvec.obj sets.obj slist.obj dlist.obj dynarr.obj bintree.obj
+CPP2 = hash.obj bucket.obj vma.obj vms.obj time.obj rtc.obj
+CPP3 = fname.obj intvec.obj criterr.obj sedit.obj datedit.obj
+CPP4 = dir.obj twindow.obj text.obj intnn.obj lint.obj
+CPP5 = money.obj moneynn.obj
+CPP6 = ztui.obj mensys.obj menu.obj button.obj event.obj eq.obj
+CPP7 = box.obj notice.obj scroll.obj bitvec.obj
+CPP8 = screen1.obj screen2.obj screen3.obj screen4.obj screen5.obj
+CPP9 = screen6.obj screen7.obj screen8.obj screen9.obj screen10.obj
+
+.asm.obj :
+    $(MASM) $*;
+
+.cpp.obj :
+    ztc $* -m$(MODEL) -e -c -o -i$(INC) -D$(OS)
+
+
+library : cppt$(MODEL).lib
+
+cppt$(MODEL).lib : $(CPP1) $(CPP2) $(CPP3) $(CPP4) $(CPP5) $(CPP6)\
+    $(CPP7) $(CPP8) $(CPP9) cppt$(MODEL).lcf
+    del cppt$(MODEL).lib
+    copy ..\..\lib\bcdlow$(MODEL).obj bcdlow.obj
+    copy ..\..\lib\lintlow$(MODEL).obj lintlow.obj
+    copy ..\..\lib\memx$(MODEL).obj memx.obj
+    zorlib @cppt$(MODEL).lcf
+
+$(CPP8) $(CPP9) : screen.cpp
+    ztc -c -o -DC$* screen -o$*.obj -m$(MODEL) -d$(NU) -i$(INC) -D$(OS)
+
+cppt$(MODEL).lcf : makefile
+    echo cppt$(MODEL).lib/C >cppt$(MODEL).lcf
+    echo bitvec+sets+slist+dlist+dynarr+bintree+hash+bucket$(A) >>cppt$(MODEL).lcf
+    echo +vma+vms+time+rtc+dir+fname+intvec+criterr+sedit$(A) >>cppt$(MODEL).lcf
+    echo +datedit+twindow+text+event+eq$(A) >>cppt$(MODEL).lcf
+    echo +intnn+lint+money+moneynn+bcdlow+lintlow+memx$(A) >>cppt$(MODEL).lcf
+    echo +ztui+mensys+menu+button$(A) >>cppt$(MODEL).lcf
+    echo +box+notice+scroll$(A) >>cppt$(MODEL).lcf
+    echo +screen1+screen2+screen3+screen4+screen5$(A) >>cppt$(MODEL).lcf
+    echo +screen6+screen7+screen8+screen9+screen10 >>cppt$(MODEL).lcf
+    echo cppt$(MODEL).lst; >>cppt$(MODEL).lcf
+
+clean :
+    del *.obj
+    del *.lst
+    del *.lcf
+
+bitvec.obj : $(INC)\bitvec.hpp
+sets.obj : $(INC)\sets.hpp $(INC)\bitvec.hpp
+slist.obj : $(INC)\slist.hpp
+dlist.obj : $(INC)\dlist.hpp
+dynarr.obj : $(INC)\dynarr.hpp
+bintree.obj : $(INC)\bintree.hpp
+hash.obj : $(INC)\hash.hpp
+intnn.obj : $(INC)\intnn.hpp
+lint.obj : $(INC)\lint.hpp
+money.obj : $(INC)\money.hpp
+moneynn.obj : $(INC)\moneynn.hpp $(INC)\intnn.hpp
+vma.obj : $(INC)\vma.hpp
+vms.obj : $(INC)\vms.hpp
+time.obj : $(INC)\time.hpp
+rtc.obj : $(INC)\rtc.hpp
+dir.obj : $(INC)\dir.hpp
+fname.obj : $(INC)\dir.hpp
+intvec.obj : $(INC)\intvec.hpp
+criterr.obj : $(INC)\criterr.hpp
+sedit.obj : $(INC)\sedit.hpp
+twindow.obj : $(INC)\twindow.hpp
+datedit.obj : $(INC)\datedit.hpp
+text.obj : $(INC)\text.hpp
+event.obj eq.obj : $(INC)\event.hpp
+ztui.obj : $(INC)\mensys.hpp $(INC)\menu.hpp $(INC)\scroll.hpp $(INC)\event.hpp\
+     $(INC)\ztui.hpp $(INC)\screen.hpp $(INC)\iobject.hpp
+scroll.obj : $(INC)\scroll.hpp $(INC)\screen.hpp $(INC)\iobject.hpp\
+    $(INC)\event.hpp
+button.obj : $(INC)\button.hpp $(INC)\screen.hpp $(INC)\iobject.hpp\
+    $(INC)\event.hpp
+mensys.obj : $(INC)\mensys.hpp $(INC)\menu.hpp $(INC)\screen.hpp\
+    $(INC)\iobject.hpp $(INC)\event.hpp
+menu.obj : $(INC)\menu.hpp $(INC)\screen.hpp $(INC)\iobject.hpp\
+    $(INC)\event.hpp
+box.obj : $(INC)\box.hpp $(INC)\screen.hpp
+notice.obj : $(INC)\box.hpp $(INC)\event.hpp
+screen.obj : $(INC)\screen.hpp

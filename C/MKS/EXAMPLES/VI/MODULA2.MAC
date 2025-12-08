@@ -1,0 +1,34 @@
+"
+" The sara macro set translated:
+"
+" In order to keep EXACTLY the same command structure between Lilith,
+" Ceres, macMeth, and Unix, the original (Gutknecht) macro set is:
+"
+map ;ce iCARDINAL var bcw
+map ;C iLONGCARD var bcw
+map ;in iINTEGER var bcw
+map ;re iREAL var bcw
+map ;R iLONGREAL var bcw
+map ;bi iBITSET var bcw
+map ;bo iBOOLEAN var bcw
+map ;se iSET OF var bcw
+map ;ar iARRAY OF var bcw
+map ;pr iPROCEDURE proc(vars) : BOOLEAN;(* PreConditions:  *)(* PostConditions: *)END proc;kkkkwcw
+map ;pt iPOINTER TO var bcw
+map ;ex iEXPORT varbcw
+map ;im iIMPLEMENTATION MODULE mod; bbcw
+map ;fr iFROM mod IMPORT vars; bbbbcw
+map ;im iIMPORT module; bbcw
+map ;if iIF ( cond ) THEN  statement END;kkkwwcw
+map ;ie iIF ( cond ) THEN  statement ELSE  statement2END;5kwwcw
+map ;ii iELSEIF ( cond2 ) THEN  stmnt2ELSEIF ( cond3 ) THEN  stmnt3
+map ;wh iWHILE ( cond ) DO  statementEND;kkkwwcw
+map ;wi iWITH var DO  statementEND;kkkwcw
+map ;fo iFOR var := low TO high DO  statementEND;kkkwcw
+map ;rp iREPEAT  statementUNTIL ( condition );kkwcw
+map ;lo iLOOP  statement  IF ( cond ) THEN EXIT END;END;kkkwcw
+map ;rc ivar = RECORD  var1 : t1  var2 : t2END;kkkkcw
+map ;ca iCASE var OF  case1 : stmnt1 |  case2 : stmnt2 |case3 : stmnt3  ELSE defaultEND; (* case *)
+map ;ws iWriteString("str");kwwcw
+map ;wl iWriteLn;
+map ;de i(* debug *)WriteString("string"); WriteInt(var); WriteLn;kwwcw

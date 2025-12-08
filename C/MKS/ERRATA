@@ -1,0 +1,325 @@
+
+                        MKS Toolkit for DOS 
+                        Release 4.1
+			Manual Errata
+                        October 30, 1992
+
+
+PLEASE READ THIS DOCUMENT! It contains important, last minute information
+that may not be present in the printed manuals.  
+
+------------------------------------------------------------------------------
+INSTALLATION MANUAL
+
+- In several places the Installation Manual mentions that when a file
+  is overwritten with a new file, the old version is saved with a .mks
+  extension.  This behavior has been extended.  When another file with
+  the same name is saved, the .mks file is saved with the .mk0 file extension.
+  As subsequent files with this name are saved, the .mk0 extension changes
+  to .mk1, then .mk2 through .mk9.
+
+- Page 31 CONFIGURATION: Section 2.9 Configuration 5:
+
+         $ROOTDIR is now removed from the lines:
+
+         co;2;respawn;$ROOTDIR/bin/login.exe
+         co;2;respawn;$ROOTDIR/bin/sh.exe
+
+- Page 33 APPENDICES: Section 1.1.3 With Configuration 4:
+
+         c:/ is now removed from the line:
+
+         co;2;respawn; ENVSIZE=512 c:/bin/login.exe
+
+------------------------------------------------------------------------------
+USER'S GUIDE
+
+- Page 65 Awk Tutorial: Introduction:
+
+        The manual states that a book entitled The Awk Programming Language 
+        is included in the MKS AWK package.  This book is not included with 
+        MKS Toolkit.
+
+- Page 96 AWK Tutorial: 5.2 The if Statement:
+
+       An if statement is an action of the form 
+                if (expression) statement1 else statement2
+
+  Note: When the else statemant2 part of the if statement is on the same 
+  line as the statement1, the else statement2 should be separated from the 
+  statement1 by a semicolon (;).
+
+- Page 97 AWK Tutorial: Please add:
+  Remember that \t is the escape sequence for a tab character.
+
+------------------------------------------------------------------------------
+REFERENCE MANUAL
+
+- copyright     
+	NFS and PC-NFS are both trademarks of Sun Microsystems, Inc.
+
+- awkc(1), init(1), mksgroup(1), and umask(1) are not available in this
+        reference manual; see the manual pages provided separately in the release 
+        notes booklet, or the online man pages for these commands.
+
+- Page 93 cd(1): NOTE section:
+
+        Please add: The external version of cd has no effect when run from 
+                    the shell.
+
+- Page 44 alias(1): DESCRIPTION section:
+
+        Please delete last line: chdir is not a known alias for cd.
+
+- Page 105 compress(1): DESCRIPTION section, 2nd paragraph:
+
+	The last sentence should read:
+
+	If the .Z file already exists, compress gives an error and asks you
+	whether or not it should overwrite the existing file, unless you
+	specified the -f option.
+
+	The 3rd paragraph should start off:
+
+	On DOS and OS/2 systems, that use the FAT (File Allocation Table)
+	file system, compress writes ...
+
+- Page 113 cpio(1): NOTE section:
+
+        Please add: If you are extracting files under DOS and OS/2, to 
+                    a FAT (File Allocation Table) system, truncation 
+                    will occur.
+ 
+- Page 120 ctags(1): PORTABILITY section:
+
+	The -w option is also an MKS extension to the POSIX standard.
+
+- Page 123, 124 date(1): DESCRIPTION section:
+
+        The descriptions of some of the special format fields are 
+        inaccurate.  Make the following changes:
+
+	%d   the two-digit day of the month as a number (01-31)
+	%s   the seconds (00 to 61). Note that there is an allowance for 
+             2 leap seconds.
+	%t   represents a tab character (not a synonym for %T)
+	%z   a synonym for %Z
+
+- Page 125 date(1): EXAMPLES section: 
+
+        Please complete this section by adding the following:
+
+	... produces the date in the default format, as shown at the
+	top of this man page.
+
+- Page 145 diff(1): DESCRIPTION section: 
+
+        The -s option is not documented. This option compares two 
+        directories, file by file, and prints messages for identical files 
+        between directories.
+
+        Last paragraph should say the default is 3999.
+
+- Page 146 diff(1): PORTABILITY section: 
+
+        The -B option is also an MKS extension to the POSIX standard.
+
+- Page 166 ex(1): new NOTE section:
+
+        ex is documented, but not installed as part of the normal Toolkit.
+        Since the vi program usually runs as a full screen editor, you can    
+        copy vi.exe to ex.exe, and then use ex as a line-oriented editor.
+
+- Page 153 echo(1): DESCRIPTION section: 
+
+        The \c option should read:
+
+        	\c  removes any following characters including \n and \r
+
+- Page 153 echo(1):  PORTABILITY section, 4th paragraph:
+
+	This section may appear to refer to the patch(1) command.
+	Actually, it refers to the `patch.bat' file which has
+	historically been provided in MKS Toolkit.  It will modify
+	command.com to remove the built-in utilities CD, DATE, TIME,
+	ECHO, MKDIR, RMDIR. The purpose of this is to make the MKS
+	utilities (cd, date, time, echo, mkdir, and rmdir) available to
+	command.com users.
+
+	`patch.bat' may be found on the first MKS Toolkit distribution
+	diskette.
+
+- Page 196 getopts(1): PORTABILITY section:
+
+        The second paragraph should read:
+
+	On UNIX systems, getopts is built into both the KornShell and
+	Bourne Shell.
+
+- Page 203 head(1): DESCRIPTION section:
+
+        The description of the -b option is incorrect.  It should read:
+
+	-b num	displays the first num*512 bytes of each file
+
+        The synopsis shows a -k option, but there is no entry in the 
+        DESCRIPTION section.  The description should read:
+
+	-k num	displays the first num*1024 bytes of each file
+
+        The last example given in the DESCRIPTION section, regarding 
+        option characters as modifiers, is incorrect.  It uses an old 
+        syntax for head(1) that is no longer supported.  The example 
+        will be removed in the next printing of the reference manual.
+
+- Page 216 join(1): DESCRIPTION section:
+
+        Please add a space between the -t option and its c argument.
+ 
+- Page 228 ls(1): DESCRIPTION section:
+ 
+        Description of -f option should read:
+
+       -f   enables the -a option and disables the -C option.
+            This means that for each argument which is a 
+            directory, all directory entries are listed in the 
+            same order as retrieved from the system. 
+
+- Page 255 mailx(1): ENVIRONMENT VARIABLES section:
+
+	indent and indentprefix are synonymous. If both indent and 
+        indentprefix are set, indentprefix takes precedence.
+
+- Page 260 man(1): ENVIRONMENT VARIABLES section:
+
+	TMPDIR identifies the directory where temporary files reside.
+
+- Page 272 nm(1): SYNOPSIS section:
+
+        The synopsis describes -A and -v options.  Neither option
+	is part of MKS Toolkit for DOS.  The -A option is a duplicate of
+	the -o option.  The -v option is the same as the -n option.
+
+- Page 284 patch(1): DESCRIPTION section:
+
+        The last sentence of the third paragraph should read: 
+
+        If only one of the files exists, patch patches that file; if        
+        neither exists or both do, patch checks for a line starting
+        with a string Index: before asking you for the name of the
+        file to patch.
+
+- Page 293 pax(1): NOTE section:
+
+        Please add:
+
+	If you are extracting files under DOS and OS/2, to a FAT (File
+	Allocation Table) system, truncation will occur.
+
+- Page 298 pg(1): ENVIRONMENT VARIABLES section:
+
+        TEMPDIR should be TMPDIR.
+
+- Page 322 sed(1): new LIMITS section includes the following:
+
+	sed allows a limit of 1024 bytes per line and 28,000 lines per
+        file. It does not allow the NUL character. The maximum length
+        of a global command is 256 characters, including newlines.
+
+- Page 329 sh(1): DESCRIPTION section:
+
+        Add the -T flag:
+
+	Disable the shell's timer interrupt.  This can be used when a
+	program causes a TSR to enable a timer interrupt, which would be
+	disabled when the shell exits.  The only use for this is Sun's
+	PC-NFS "net start rdr" command in a shell script.
+
+- Page 330 sh(1): 
+
+       First sentence at top of page should read:
+
+       In addition to these options, you can use any valid sh(1) option
+       to the set command (including -o option) as a command line option
+       to sh.
+
+- Page 334 sh(1): 
+
+        Remove the last line:
+
+        On OS/2, any such file is passed to cmd.exe and executed as an
+        OS/2 batch file.
+
+- Page 340 sh(1): Summary of Operators Table:
+
+        Under the heading `Assignment Operator,' the word `assignment' 
+        appears to be included in the list of operators.  This is a 
+        formatting error.  The word belongs in the right hand half of 
+        the table, under `logical or'.
+
+- Page 378 tar(1): NOTES section:
+
+        Please add:
+
+	If you are extracting files under DOS and OS/2, to a FAT (File
+	Allocation Table) system, truncation will occur.
+
+- Page 383 time(1): NOTE section:
+
+        Please add:
+
+	OS/2 has no external time command.
+
+- Page 388 tr(1): DESCRIPTION section:
+
+        Please change [c1-c2] to c1-c2 
+        Also change the example filter from tr '[a-z]' '[A-Z]' 
+        to tr 'a-z' 'A-Z'
+
+- Page 396 typeset(1): DESCRIPTION section:
+
+        -R[number] option, should read:
+
+	right ... the start (not end) of the value as necessary. ...
+
+- Page 400 uname(1): PORTABILITY section, should read:
+
+        ... Under the DOS compatibility box, the release is equal to that
+        of OS/2; the version is equal to the OS/2 version multiplied by
+        10. ...
+
+- Page 401 uncompress(1): DESCRIPTION section:
+
+        Please add the following paragraph between the second and third:
+
+        On DOS and OS/2 (using a FAT file system), compressed files typically
+        do not end in .Z and are uncompressed in place.
+
+- Page 406 unpack(1): DIAGNOSTICS section:
+
+        The example for an exit status of n should read:
+
+        For example, if three out of six files could not be unpacked
+        properly, the exit status is 3.
+
+- Page 406 unpack(1): The ENVIRONMENT VARIABLES section should be removed.
+
+	The FILES section describes the correct behavior for unpack
+	temporary files.
+
+- Page 414 vi (1): DESCRIPTION section:
+
+        Add the -r option:
+
+        -r    tries to recover all specified files after a system or
+              editor crash. If you do not specify any files, vi displays
+              a list of all recoverable files. 
+
+- Page 421 vi(1): DESCRIPTION section:
+
+        The description of the `I' command should read:
+
+	Enter insert mode before the first non-blank character on line.
+
+
+--- end - of - file ----------------------------------------------------------

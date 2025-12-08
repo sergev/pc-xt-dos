@@ -1,0 +1,17 @@
+"
+"	Word Completion Macros
+"
+"	Eric Edward Bowles
+"	Dept of Information Science, Faculty of Science
+"	University of Tokyo, 7-3-1 Hongo, Bunkyo-ku
+"	Tokyo, JAPAN 113.     +81-3-3812-2111 x4096
+"
+"	bowles@is.s.u-tokyo.ac.jp
+"
+"	^K	Complete 
+"	^N	Next
+"	^P	Previous
+"
+:map!  a. hbmmi?\<2h"zdt.@zywmx`mPbea dwbis"zdt.x@z
+:map!  a. hbdw`xnywmx`mPbea dwbis"zdt.x@z
+:map!  a. hbdw`xNywmx`mPbea dwbis"zdt.x@z

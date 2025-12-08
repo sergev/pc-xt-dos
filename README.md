@@ -19,7 +19,7 @@ The collection is split into disks:
 * [E](E) - Development tools from Borland
 * [F](F) - Development tools from Microsoft
 * [G](G) - Development tools from Digital Research and IBM
-* [H](H) - Development tools from Intel and others
+* [H](H) - Development tools from others
 
 Sources:
 

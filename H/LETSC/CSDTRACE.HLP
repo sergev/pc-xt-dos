@@ -1,0 +1,25 @@
+%BFUNCTION%N %BKEY%N    %BACTION%N
+%R Trace %N %R  F3   %N In the %Bsource window%N the current statement is marked traced.
+		The statement is shown highlighted, and whenever it is executed
+		it is first copied to the history log.
+		If the statement is already traced, the trace is removed.
+
+		Only executable statements may be traced. This excludes all
+		comments and declarations. Furthermore the optimizer in the
+		compiler deletes unreachable and duplicated code (usually
+		break, continue or return statements); deleted code is not
+		executable.
+
+		In the %Bevaluation window%N the current expression is traced.
+		This means that before each source statement is executed, the
+		expression is re-evaluated, and is copied to the history log
+		whenever it is found to have changed value.
+		If the expression is already traced, the trace is removed.
+
+		This command is not accepted in any other window.
+
+		The program may also be run until a trace is encountered:
+		see %RRun <F4>%N.
+
+Press %R Help <F6> %N to return to the debugger.
+

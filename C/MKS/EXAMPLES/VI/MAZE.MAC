@@ -1,0 +1,44 @@
+"
+"	Maze Solving Macros
+"
+"	Greg McFarlane
+"	OTC R&D GPO Box 7000, Sydney 2001, Australia
+"	Tel: +61 2 287 3139    Fax: +61 2 287 3299
+"
+"	ACSnet:	gregm@otc.otca.oz.au
+"	UUCP:	{uunet,mcvax}!otc.otca.oz.au!gregm
+"
+"
+"	Load a maze file like MAZE.EG, then enter 'g' from VI 
+"	ESC mode to start.  To stop prematurely, press the
+"	interrupt key.  Note that the VI session should be 
+"	restarted in order to clear all the macros.
+"
+set remap
+set nomagic
+set noterse
+map g IL
+map I G?.^2GQlmaGYJzJeJDJKP0S`a
+map L QAmaGNB0M0E@mwX`a@mGT$B$R0M0E@mfZbSbXGVJ0H`a@r@mU
+map U L
+map Q "cyl
+map A rO
+map ^ rX
+map N C/n
+map B "sp
+map M "my$
+map T C/s
+map R "np
+map S "syl
+map X "myt 
+map V ar
+map J "cp
+map H "ry$
+map F "nyl
+map Y osA  k EZ sA_ mm BZ sB
+map z $a mm GZ sB  ll AZ sB. ll AZ sC  j GZ sC. j GZsC_ mm DZ sD
+map e $a mm EZ sD. hh CZ sE. hh CZ sE
+map D $a mm FZ sF  k EZ sF_ mm AZsG. ll AZ sG  ll AZ sG
+map K $a mm HZ sH  j GZ sH_ mm CZ
+map P onA kF nB lF nC G$JF nD hF nE hF nF kF nG lF nH G$JF A
+map E d$

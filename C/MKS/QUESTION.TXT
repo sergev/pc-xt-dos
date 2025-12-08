@@ -1,0 +1,1266 @@
+
+			MKS Toolkit 
+			Frequently Asked Questions
+			Updated: October 30, 1992
+
+Before you call MKS Technical support, read this!
+
+This section addresses some of the problems and questions that you may
+encounter using MKS Toolkit. If you are having a problem with our
+software, we hope you will look here first for answers to your questions.
+
+If you cannot find a solution here, contact MKS Technical Support
+Monday through Friday: 8:00 a.m. to 6:00 p.m. (Eastern Standard Time)
+
+Please include your product name, release number and serial number with
+all Technical Support correspondence. To obtain these numbers, check
+your product label or type mksinfo at the command line prompt.
+
+ * Internet: inquiry@mks.com
+ * CompuServe: >INTERNET:inquiry@mks.com
+		         73260,1043
+ * BIX User Name: mks
+ * Telephone: (519) 884-2270
+ * In Europe: +1-519-884-2270
+ * FAX: (519) 884-8861
+
+		Some simple answers to common questions
+			  about MKS Toolkit
+
+
+Question: Can I install MKS Toolkit in a subdirectory, such as c:/mks?
+
+Answer: Actually, the installation program handles this automatically;
+however, if you manually install MKS Toolkit, you must set up the
+ROOTDIR environment variable correctly.  See the discussion of ROOTDIR
+in the Installation Guide.
+			____________________
+
+Question: Which configuration of MKS Toolkit should I use?
+
+Answer: The answer depends on the way you intend to use MKS Toolkit.
+To start, choose the simplest configuration that meets your needs;
+you can always change to a more complex configuration.
+
+ * If you want a DOS-like setup with UNIX utilities, you should consider
+   configuration 1.  In this configuration, you only copy MKS Toolkit
+   utilities onto your disk (as you would any other application software)
+   and call them when necessary.
+
+ * If you are going to use the KornShell, you should look at
+   configuration 2, 3, or 5.  Configuration 3 is preferred, but cannot
+   be used with DOS 2.x.  In any of these, the shell is started
+   automatically when the computer is booted, and it replaces
+   command.com as the standard command interpreter or shell.
+
+ * If you want an environment most like the UNIX environment, or if
+   your computer is shared by several people, you should consider
+   configuration 4.  This configuration uses the login program, and each
+   person can be assigned a unique home directory and individual shell
+   initialization.
+			____________________
+
+Question: If I use configuration 4, with login and so on, what commands
+should I put in which files?
+
+Answer: First, as DOS is loaded, it reads the config.sys file on your
+boot disk.  It sees the line shell=c:\etc\init.exe, and loads init as
+the first program.  The init program executes each line specified in the
+ROOTDIR/etc/inittab file.  By default, inittab runs the
+ROOTDIR/etc/rc.ksh script and then displays a login prompt.  When you
+successfully log in, login loads the shell specified in
+ROOTDIR/etc/passwd.  The new shell reads ROOTDIR/etc/profile.ksh and
+then HOME/profile.ksh.
+
+As a result, commands that need to be run only once should go into
+ROOTDIR/etc/inittab; for example, TSR (terminate-stay-resident)
+programs.  Commands needing the KornShell (for example, for redirection,
+pipes, and loops) should go into ROOTDIR/etc/rc.ksh.  For example, you
+might call the mode command to set the baud rate of the serial port.
+Commands to initialize the shell of all users should go into
+ROOTDIR/etc/profile.ksh.  All login shells read this file when they
+start.  For example, you might set the PATH. Finally, you can add
+commands to profile.ksh in your own home directory to customize the
+shell for personal use.  For example, you might set a personal prompt or
+environment variable.
+
+If you set the environment variable ENV to point to a KornShell script
+(by convention, HOME/environ.ksh), that script will be run after
+profile.ksh, and before any new shell gets control.  This is the best
+place to keep aliases and function definitions, since they will then be
+available for each KornShell you call, even from other programs, for
+example vi.
+			____________________
+
+Question: If I use login, how can I set up a user that logs into the
+normal DOS command interpreter?
+
+Answer: If your MKS Toolkit is configured to use login, a user named
+`com' that logs into the DOS command interpreter is provided.
+			____________________
+
+Question: Why do I get an error message `invalid command interpreter'
+when booting the computer since I upgraded my DOS?  I did not change the
+configuration of MKS Toolkit.
+
+Answer: If you have updated to a version of DOS that is 3.3 or later,
+the problem may be caused by forward slashes in the config.sys file.
+Just change any forward slashes (/) to backslashes (\), and the computer
+should boot.  The use of forward slashes in other areas is unaffected.
+			____________________
+
+Question: I'm confused about which kind of slash to use where.  What's
+going on?
+
+Answer: As you know, DOS normally uses the \ character, called the
+backslash, in path names, and it uses the / character, called the
+forward slash or just slash, to indicate options.  For example, you
+might type the command:
+
+	dir c:\fred /w
+
+However, on UNIX systems from which MKS Toolkit is derived, the forward
+slash is used in path names and the hyphen (-) is used as the option
+character.  So a similar UNIX command might be:
+
+	 ls -x /fred
+
+On versions of DOS before 4.0, you can use MKS Toolkit's switch command
+to tell DOS you prefer to use the hyphen as the option character.  Once
+you have done this, you can then use the forward slash in path names;
+however, there are exceptions.  The use of the option character is not
+forced upon a program; it is only an indication of your preference.
+Some programs do not inquire about it, and instead they assume the old
+conditions are still in effect.  For these programs, you will have to
+continue to use the standard DOS methods.  Also, most of the standard
+software on DOS 4.0 and up and OS/2 ignores your choice of switch
+character; on those systems, you must use slashes to mark options for
+non-MKS software.
+
+You may also be interested in the dossify.ksh script found in the
+examples subdirectory on your distribution set.  This script, when
+specified with WordPerfect for example, sets up a function which
+specifies backslashes (\) as directory separators and changes hyphens to
+forward slashes.
+
+There is one more difficulty.  If you do need to use the backslash
+character while using the KornShell, you have to take special
+precautions.  As with most UNIX-like programs, the KornShell uses the
+backslash as an escape character.  That is, the backslash indicates that
+the following character has a special meaning.  To prevent the shell
+from interpreting the backslash this way, you should put apostrophes
+around any command line argument containing a backslash.  For example,
+if you specify an environment variable containing backslashes, you might
+enter the command:
+
+	 LIB='c:\lib'
+
+If you try to display the contents of a variable that contains
+backslashes you must be careful.  If you use the MKS echo command, you
+may find that your output is not what you expected.  That is because a
+backslash gives special meaning to the character that follows.  For
+instance, a backslash followed by a `t' is interpreted as a tab
+character.  To display these environment variables correctly, you should
+use the built-in print command with the -r option.  For example,
+
+	 print -r $LIB
+
+correctly displays the contents of the environment variable LIB.
+			____________________
+
+Question: Why doesn't your xyz utility behave the same as
+the one on my UNIX/SunOS/AIX/Ultrix/HP-UX/Berkeley/whatever system?
+
+Answer: The behavior of MKS Toolkit programs is governed
+by the following (in order):
+
+	1. POSIX.2
+	2. Existing Practice (notably System V and BSD)
+
+There may be additional differences due to limitations of DOS and OS/2.
+			____________________
+
+Question: I am calling awk from command.com.  The awk script commands
+are specified on the command line.  The results seem to be unpredictable.
+Why is this?
+
+Answer: The quoting rules for command.com are not the same as for the
+KornShell.  It is not possible to place most awk scripts on the command
+line when using command.com.  The best approach is to place the awk
+commands into a script file, and specify the name of the script on the
+awk command line as follows:
+
+	 awk -f script datafile
+			____________________
+
+Question: Where are the 8087 (math co-processor) versions of awk?
+
+Answer: Beginning with Release 4.1, awk now automatically detects the
+presence of a math co-processor and uses it if possible.
+
+Remember that the large model awk is available as awkl.
+			____________________
+
+Question: What's the difference between awk in MKS Toolkit and the
+separate MKS AWK package?
+
+Answer: There is no difference.  MKS Toolkit includes both the small and
+large model programs.
+
+The small model interpreters have a 64K limit on the amount of data they
+can hold.  This includes the awk program, and its variables, arrays, and
+so on, but does not impose any limit on the size of the file that can be
+manipulated, since awk reads your file one line at a time.
+
+NOTE: The large model version of awk is called awkl; if you usually
+require this version, you can copy ROOTDIR/bin/awkl.exe onto
+ROOTDIR/bin/awk.exe.
+			____________________
+
+Question: Why is MKS Toolkit awk different from the one on my UNIX
+system?
+
+Answer: There have been two major versions of awk written by Aho,
+Weinberger, and Kernighan (the original authors).  The second version,
+sometimes called `new awk', is, with minor exceptions, a superset of the
+first.  New awk is described in The AWK Programming Language by Alfred
+V. Aho, Peter J. Weinberger, and Brian W. Kernighan, Addison-Wesley,
+1987.  MKS AWK is based on the version described in this book, and
+includes all of the new features that have been added.  Unlike new awk,
+however, MKS AWK is designed to run almost all `old awk' scripts without
+change.
+			____________________
+
+Question: I want to start command.com from the KornShell.  When I type
+command, I get a usage message of the form
+
+	command [-bdfpt] command ...
+
+instead of the C> prompt.
+
+Answer: In the KornShell, command is built-in.  Use some other syntax
+to start command.com, such as:
+
+	command.com
+	/dos/command
+
+Another approach is to create an alias for command as in:
+
+	alias command=c:/dos/command.com
+			____________________
+
+Question: I am using a transient shell.  Before the shell displays the
+first command prompt, the following is printed:
+
+	Cannot reload from $0 or $SHELL
+
+Everything appears fine until I exit a certain program, then the shell
+prints:
+
+	sh: Corrupted code segment - cannot reload shell
+
+and exits.
+
+Answer: The command line that invoked the transient shell was incorrect;
+the command line did not correctly specify the file name from which to
+reload.  The -0 (zero) option may be used in conjunction with the -R
+option to specify from where the transient shell is to be reloaded.  If
+configuration 3 is being used, an example config.sys entry to start a
+transient shell would be:
+
+	shell=c:\bin\sh.exe -L -0 c:/bin/sh.exe -R 0
+			____________________
+
+Question: I edited my ROOTDIR/etc/inittab file to get a transient
+version of the KornShell.  Now the KornShell seems to be working oddly.
+What went wrong?
+
+Answer: When you specify the -R option to get a transient version of the
+KornShell, you must have a single space after the -R and then an
+address, as in:
+
+	-R 0
+
+As of MKS Toolkit 3.2, the KornShell uses a default of 0 if you omit
+the space or address.
+			____________________
+
+Question: The commands in environ.ksh do not appear to be working.  What
+is needed to ensure that the commands are executed?
+
+Answer: Ensure that the variable ENV has been set and exported to the
+environment.  The variable must contain the name of the file containing
+the commands.  It is usually set in one of the profile.ksh files.  For
+example:
+
+	 export ENV="$HOME/environ.ksh"
+			____________________
+
+Question: What is the purpose of the environ.ksh file?
+
+Answer: The environ.ksh (conventional name) file is used to separate
+things done automatically at login only from those done every time a
+shell is started.  This means that shells other than the login shell can
+have the same environment defined as the user's login shell.  (This
+might be a shell the user calls, either by using the sh command
+directly, or indirectly by using a command such as :!ls from within the
+vi editor.)
+
+Any environment variables that are defined for the login shell can be
+exported, and they will be inherited by other shells; however, items
+such as shell functions and aliases cannot be passed this way.
+
+When another shell starts, it looks for an environment variable called
+ENV. If found, it reads the file named in ENV. If you have aliases or
+functions that you use all the time, you should define them in a file
+(usually called environ.ksh) and set ENV to that file's name.
+
+As of Release 3.1, a login KornShell also reads the ENV file after
+processing profile.ksh.  Before this release, you had to place a line of
+the form:
+
+	 . $ENV
+
+as the last line in your profile.ksh to force the login shell to read
+the file defined by ENV. This is no longer necessary, and you should
+remove such a line if you have it in your profile.ksh to prevent
+duplicate execution.
+			____________________
+
+Question: I am using configuration 3, with some changes.  I installed
+MKS Toolkit into the root directory of the D: drive.  The machine boots
+from the C: drive.  Why do my profile.ksh files not execute?
+
+Answer: The /etc/profile.ksh file is always found relative to the
+directory specified by the ROOTDIR environment variable.  If the
+KornShell is run from config.sys, then there is no way to set ROOTDIR
+before running the KornShell.  The KornShell then uses the default:
+
+	 ROOTDIR=c:
+
+Therefore, the shell is looking for the profile.ksh files
+on the C: drive, not the D: drive.  There are other alternatives:
+
+ * Change to configuration 4 or 5.  This will allow ROOTDIR to be set
+   before a KornShell is started.
+
+ * Create a small file, c:/etc/profile.ksh, that directs the shell to
+   the actual location of MKS Toolkit on the D: drive.  The file would
+   contain the lines:
+
+	export ROOTDIR=d:
+	. d:/etc/profile.ksh
+			____________________
+
+Question: When my application program tries to run a subprogram, I get
+an error message and get dumped into command.com.  Why does this
+happen?
+
+Answer: This may have to do with the setting of the switch character.
+
+Many applications that want to run a subprogram (such as make or some
+editors) actually call command.com and let it do all the work.  This is
+also true if you are writing a C program and using the system() func-
+tion.  The problem is that these programs may not check the current
+setting of the switch character when they call command.com.  This means
+that when they set an option for command.com they always use the slash,
+even though it may be incorrect.  For example, to run the dir command,
+an application might run the command:
+
+	command /c dir
+
+If you have the switch character set to a hyphen, command.com interprets
+the slash option as a directory name, and will not be able to find it.
+
+There is really only one way to solve this -- change the switch
+character to a slash before running these applications.  You can either
+do it manually, or you may be able to create a shell function or shell
+script to change the switch character, run the application, then
+restore the switch character.
+
+As of DOS 4.0, command.com no longer looks for the switch character.
+This means that setting the switch character to the hyphen is ignored.
+You must set the switch back to the slash before running applications
+that call command.com.
+
+For those who really know what they are doing, there is another
+possibility.  If you use a binary editor, you may be able to find the
+string command /c in the program being used and change it to command -c.
+If you attempt this, make sure you practise on a copy of the program.
+If you do not succeed, you don't want to lose your only copy.
+			____________________
+
+Question: How can I use the commands built into command.com when I am
+using the KornShell?
+
+Answer: You can load command.com, just like any application program,
+by calling it by name.  Like other applications, command.com will take
+arguments on the command line.  One of its options is -c (or /c if you
+haven't changed the switch character).  The rest of the command line is
+run by command.com.  Once the command has run, command.com terminates.
+For example, to use the cls command, you can type the command:
+
+	 command.com /c cls
+
+If you do this a lot, you can define a shell alias.  For example, you
+can specify:
+
+	 alias cls=`command.com /c cls'
+
+This particular alias, and several others, are defined in the sample
+environ.ksh file distributed.  Your search path should include the
+directory where command.com is located, or you can specify the complete
+path name of command.com.
+			____________________
+
+Question: The program I want to run is in my current directory, but the
+shell doesn't seem to find it.  What is wrong?
+
+Answer: You may have to change your PATH variable.  The command.com
+program always looks for a program in the current directory first.  If
+it is not found there, it looks in each of the directories named in the
+PATH variable.
+
+However, the shell does not look in the current directory unless you
+tell it.  To do that, you should have a null name in the PATH variable.
+For example, if you want to search the current directory first, and then
+the bin directory, you can set your path using the command:
+
+	PATH=" ;c:/bin"
+
+The space you see in front of the first semi-colon is the null entry
+that represents the current directory.
+
+NOTE: When setting PATH, you can also specify .  as the current
+directory, as in:
+
+	 PATH=".;c:/bin"
+
+However, this is not the preferred method as the root directory for DOS
+does not have a .  directory.
+
+If you prefer, you can search the current directory later.  For example,
+the command:
+
+	 PATH="c:/bin;;c:/dos"
+
+tells the shell to look in the bin directory first, then in the current
+directory, then in the dos directory.
+			____________________
+
+Question: What's the difference between make in MKS Toolkit and the separate
+MKS Make package?
+
+Answer: There is no difference in the programs. As of MKS Toolkit Release
+4.1, the programs of the MKS Make package have been merged with MKS Toolkit.
+			____________________
+
+Question:  My makefiles don't seem to work, and I can't find
+anything wrong with their contents.  Why does this happen?
+
+Answer:  Make requires each line in a recipe to start with a literal TAB
+character.  Some DOS editors automatically expand TAB characters to spaces
+when saving a file.  If your editor does this, you can try one of three
+things:
+
+- Many editors allow you to disable the TAB expansion feature.
+
+- You can use an editor such as Vi or ED which saves TAB characters as
+  TABs.
+
+- The MKS Toolkit command unexpand(1) converts spaces into TAB characters.
+			____________________
+
+Question: When I try to use MKS Toolkit's sort command, the DOS sort
+command runs instead.  How can I fix this?
+
+Answer: You may have to change your PATH variable.  If the directory
+containing the DOS sort command is listed before the directory
+containing MKS Toolkit's sort command, the DOS version will be used.
+The same is also true for the find, more, and join commands.
+
+This mixing of the DOS and MKS Toolkit utilities can result in some
+unexpected behavior.  For example, if you use the ctags command to
+create a tags file for the vi editor, it in turn calls the sort command.
+If the DOS command is called, you may get an error message, or the
+system may appear to hang.  Actually, the DOS sort is waiting for input;
+you can type CTRL-Z to indicate the end of input and unhang the system.
+In some instances the tags file may be created, but not sorted, and vi
+will be unable to find the labels that are in the file.  Change your
+path so that MKS Toolkit commands are found first.  You can do this
+under the KornShell by typing the following:
+
+	 export PATH="c:/bin;c:/dos"
+
+Under command.com, you would type:
+
+	 set PATH=c:\bin;c:\dos
+			____________________
+
+Question:  When I run the man command, I get the error, "Too many arguments
+on command line."
+
+Answer:  The man program calls the more pager program.  The DOS version
+of more.exe is being run instead of the MKS version of more.exe.  Either
+re-arrange your PATH variable so that the /bin subdirectory comes before
+the /dos subdirectory, or rename the DOS version of more.exe to something
+else.
+			____________________
+
+Question: Why can't my application program find all the necessary files?
+
+Answer: There are a couple of situations that might cause this problem.
+
+Some programs (such as Microsoft link) will not let you use the forward
+slash in environment variables.  One solution to this is to simply
+change any forward slashes to backslashes.  For Microsoft link, this
+will have to be done for the variable LIB. Under the KornShell, you can
+do this by typing:
+
+	 export LIB='c:\msc\lib'
+
+Another way involves MKS Toolkit's typeset command.  On DOS and OS/2,
+the commands
+
+	 typeset -H LIB='c:/msc/lib'
+	 export LIB
+
+map forward slashes to backslashes.
+
+NOTE: If you change the value of LIB later, forward slashes will still
+be mapped to backslashes.
+
+Other programs, such as WordPerfect and Turbo Pascal, examine the full
+name of the program to determine how to load their subsidiary files.
+For example, if the program wp.exe is in directory c:\word, it will be
+able to determine that its full name is c:\word\wp.exe.  Knowing that,
+it will try to load other files from the directory c:\word.
+
+NOTE: Some programs, like WordPerfect, are unable to accept forward
+slashes in the name.  A partial cure would be to use backslashes in the
+PATH variable, but the shell will still use a forward slash as it
+appends the name of the program.  The best solution is to use a shell
+alias that contains the full name of the program using backslashes.  For
+example, the command:
+
+	 alias wp='c:\\word\\wp.exe'
+
+will set an alias so that wp will be called with backslashes in its
+name.  Because the alias provides the complete name of the program, the
+shell will not have to consult the PATH variable, and no changes to it
+are necessary.
+
+You may also be interested in the dossify.ksh script found in the
+examples subdirectory on your distribution set.  This script, when
+specified with chkdsk for example, sets up a function which specifies
+backslashes (\) as directory separators and changes hyphens to forward
+slashes.  For example, type the following at the command line prompt:
+
+	 . dossify chkdsk
+	 chkdsk /dos -f
+
+The screen displays:
+
+	 chkdsk \dos /f
+			____________________
+
+Question: I want to use the KornShell as my COMSPEC. I set the
+following environment variable  in ROOTDIR/etc/profile.ksh:
+
+	 COMSPEC=c:\bin\sh.exe
+
+Now a number of applications behave strangely.
+
+Answer: By DOS convention, the COMSPEC variable will always point to a
+copy of the command.com interpreter.  Many application programs use
+COMSPEC to find a valid copy of the default command interpreter.  These
+programs will assume that COMSPEC points to command.com, and will make
+certain assumptions.  The most reliable solution is to set COMSPEC to
+point to command.com and to set SHELL to point to the KornShell.
+			____________________
+
+Question: I'm having trouble running TSR (terminate-stay-resident)
+programs with the shell.  What can I do?
+
+Answer: There are two possible reasons for conflicts.
+
+ 1.  One has to do with memory allocation.  The shell is not a fixed
+     size -- it may try to expand its data area from time to time.  If
+     you are using the shell, and you run a TSR program, it will load
+     into memory directly above the shell.  Then, if the shell tries to
+     grow, you will receive an error.
+
+     There are two ways out.  One is to load the TSR before running the
+     shell.  This will keep the TSR out of the shell's way.  (This is
+     described in the next question/answer segment.) The other way is to
+     use the shell's ulimit command.  This tells the shell to expand its
+     data area before loading any program, so if the program stays
+     resident the shell has some free memory to use.
+
+ 2. The other possible conflict between a TSR and the shell has to
+    do with data from the keyboard.  Many TSRs want to examine the
+    keyboard data so that they can wake up when you enter a special key
+    sequence.  Sometimes the method used to peek at this data interferes
+    with the operation of the shell.  The shell can use two different
+    methods to read the keyboard.  It uses one method when in vi or
+    emacs editing mode, and a different method when not in an editing
+    mode.  We have found some conflicts can be resolved by enabling or
+    disabling the editing mode of the shell; however, if this doesn't
+    fix the problem, there is little else that can be done and you may
+    have to give up on the TSR.
+			____________________
+
+Question: How can I load my TSR (terminate-stay-resident) programs
+before loading the MKS programs?
+
+Answer: If you are using configuration 1 or 2, all you have to do is
+load the TSR program from autoexec.bat.  If you are using configuration
+3, you can change to either configuration 2 or 5.  Configuration 5 is
+recommended over configuration 2.  Configuration 2 will allow you to
+load your TSR from autoexec.bat before starting the shell, while
+configuration 5 can be used to start your TSRs from ROOTDIR/etc/inittab.
+
+If you are using configuration 4 or 5, you can load TSR programs by
+adding lines in the file ROOTDIR/etc/inittab.  This file is read by init
+before the login program is started for the first time.  You can tell
+init to run programs, including TSRs, automatically when the computer
+is booted.
+			____________________
+
+Question: I want to load my TSR (terminate-stay-resident) programs from
+ROOTDIR/etc/inittab, but I don't want to login.  Can I do this?
+
+Answer: Yes.  The last line of the ROOTDIR/etc/inittab file normally
+contains instructions to run the ROOTDIR/bin/login.exe program, but that
+does not have to be the case.  You could specify the KornShell as the
+program that is to be re-spawned.  See Configuration 5 in the MKS
+Toolkit Installation Manual.
+			____________________
+
+Question: I want to run a TSR (terminate-stay-resident) program from
+ROOTDIR/etc/inittab.  The TSR program requires an environment variable.
+How can I set up an environment for the program?
+
+Answer: MKS Toolkit's env program may be used to do this.  The following
+example ROOTDIR/etc/inittab entry runs tsrpgm.exe, and sets up an
+environment variable PATH:
+
+	 t1;2;wait;c:/bin/env.exe PATH=c:\dos tsrpgm.exe
+
+NOTE: The backslash (\) character should not be quoted or escaped in
+ROOTDIR/etc/inittab, since there is no shell present to interpret quotes
+or escape characters.
+			____________________
+
+Question: Why doesn't my program see the environment variables I have
+set?
+
+Answer: It is possible you have not exported the variables.  Unlike
+command.com, which passes all variables to other programs, the KornShell
+only passes the variables you have specified.  (This lets it keep some
+variables private.) You can mark a variable for export when the variable
+is defined by preceding the definition with the word export, as in:
+
+	 export PATH=c:/bin
+
+Alternatively, you can export the variable after it is defined, by
+using:
+
+	 export PATH
+
+You can find out which variables are being exported by using the shell
+command:
+
+	 export
+
+which displays a list of all exported variables.
+			____________________
+
+Question: Why is only the first part of my path being saved in the PATH
+variable?
+
+Answer: Perhaps you have forgotten to put any semi-colons within quotes.
+
+Remember, the semi-colon is a special character to the shell -- it
+indicates the end of one command and the start of another, allowing you
+to put several commands on one line, as in:
+
+	 cd /tmp;cp /fred/file .
+
+This changes your directory to the /tmp directory, and then runs the cp
+command to copy a file.  However, semi-colons are needed in the PATH
+variable to separate the various directory names.  To make sure that the
+shell does not regard them as command separators, you should put the
+whole definition within quotes.  For example, if you type the command:
+
+	 PATH=c:/bin;c:/
+
+the shell will take the part before the semi-colon as a command to
+define the PATH variable, and then will try to run the part after it as
+a command, resulting in an error message.  To avoid this, type the
+command as:
+
+	 PATH='c:/bin;c:/'
+			____________________
+
+Question: Why can't I run a batch file or a shell file to set
+environment variables?
+
+Answer: If the command name you type happens to be a DOS batch file
+(with the suffix .bat), the KornShell will load a new copy of
+command.com to read the file.  If the command name is a shell script
+(with the suffix .ksh), it is executed in a subshell which has its own
+environment.  Any environment variables defined will be created in the
+environment of that new interpreter, not in the environment of the
+shell you are using.  When the command file is finished running, the
+interpreter will exit and the newly defined variables will vanish.
+
+If the command is a shell script (not a batch file), there is one way
+out of this.  You can tell the KornShell to read the file directly,
+without loading a new copy of the shell.  You do this by using the dot
+command (see dot(1) in the MKS Toolkit Reference Manual).  For
+example, to tell the shell to run the file foo.ksh, you can type the
+command:
+
+	 . foo
+
+The dot instructs the shell to execute the file itself, rather than in a
+subshell.
+			____________________
+
+Question: How can I print a file on my printer?
+
+Answer: Your procedure for printing need not change once you have
+installed MKS Toolkit.
+
+One way is to simply redirect the output of any command to the
+printer.  For example, to route the output of the pr command to the
+printer, you might type the command:
+
+	 pr report >prn
+
+You can also use the DOS print spooler, but watch out for two things.
+First: the spooler is a TSR (terminate-stay-resident) program.  See
+the man page for ulimit(1), in the MKS Toolkit Reference Manual, for
+instructions on running TSRs from the KornShell.  Second: the KornShell
+has a built-in command called print, and the name conflicts with DOS's
+print command.  If you are in the KornShell and type the command:
+
+	 print report
+
+the shell's built-in print command will simply echo the word `report' to
+the screen.  To specify the external command, you must use its full path
+name, as in:
+
+	 c:/dos/print report
+
+Of course, this gets a bit tiresome, so you might set a shell alias to
+use as a short form.  You can do this with:
+
+	 alias prn=c:/dos/print
+
+If you call your alias print, you should use an escape character, such
+as the backslash, to access the print command built into the KornShell
+by using a command like:
+
+	 \print one two three
+
+The backslash bypasses the defined print alias.
+			____________________
+
+Question: While tidying up my disk, I moved all the DOS commands from
+the root directory into a subdirectory.  Why do I now get an error
+message when I try to boot?
+
+Answer: It's possible you have moved the hidden files IO.SYS and
+MSDOS.SYS along with all your other files.
+
+NOTE: These files may have slightly different names in various versions
+of DOS. For example, on PC-DOS, these files are called IBMBIO.SYS and
+IBMDOS.SYS.
+
+These files contain the kernel of the operating system, and must
+remain as the first two files of the disk's root directory.
+
+Reboot from diskette, and use the DOS sys command to make the hard disk
+bootable.
+
+NOTE: The ls command, with the -f option, lists the names of files in
+the order that they are stored in each directory slot.
+			____________________
+
+Question: Why can't I find the ex editor, the egrep program, or the fgrep
+programs?
+
+Answer: ex is the same program as vi.  vi knows that when it is called
+under the name of ex, it should run as a line-oriented editor; when it
+is started as vi, it runs as a screen editor.
+
+Similarly, fgrep and egrep are the same program as grep.  Like vi, the
+programs check to see how they were called, to determine the way they
+should behave.  The automatic installation program writes a copy of the
+vi program to both ROOTDIR/bin/vi.exe and ROOTDIR/bin/ex.exe.
+Similarly, the other programs we've discussed are installed under all
+the appropriate names.  Therefore if you have used the automatic
+installation procedure, you should already have the appropriate copies
+in your ROOTDIR/bin directory.  If you do not have all the programs you
+expected, you probably used the manual installation procedure.  We
+recommend that you refer back to the manual installation process
+(Installation Manual) and follow the instructions given there for
+installing programs under multiple names.
+			____________________
+
+Question: Why isn't mailx working for me?
+
+Answer: mailx looks at the LOGNAME environment variable to find out who
+you are; that's how it can find out what mail is waiting for you, and
+send mail in your name.  If you haven't set LOGNAME, mailx can't read or
+send mail.  If you log in using configuration 4 or 5, the LOGNAME
+variable is set automatically to the name you use when you log in.  If
+not, you must set LOGNAME before you try to use mailx.  You can do this
+with the command:
+
+	 set LOGNAME=name
+
+in your autoexec.bat file (if you are using command.com) or
+
+	 export LOGNAME=name
+
+in your profile.ksh (if you are using the KornShell).  You can also
+enter the command manually.
+			____________________
+
+Question: When I try to send mail to a user on my machine, why do I
+get the message, "Unable to open mailbox"?
+
+Answer:  The most common reason that the user's mailbox cannot be opened is
+that there is a directory with the same name as the user's system mailbox.
+For instance, mail to the user terry is normally stored in the file
+terry in the system mailbox, usually c:/usr/mail.  If terry is a directory,
+the mail programs cannot open it for writing, as they would a file.
+
+Remove the directory with the user's name from the system mailbox.
+			____________________
+
+Question: I changed my config.sys file.  Now when the machine boots, the
+following message is printed:
+
+	 Bad or missing Command Interpreter
+
+and the machine hangs.
+
+Answer: The command interpreter is the first program run by the system
+after the config.sys file has been read.  The default command
+interpreter is command.com.  This default may be changed using a shell=
+statement in the config.sys file.  If the shell= line specifies a file
+that is invalid or does not exist, then this message will be printed,
+and the machine will halt.  To fix the problem, restart the machine
+using a DOS boot diskette, then edit the shell= line in the config.sys
+file to correct the problem.  The most common causes of this message
+are:
+
+ * there is a typing mistake in the shell= line
+ * the shell= line specifies a file that does not exist
+ * if init is your shell, the inittab file specifies a program that does
+   not exist
+
+Verify that the path name and file name are correct.  Typical shell=
+lines might be:
+
+	 shell=c:\dos\command.com /e:1024 /p
+or
+	 shell=c:\etc\init.exe -R c:
+or
+	 shell=c:\bin\sh.exe -L
+			____________________
+
+Question: I installed MKS Toolkit, everything appears to be fine.  Now
+when I type bc to start Borland C++, the machine appears to hang.
+
+Answer: The machine is probably not hung.  There is a new utility bc in
+MKS Toolkit 3.2.  bc is a programming language which can perform
+arithmetic calculations to arbitrary precision.  Use the command:
+
+	 which bc
+
+to determine which file is actually executed when the command is
+typed.  Change the PATH variable or rename one of the files to get the
+desired behavior.
+			____________________
+
+Question: The colors in uuconfig are difficult to see on my laptop's
+monochrome screen.
+
+Answer: The uuconfig program automatically detects your computer's video
+mode when it starts.  Some laptops set the mode to color even though they
+use a monochrome screen.  You can often fix this by re-setting the mode.
+Use the mode command without arguments to display the status of your
+computer's devices.
+
+To check the current device settings for your computer, use the command:
+
+	mode
+
+To change the video mode for uuconfig, use the command:
+
+	mode bw80
+			____________________
+
+Question:  How fast should I set the connection speed over my hard-wired
+UUCP connection?
+
+Answer:  The connection speed is controlled by many factors, including the
+type and speed of your computer's processor, the type of serial controller
+(UART) chip, and the other software you're running.  This chart lists the
+maximum speeds for different combinations.
+
+	  PROCESSOR		 BUS	UART	  LIMIT
+	TYPE	SPEED		SPEED
+	
+	 8088	 4.77mhz	4.77mhz	8250	 4,800bps
+	80286	 6mhz		6mhz	8250	 9,600bps
+	80286	 8mhz		8mhz	8250	19,200bps
+	80386sx	16mhz		8mhz	8250	19,200bps
+	80386dx	33mhz		8mhz	8250	38,400bps
+	80486	33mhz		8mhz	8250	38,400bps
+
+Many later PCs use a different model of UART chip, usually the 16540 or the
+16550; as of Release 4.1, MKS UUCP treats these chips as if they were 8250
+chips.
+
+Some applications, especially those extensive graphics or screen re-draws,
+can significantly lower the connection speed.
+			____________________
+
+Question: How can I run the uuxqt program automatically, so I don't have to
+worry about remote command requests?
+
+Answer: By default, uuxqt is run to process mail requests whenever you
+read mail.  You need to run uuxqt only if you have changed your default
+mailx start-up file, $ROOTDIR/etc/mailx.rc, or if you have given remote users
+permission to run commands other than rmail on your site.
+
+The following lines in your $ROOTDIR/etc/mailx.rc file cause mailx to run
+uuxqt whenever mailx is started to read mail:
+
+if r
+	!uuxqt -c rmail
+endif
+
+These lines are added automatically by the uuconfig program. The -c option
+restricts uuxqt to processing mail requests.
+
+To process other remote command requests, you can include a uuxqt command
+line in your startup file (profile.ksh or autoexec.bat).
+
+If you keep your system up most of the time, the following short shell
+script may help.  It runs uuxqt every hour, if your system is not
+already busy.  To use this script, your system must be left on when
+unattended, and it must be running MKS KornShell.
+
+	trap 'date;uuxqt' ALRM
+	export TMOUT=3600
+			____________________
+
+Question: In vi insert mode, the ampersand (@) character deletes the
+entire line.  How do I prevent this?
+
+Answer: By default, the @ character is the line delete character.  This
+may be easily changed using the vi set option variable linedelete.  For
+example, to change the line delete character to CTRL-U, use the
+following in the ex.rc file:
+
+	 set linedelete=0x15
+			____________________
+
+Question: I have a color monitor.  When vi starts, the colors on the
+screen change to white on black.  Can vi use the same colors that the
+command line used?
+
+Answer: By default, vi changes the screen to white characters on a
+black background.  For example, to change the screen to white characters
+on a blue background, with error messages in blue characters on a white
+background, use the following in the ex.rc file:
+
+	 set attrib=0x1700
+	 set errattrib=0x7100
+
+NOTE: This example works with many video cards.  Not all video hardware
+is the same, however.  Some trial and error may be required to get the
+desired combination of colors.
+			____________________
+
+Question: I use vi on a network to edit a text file residing on a UNIX
+file server.  The next time that I edit the text file from the UNIX
+system, every line ends in CTRL-M. Can this be prevented?
+
+Answer: The CTRL-M is a result of the DOS convention of using CRLF
+(carriage return, line feed pair) as the end-of-line delimiter.  vi does
+not add CR to the end of line if the notosscr set option variable is set
+in the ex.rc file.  You can strip CTRL-Ms from your file, on a one-time
+basis, by using the command:
+
+	 tr -d `\r' <in > out
+
+To make vi always write UNIX compatible files without CRs, add the line
+
+	 set notosscr
+
+in your ex.rc file.
+			____________________
+
+Question: The speaker on my machine is loud.  This is annoying since any
+error in vi results in a loud beep.  Can I turn it off?
+
+Answer: Yes. In your ex.rc file, add this line:
+
+	 set noerrorbells
+or
+	 set noeb
+			____________________
+
+Question: Using vi, under DOS 4.01, piping text through a filter or
+running an external command using `!' produces the message:
+
+	 Specified COMMAND search directory bad
+	 Too many parameters
+
+and then a command.com prompt.
+
+Answer: This problem occurs because command.com ignores the switch
+character.  To return to vi, type
+
+	 exit
+
+and press ENTER. Add the following line to the ex.rc file:
+
+	 set shell=c:/bin/sh.exe
+
+or add the following line to autoexec.bat:
+
+	 set SHELL=c:/bin/sh.exe
+			____________________
+
+Question: Why do I get a `temporary file error' when I try to use vi?
+
+Answer: More often than not, this occurs when vi cannot find a place to
+create its temporary work file.  The normal place for vi's work file
+is in the directory specified by the TMPDIR environment variable.  When
+vi attempts to create a work file, it first looks for the directory
+specified by the TMPDIR environment variable; if TMPDIR is not
+specified, vi looks for a TMP environment variable.  If TMP is not
+defined, vi checks for the directory ROOTDIR/tmp, and then for /tmp on
+the current drive.  If none of those exist, vi gives the error message
+and terminates.
+
+If you have several drives on your system, you should consider defining
+the variable TMPDIR. For example, if you add
+
+	 export TMPDIR=c:/tmp
+
+to your profile.ksh, vi will look for the /tmp directory on drive C,
+even when you are working on a different drive.
+			____________________
+
+Question: When I try to run vi in a Desqview window, it just prints
+spaces and beeps.  What am I doing wrong?
+
+Answer: You need to tell Desqview that vi is a program that writes
+directly to the screen.  You can do this by using the Change a Program
+menu item in Desqview.
+			____________________
+
+Question: I have a diskette containing a tar archive.  The diskette was
+written on a UNIX machine.  How can I extract the archive on my DOS
+machine using MKS Toolkit.
+
+Answer: This may best be illustrated by an example.  The example assumes
+that the tar archive will be read using floppy drive A:.  If you want to
+use another drive, substitute that drive letter in place of A:.
+
+You will need a second diskette that is formatted by DOS to the same
+density as the diskette containing the tar archive.
+
+Follow these steps to read the diskette containing the tar archive:
+
+ 1. Place the formatted DOS diskette in drive A:.
+
+ 2. Type the following command:
+
+		s a:
+
+     and press ENTER.
+
+ 3.  Remove the DOS diskette.  Place the tar archive diskette in drive
+     A:.  The contents of the tar archive may now be extracted with the
+     command:
+
+		ar -xvf a:
+			____________________
+
+Question: Why do I get a ``General failure error'' message when
+attempting to extract a tar, cpio, or pax archive written on a UNIX
+machine.
+
+Answer: This error may occur if tar, cpio, or pax is used from DOS
+command.com.  It will not occur under the KornShell.
+
+The diskette containing the archive will not contain a valid DOS boot
+block, since it was written on a UNIX machine.  DOS uses the boot block
+to determine the density of the diskette, among other things.  Without a
+boot block, DOS cannot determine the diskette format with any certainty.
+This results in a general failure error.
+
+If you have followed the procedure given above for extracting archives
+written on a UNIX machine, then type an F (fail) in response to the
+message.  The Toolkit command will still be able to extract the archive.
+			____________________
+
+Question: I need to transfer some files to a UNIX machine.  I want to do
+this using a tar archive.  How can I write an archive on my DOS machine
+that can be read on a UNIX machine?
+
+Answer: This may best be illustrated by an example.  The example assumes
+that the tar archive will be created using floppy drive A:.  If you want
+to use another drive, substitute that drive letter in place of A:tar
+diskette containing the files file1 and file2.
+
+Follow these steps to create the tar diskette:
+
+ 1. Place the diskette that contains the tar archive
+    into A:.  Format the diskette to an appropriate density.
+
+    NOTE: This procedure serves two purposes: it establishes the density
+    of the diskette, and finds any bad sectors.  Do not use the diskette
+    if it contains bad sectors!
+
+ 2. Write the tar archive to the diskette:
+
+		ar -cvf a: file1 file2
+			____________________
+
+Question: I have a cartridge tape containing a tar archive.  The tape
+was written on a UNIX machine.  How can I extract the archive on my DOS
+machine using MKS Toolkit?
+
+Answer: It is probably not possible to extract the tape using MKS
+Toolkit.
+
+Before the tape drive can be made accessible to DOS commands such as
+tar, it is necessary to install a software program called a device
+driver.  The device driver provides the essential link between the hard-
+ware and the DOS operating system.  tar cannot use the tape drive
+without this link.
+
+DOS device drivers usually take the form of a .sys file that is loaded
+using a
+
+	 device=
+
+line in the config.sys file.  Most manufacturers do not include DOS
+device drivers with their tape drives, electing instead to provide
+special backup/restore programs that work directly with the hardware.
+
+MKS does not attempt to provide device drivers for any third party
+hardware.
+
+NOTE: If a device driver for the tape drive were available, and the
+device name happened to be TAPE1:, then a command such as the following
+should work:
+
+	tar -xvf tape1:
+			____________________
+
+Question: Is there any way to speed up tar commands?
+
+Answer: It is often possible to speed up a tar command by specifying a
+block size for the command.
+
+The best results seem to occur when the block size is equal to the
+capacity of a single diskette cylinder.  In other words, tar will read
+an entire cylinder at a time from the diskette.  For example, a 360K
+diskette contains nine sectors per track, and two sides, giving 18
+blocks (sectors) per cylinder.
+
+The following table gives example tar commands for the common diskette
+densities:
+
+	         Size   Capacity  Command Line        
+	         5.25"      360K  tar -tv -b 18 -f a:
+	         5.25"      1.2M  tar -tv -b 30 -f a:
+	         3.5"       720K  tar -tv -b 18 -f a:
+	         3.5"      1.44M  tar -tv -b 36 -f a:
+
+NOTE: The  dd(1) man page  contains examples of  commands that  use
+block sizes  suited to the  commonly found diskette densities.
+			____________________
+
+Question: I've used  setver to change the DOS version number for a
+program; however, the program still reports that the DOS  version is 5.0
+when I run  the program from  the KornShell.
+
+Answer: The problem is caused by a deficiency in setver. See the note
+at the end of this question.
+
+The workaround is to use command.com to run the program.  Instead of
+calling the program by name, use a command line like:
+
+	    command.com /c program
+
+If the program will be used often, an alias could be used to reduce the
+amount of typing required:
+
+	    alias program="command.com /c program"
+
+An alternative would be to use setver on the KornShell itself.  This
+has a couple drawbacks:
+
+ * It will work only if the KornShell is run from a non-MKS program such
+   as command.com.
+
+ * All programs run from this setver'd KornShell will get the same
+   version number.
+
+NOTE: It appears that Microsoft has not completely implemented the
+setver command.  The DOS call: int 21, AH=4B, AL=03 (load an overlay)
+does not consult the setver driver.  MKS Toolkit utilities that run
+other programs (such as the KornShell, env, and login) use this
+particular DOS call.
+	  ____________________
+
+Question: How does MKS Toolkit match the case of file names?
+
+Answer: Under DOS and other File Allocation Table (FAT) type file
+systems, file names appear in lowercase; however, case of file names
+is ignored unless the DUALCASE environment variable is set in
+profile.ksh (if using MKS KornShell) or config.sys.  Use of the DUALCASE
+environment variable is only required if you perform operations on files
+on a High Performance File System (HPFS).
+			____________________
+
+Question: If I am working on an HPFS file system, can I rename any of
+the commands truncated to 8.3 (for a FAT system) to their full names
+(for example, uncompre.exe to uncompress.exe)?
+
+Answer: Yes
+			____________________
+
+Question: Why doesn't the find command work when specified as follows?
+
+	  find / -name file*
+
+Answer: As can be discerned from the man page, the correct syntax is:
+
+	  find / -name 'file*'
+
+The * is a file name expansion character which needs to be enclosed in
+single quotes to pass to find.
+			____________________
+
+Question: Why does du seemingly report twice as much space as there
+really is?
+
+Answer: du reports blocks (512 bytes) by default, not the number of
+kilobytes.
+			____________________
+--- end - of - file -----------------------------------------------------------

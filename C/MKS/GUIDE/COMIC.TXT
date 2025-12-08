@@ -1,0 +1,63 @@
+Detective Comics:572:Mar:1987:$1.75
+Demon:2:Feb:1987:$1.00
+Ex-Mutants:1:Sep:1986:$2.60
+Justice League of America:259:Feb:1987:$1.00
+Boris the Bear:1:Sep:1986:$1.50
+Flaming Carrot:14:Oct:1986:$2.75
+Demon:4:Apr:1987:$1.00
+The Question:1:Jan:1987:$2.10
+Elektra:7:Feb:1987:$2.00
+Howard the Duck:29:Jan:1979:$0.35
+Wonder Woman:3:Apr:1987:$1.00
+Justice League of America:261:Apr:1987:$1.00
+Secret Origins:10:Jan:1987:$1.75
+The Question:2:Mar:1987:$2.10
+Justice League of America:258:Jan:1987:$1.00
+Batman:566:Sep:1986:$1.00
+Legends:3:Jan:1987:$1.00
+Daredevil:234:Sep:1986:$0.95
+Legends:5:Mar:1987:$1.00
+Daredevil:237:Dec:1986:$0.95
+Star Trek:29:Aug:1986:$0.95
+Green Lantern Corps:203:Aug:1986:$0.95
+The Shadow:3:Jul:1986:$2.10
+Green Lantern Corps:204:Sep:1986:$1.00
+Son of Ambush Bug:3:Sep:1986:$1.00
+New Teen Titans:26:Dec:1986:$2.10
+Legends:1:Nov:1986:$1.00
+Detective Comics:568:Nov:1986:$1.00
+Boris the Bear:3:Dec:1986:$2.30
+Cerebus:89:Aug:1986:$2.00
+Legends:4:Feb:1987:$1.00
+Swamp Thing:57:Feb:1987:$1.00
+Wonder Woman:1:Feb:1987:$1.00
+Flaming Carrot:13:Jul:1986:$2.00
+Ex-Mutants:2:Oct:1986:$2.60
+Ex-Mutants:3:Dec:1986:$2.75
+Flaming Carrot:12:May:1986:$2.00
+Midnite Skulker:2:Aug:1986:$2.50
+Strikeforce Morituri:2:Jan:1987:$0.95
+Strikeforce Morituri:1:Dec:1986:$0.95
+Demon:3:Mar:1987:$1.00
+Watchmen:5:Jan:1987:$2.10
+Watchmen:6:Feb:1987:$2.10
+Watchmen:7:Mar:1987:$2.10
+Watchmen:8:Apr:1987:$2.10
+Watchmen:4:Dec:1986:$2.10
+Watchmen:3:Nov:1986:$2.10
+Watchmen:1:Sep:1986:$2.10
+Watchmen:2:Oct:1986:$2.10
+Moonshadow:2:May:1985:$1.75
+Moonshadow:3:Jul:1985:$1.75
+Border Worlds:1:Jul:1986:$2.80
+Daredevil:239:Feb:1987:$0.95
+Dark Knight:4:Oct:1986:$4.50
+Firestorm:55:Jan:1987:$1.00
+Dark Knight:1:Jul:1986:$4.50
+Superman:2:Feb:1987:$1.00
+Legends:2:Dec:1986:$1.00
+Cerebus:87:Jun:1986:$2.00
+Swamp Thing:54:Nov:1986:$1.00
+Son of Ambush Bug:6:Dec:1986:$1.00
+Bozz Chronicles:2:Feb:1986:$1.75
+Bozz Chronicles:3:May:1986:$1.75

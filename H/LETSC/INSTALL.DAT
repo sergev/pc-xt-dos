@@ -1,0 +1,27 @@
+: csd.dat 6/10/87
+: installation data file install.dat for CSD V4.0.12
+: product CSD
+: version CSD4012
+:
+: disk	filename	directory	category
+:1	CSD4012.001
+:1	install.dat
+:1	install.exe
+1	atod.c		\sample		sample
+1	cc4.exe		\bin		large|small
+1	csd.exe		\bin		csd
+1	csdedit.hlp	\lib		csd
+1	csdeval.hlp	\lib		csd
+1	csdfind.hlp	\lib		csd
+1	csdhelp.hlp	\lib		csd
+1	csdrun.hlp	\lib		csd
+1	csdselec.hlp	\lib		csd
+1	csdtrace.hlp	\lib		csd
+1	csdxl.obj	\lib		large
+1	csdxs.obj	\lib		small
+1	factor.c	\sample		sample
+1	factor.exe	\sample		sample
+1	infl.c		\sample		sample
+1	infl.exe	\sample		sample
+1	inflbug.c	\sample		sample
+1	lcsd.exe	\bin		csd

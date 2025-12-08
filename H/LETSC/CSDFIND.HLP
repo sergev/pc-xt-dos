@@ -1,0 +1,25 @@
+%BFUNCTION%N   %BKEY%N       %BACTION%N
+%R Find  %N    %R  F1  %N     Find the first line in the current window matching a
+		     pattern, which may include the Trace key or metacharacters:
+	   %R Trace %N    The Trace key causes the pattern to be highlighted
+		     and matches traced statements or expressions.
+	     ^^	     matches the beginning of a line.
+	     $       matches the end of a line.
+	     ?       matches any character.
+	     *       matches a string of zero or more of any characters.
+	     [abc]   a class (in []) matches any member of the class.
+	     [i-n]   part of a class may be specified as a range.
+		      Any other character matches itself.
+	If not given the pattern defaults to the previous value.
+	%BThe command is terminated by one of the following:%N
+%R Up   %N     %R ^X %N      Search up to the beginning of the current source file
+		    or top of the evaluation or history display.
+%R Down  %N    %R ^Y %N      Search down to the end of the current source file
+		    or bottom of the evaluation or history display.
+%R Beg %N      %R Home %N   Search up to the beginning of the first source file
+		    or top of the evaluation or history display.
+%R End  %N     %R End %N    Search down to the end of the last source file.
+		    or bottom of the evaluation or history display.
+%R Cancel %N   %R  F5   %N  Cancel the %R Find  %N command.
+	If the pattern is not found, this failure is reported.
+Press %R Help <F6> %N to return to the debugger.

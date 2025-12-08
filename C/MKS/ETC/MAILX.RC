@@ -1,0 +1,13 @@
+# MKS Toolkit sample /etc/mailx.rc -- modify to taste.
+# This is the system wide startup file for mailx.exe.
+# It contains variable values and definitions that should
+# be common to all users.
+#
+# If you are using UUCP, uuconfig will add lines to invoke 'uuxqt -c rmail'
+# when reading mail, and will set sendmail to rmail.exe
+#
+# However, uuconfig will *not* do this if it sees the line
+#	set sendmail=rmail
+# or
+#	#set sendmail=rmail
+# already in this file (note there is no space between '#" and 'set'.

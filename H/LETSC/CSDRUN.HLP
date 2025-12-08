@@ -1,0 +1,24 @@
+%BFUNCTION%N   %BKEY%N       %BACTION%N
+%RRun %N       %R  F4   %N   Execute program. The next key indicates when to stop.
+		%BThe next key must be one of the following:%N
+%R Trace %N    %R  F3   %N   Program executes until a traced statement is encountered
+		     or a traced expression changes value.
+%RReturn %N    %R Return %N  One statement is executed (i.e. program is single-stepped).
+
+%R Down  %N    %R ^Y %N       One statement in the current function is executed.
+		     A function call is treated as an indivisible statement.
+%R Beg %N      %R Home %N    Program is reloaded and reinitialized execution
+		     from the beginning.
+%R  End  %N    %R End %N     Program executes through to the end, logging
+		     tracepoints in the history window.
+
+%R  Out  %N    %R  ^[  %N     Program executes until the current function returns.
+
+%RCancel %N    %R  F5   %N   Cancels the %RRun %N command.
+
+The program executes at full speed if there are no traced expressions in the
+evaluation window (traced statements in the source window do not significantly
+impact the speed) and you use %RRun %N %R Trace %N or %RRun %N %R  End  %N. Otherwise
+it runs at single-step speed, which can be significantly slower.
+
+Press %RHelp <F6>%N to return to the debugger.

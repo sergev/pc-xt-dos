@@ -1,0 +1,155 @@
+LIST toolkit.lst
+
+t = a = m = 1
+s = n = u = w = g = e = 0
+OPTIONS z
+t General MKS Toolkit
+a General MKS Toolkit Support Files
+m Online Manual Pages
+r Restricted MKS Toolkit Commands
+s Speller and Dictionary
+n MKS Make
+u MKS UUCP
+w Microsoft Windows Support Files
+g MKS Vi Tutorial
+e Miscellaneous Examples
+END OPTIONS
+
+IF !t && !a && !m && !r && !s && !n && !u && !w && !g && !e
+	ALERT
+You have not selected any options.
+~cInstallation discontinued.
+	END ALERT
+	EXIT
+END IF
+
+IF t
+	ADD SET t TO z
+END IF
+IF a
+	ADD SET a TO z
+END IF
+IF m
+	ADD SET m TO z
+END IF
+IF r
+	ADD SET r TO z
+END IF
+IF s
+	ADD SET s TO z
+END IF
+IF n
+	ADD SET n TO z
+END IF
+IF u
+	ADD SET u TO z
+END IF
+IF w
+	ADD SET w TO z
+END IF
+IF g
+	ADD SET g TO z
+END IF
+IF e
+	ADD SET e TO z
+END IF
+
+EXIST $root/bin/makes.exe a
+EXIST $root/bin/makel.exe b
+EXIST $root/bin/makesl.exe c
+d = a | b | c 
+IF n && d
+	a = 1
+	YN a
+You have a previous version of MKS Make
+installed. Do you want to remove the
+previous version?
+
+Specifically, you will remove whichever
+of the following commands are present:
+    makes.exe, makel.exe and makesl.exe
+
+	END YN
+	IF a
+		REMOVE $root/bin/makes.exe
+		REMOVE $root/bin/makel.exe
+		REMOVE $root/bin/makesl.exe
+	END IF
+END IF
+
+IF !z
+	z = 0
+	YN z
+If you are installing on a laptop, have limited disk space, or
+want to copy a subset of the ~!MKS Toolkit~! then you will
+want to select individual files from the options you have chosen.
+
+Do you want to select individual files?
+
+	END YN
+END IF
+
+IF z
+	SELECT z
+END IF
+
+a = 1
+YN a
+Ready to install ~!MKS Toolkit~! to
+~c"$root"
+~cDo you want to proceed?
+END YN
+IF !a
+        EXIT
+END IF
+
+COPY SET z
+
+EXIST $boot/autoexec.bat a
+IF a
+	a = 1
+	YN a
+Would you like a backup copy made of
+
+        $boot/autoexec.bat
+to
+        $boot/autoexec.mks
+
+	END YN
+	IF a
+		REMOVE $boot/autoexec.mks
+		COPY $boot/autoexec.bat=$boot/autoexec.mks
+	END IF
+END IF
+
+EXIST $boot/config.sys a
+IF a
+	a = 1
+	YN a
+Would you like a backup copy made of
+
+        $boot/config.sys
+to
+        $boot/config.mks
+
+	END YN
+	IF a
+		REMOVE $boot/config.mks
+		COPY $boot/config.sys=$boot/config.mks
+	END IF
+END IF
+
+EXIST $root/bin/login.exe z
+IF u || z
+	EXIST $root/etc/passwd z
+	IF !z
+		ALERT
+Creating $root/etc/passwd.
+		END ALERT
+		APPEND $root/etc/passwd
+com;;0;0;command.com (DOS shell);$home;
+mks;;1;1;MKS KornShell (DOS);$home;$root/bin/sh.exe -0 $root/bin/sh.exe -R 0
+date;;2;2;Print date and time (DOS);$home;$root/bin/date.exe
+		END APPEND
+	END IF
+END IF

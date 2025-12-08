@@ -1,0 +1,58 @@
+"
+"	Towers of Hanoi
+"
+"	Greg McFarlane
+"	OTC R&D GPO Box 7000, Sydney 2001, Australia
+"	Tel: +61 2 287 3139    Fax: +61 2 287 3299
+"
+"	ACSnet:	gregm@otc.otca.oz.au
+"	UUCP:	{uunet,mcvax}!otc.otca.oz.au!gregm
+"
+"
+"	To load
+"		vi -c "so hanoi.mac"
+"
+"	To start, just enter 'g' from VI ESC mode.  To stop 
+"	prematurely, press the interrupt key.  Note that the VI 
+"	session should be restarted in order to clear all the 
+"	macros.
+"
+"	The default height of the tower is 7 but can be easily 
+"	changed by editing the macro file.
+"
+"	The disks aren't actually shown in this version, only 
+"	numbers representing each disk, but I believe it is possible 
+"	to write some macros to show the disks moving about as well.
+"
+"
+set remap
+set noterse
+set wrapscan
+" to set the height of the tower, change the digit in the following
+" two lines to the height you want (select from 1 to 9)
+map t 7
+map! t 7
+map L 1G/tX/^0$P1GJ$An$BGC0e$X0E0F$X/T@f@h$A1GJ@f0l$Xn$PU
+map g IL
+map I KMYNOQNOSkRTV
+map J /^0[^t]*$
+map X x
+map P p
+map U L
+map A "fyl
+map B "hyl
+map C "fp
+map e "fy2l
+map E "hp
+map F "hy2l
+map K 1Go
+map M dG
+map N yy
+map O p
+map q tllD
+map Y o0123456789Z0q
+map Q 0iT
+map R $rn
+map S $r$
+map T ko00
+map V Go/

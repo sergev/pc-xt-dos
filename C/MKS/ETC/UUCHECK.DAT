@@ -1,0 +1,61 @@
+#
+# uucheck.dat - uucp system integrity check data file
+#
+#
+#	This file should reside in ROOTDIR/etc
+#
+#
+#	This file defines the required uucp system files.  This list is read
+#	by the uucheck utility when it is executed to perform an integrity
+#	check of the installed uucp system.
+#
+#
+#	FILE FORMAT:
+#
+#		Data lines must start with 'D', 'F', 'N', where:
+#
+#			'D' -	File must exist and be a directory, else
+#				uucheck reports
+#				"Missing"
+#
+#			'F' -	File must exist, else uucheck reports
+#				"Missing"
+#
+#			'N' -	File must not exist, else uucheck reports
+#				"Found"
+#
+#
+#		The key letter is separated with a single space or tab from
+#		the pathname of the file to check.  This filename is considered
+#		relative to the ROOTDIR environment variable.  This means that
+#		if the ROOTDIR enviromnent variable in your installation is set
+#		to "C:", then F/bin/mksos.com would be interpreted to mean
+#		that "C:/bin/mksos.com" must exist or a warning "Missing"
+#		message will be issued when uucheck is executed.
+#
+#		Lines starting with any other character other than 'D', 'F'
+#		or 'N', or blank lines will be treated as comment lines and
+#		ignored.
+#
+#		A data line may include a comment by following the filename
+#		with a space or tab and the text of your comment.
+#
+
+F	/bin/mksos.com		Multi-tasking kernel for MKS UUCP
+F	/bin/mksuucp.com	MKS UUCP TSR
+F	/bin/rmail.exe		Electronic mail delivery utility
+F	/bin/uucheck.exe	System integrity check program
+F	/bin/uucico.exe		Monitors and controls MKS UUCP TSR (mksuucp.com)
+F	/bin/uuclean.exe	Uucp spool directory cleanup utility
+F	/bin/uuconfig.exe       Configuration program
+F	/bin/uuconfig.frl	Resource file used by uuconfig.exe
+F	/bin/uuconfig.hlp	Help file for uuconfig.exe
+F	/bin/uucp.exe		Transfer request utility
+F	/bin/uulog.exe		Log inquiry program
+F	/bin/uuname.exe		Connection inquiry program
+F	/bin/uustat.exe		Job statistics program
+F	/bin/uux.exe		Remote execution request program
+F	/bin/uuxqt.exe		Remote execution server program
+
+F	/etc/login.inf		Login scripts
+F	/etc/modems.inf		Setup strings for modems

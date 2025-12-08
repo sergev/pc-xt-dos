@@ -1,0 +1,40 @@
+		The Zortech C++ Workbench
+
+Copyright (c) 1991 Symantec Corporation. All rights reserved
+
+This is version 3.0
+
+This file contains any last minute information concerning the V3.0 version
+of the Workbench. You should read this file before continuing.
+-----------------------------------
+Version : V3.0r4 Release
+Date	: October 15, 1991
+
+-----------------------------------
+ZWB now displays the row and column position of the cursor in the active
+window.
+
+Known problems:
+The tab size is not saved in the zwb.cfg file when it is changed in the 
+Miscellaneous Options dialog. The workaround is to set the environment 
+variable, TAB=n, where n is the number of spaces.
+
+-----------------------------------
+Version : V3.0r1 Release
+Date	: July 7, 1991
+
+-----------------------------------
+COMPILER VERSION
+When the 'Normal DOS' option is selected in the second dialog box under
+compiler options, the version of the compiler actually used depends on 
+the processor available in the host computer. If a 386 or better is
+detected then the 32 bit dos extended version of the compiler will be
+run since this will normally give the best performance. To override this
+either select the 286 dos extended version, or put -b in the compiler
+command line edit box.
+-----------------------------------
+FILE LIST BOX
+ZWB now has a file list box that can used to select files to edit/compile.
+Directory paths and wild cards are accepted, but not drive specifiers.
+-----------------------------------
+EOF

@@ -1,0 +1,20 @@
+[Group Title]
+title=MKS Toolkit
+
+[Items]
+item1=sh.pif,MKS KornShell,sh.ico
+item2=vi.pif,MKS Vi,vi.ico
+item3=awk.pif,MKS AWK,awk.ico
+item4=make.pif,MKS Make,make.ico
+item5=grep.pif,MKS Grep,grep.ico
+item6=find.pif,MKS Find,find.ico
+item7=man.pif,MKS Man,man.ico
+item8=help.pif,MKS Help,help.ico
+
+[Extensions]
+ksh=ksh.pif -c "'^.ksh'"
+awk=awk.pif -f ^.awk
+mk=make.pif -f ^.mk
+
+[Install]
+installed=FALSE

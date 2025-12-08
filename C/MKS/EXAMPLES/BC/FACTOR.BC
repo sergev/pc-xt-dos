@@ -1,0 +1,28 @@
+define factor(n) {
+	auto oldscale, newscale, m, limit, try, times
+
+	oldscale=scale
+	while (n > 1) {
+		scale = 1; m = n/2; scale = 0
+		if (m != m/1) break
+		print 2,
+		n = m
+	}
+	limit = sqrt(n)
+	for (try=3; try <= limit; try+=2) {
+		# set scale to 1+floor(ln(try)/ln(ibase)) for division by try
+		# this is the smallest scale that can hold the fraction
+		m = try
+		for (newscale=1; m > 1; ++newscale) m /= ibase
+		for (times=0; n > 1; ++times) {
+			scale = newscale; m = n/try; scale = 0
+			if (m != m/1) break
+			print try,
+			n = m
+		}
+		if (times!=0) limit = sqrt(n)
+	}
+	if (n > 1) print n/1,
+	print
+	scale=oldscale
+}

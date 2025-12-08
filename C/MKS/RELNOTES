@@ -1,0 +1,634 @@
+                        MKS Toolkit Release Notes
+                               Release 4.1
+
+                        Updated: October 23, 1992
+
+
+PLEASE READ THIS DOCUMENT!  It contains important, last minute information
+that may not be present in the printed manuals.  It also contains MANUAL
+ERRATA to correct known problems in the printed documentation.
+
+
+NEW FUNCTIONALITY
+
+- MKS UUCP provides background file transfer, remote command execution, and
+  electronic mail delivery.
+ 
+  New commands: rmail(1), uux(1), uucp(1), uustat(1), uuname(1), uulog(1),
+  uucheck(1), uuclean(1), uuconfig(1), and uucico(1).
+  Enhancements to mailx(1) to use delivery agent rmail(1).
+  mksos(1) and mksuucp(1) provide background file transfer capability,
+  and uuxqt(1) handles remote execution requests.
+
+- MKS Make is now provided with Toolkit, with new documentation and
+  extensions to track the POSIX.2 standard.  Includes a cc(1)
+  interface package, which can be used from makefiles to provide a
+  vendor-independent interface to your specific C compiler.
+
+- New AWK Compiler awkc(1) lets you create executable DOS programs
+  from your AWK script, which can be run as standalone programs.  See the
+  attached awkc(1) man pages.
+
+- Windows 3.x PIF files and icons, provided in a convenient MKS program group,
+  to allow MKS DOS commands to be readily accessed from Windows.
+
+Notes on General Usage:
+
+General Changes:
+
+This section serves as a short summary of the changes to general Toolkit 
+commands between versions 3.2 and 4.1.  Most of the changes are minor.
+
+awk(1): improved handling of floating point math and the exp function.
+  Co-processor support is now part of the awk.exe program.
+
+compress(1), uncompress(1): work properly on floppy drives
+  (fixed since Toolkit 3.2).
+
+config(1): now writes an ENVSIZE=512 into the inittab lines that invoke login.
+  This ensures that Windows can be invoked from the shell.
+
+init(1): smaller, handles minimum environment size requests to allow sh(1) 
+  to work with Windows. Also, when unloading TSRs, init no longer reloads
+  all saved interrupt vectors.  Instead, vectors are restored only if the
+  current vector points into the TSR about to be unloaded.
+
+login(1):  Previous releases of MKS Toolkit always set COMSPEC to the same
+  value as the SHELL specified in the user's /etc/passwd entry.  Login now
+  searches for a copy of command.com and sets COMSPEC to point to that copy.
+
+pg(1): now swaps memory when a ! escape is done.  This saves roughly 30K
+  of memory.
+
+All MKS products now put their product information in the file 
+  $ROOTDIR/etc/product.cfg (instead of $ROOTDIR/product.cfg).
+
+------------------------------------------------------------------------------
+NOTES FOR WINDOWS 3.x USERS
+
+- Appendix 1 of the DOS Installation Guide contains useful information for
+  Windows 3.x users.  Please refer to it when configuring Windows to work
+  with MKS Toolkit.
+
+------------------------------------------------------------------------------
+USING MKS TOOLKIT ON DOS UNDER OS/2
+
+- If you already have MKS Toolkit for OS/2, then, when installing
+  MKS Toolkit on DOS under OS/2, you should assign $ROOTDIR to a
+  different value to prevent the new files from overwriting your
+  existing files.
+
+- When running MKS Toolkit on DOS under OS/2, you should configure it to
+  use either configuration 1 or 2.  In either of these configurations,
+  you can run login or sh from an icon just like the OS/2 CMD icons.
+
+------------------------------------------------------------------------------
+NOTES FOR MKS UUCP USERS
+
+- mksos(1) produces a dump of current statuses when the key combination
+  ALT-CTRL-LEFT SHIFT-D is pressed.  This may conflict with the key
+  combinations used by other programs.
+
+- In uuconfig(1), there is a new read-only text string in the remote site
+  callout dialog:
+
+	COMx initialization: ...........
+
+  This appears right above the Modem Initialization line.  If you change
+  ports to callout, the COMx and init strings are updated.
+
+- ^S/^Q handshaking in a modem should be disabled when used with UUCP.
+   The UUCP protocol permits these characters; they should be passed 
+   through unchanged.  This setting, available on some Telebit modems, should 
+   be turned off.
+
+- uustat reads a status file, if present; the format is documented in
+  status(4).  However, mksuucp does not, as yet, produce those status files.
+
+- The following TSRs are known to have a compatibility problem with MKS UUCP.
+  These problems can be solved by changing the order in which the TSRs are
+  started.  The MKS UUCP TSRs (mksos and mksuucp) must be started after 
+  these TSRs.
+
+      bwnfs - Beame & Whiteside NFS and TCP/IP
+      bwtcp - Beame & Whiteside NFS and TCP/IP
+
+  In general, beware of TSRs that are not recommended for use with Windows.
+  Both Windows and MKS UUCP attempt to take control of the serial port.
+
+- The NANSI.SYS device driver interferes with the operation of MKS UUCP. 
+  No further details are available at this time.  These problems do not
+  exist with the ANSI.SYS driver.
+
+-------------------------------------------------------------------------------
+RELEASE NOTES (release 3.2e):
+
+NOTE: This section contains information from the release notes
+attached to version 3.2e of MKS Toolkit.  It is only useful if you are
+updating MKS Toolkit version 3.2d or earlier.
+
+GENERAL ENHANCEMENTS in 3.2e (minor release)
+
+- dd(1) In some cases, the disk-to-disk copy utility overwrote the
+  source disk.  This has been fixed.
+
+- more(1), pg(1) These now display correctly when ansi.sys is not loaded.
+
+- sort(1) The -k field flags for numeric fields are now used correctly.
+
+- strings(1) This utility now understands and scans Microsoft Windows
+  and OS/2 executables.
+
+SHELL CHANGES in 3.2e
+
+- In Vi line editing mode, the '.'  (repeat last text change) command 
+  now works correctly.  Previous versions of the KornShell did not
+  remember the repetition count of the original command.
+
+  For example, the command ``4x'' will delete four characters, starting
+  from the character under the cursor.  If the command is repeated with
+  ``.'', an additional four characters will be deleted.  The previous
+  KornShell would delete only one character.
+
+- Control-break handling in the KornShell has been improved.  It is now
+  possible to interrupt even CPU intensive command lines such as:
+
+	1. set
+	2. echo "$PATH$PATH$PATH$PATH$PATH$PATH$PATH$PATH"
+	3. while : ; do : ; done
+
+This improvement gives the KornShell a more responsive feel.
+
+- The KornShell stack checking has been improved, preventing stack
+  overflows in deeply nested functions.  For example, given the 
+  following function:
+
+	function q {
+		let x=$1+1
+		print $x
+		q $x
+	}
+
+  The command ``q 1'' will eventually result in the error message
+  "recursion too deep".
+
+- The parsing of shell command line arguments has been modified 
+  slightly. Previous shells required the -0 option to precede the 
+  -R option.  Options to sh may now be placed in any order.
+
+- The behavior of ``ulimit -d'' has changed slightly. The argument 
+  to this command should be in the range 0 <= x <=64.
+
+  Values larger than 64 will wrap: ``ulimit -d 65'' sets the size of 
+  the data segment to 1K, ``ulimit -d 66'' sets the size to 2K, etc.
+
+- It is now possible to run KornShell scripts from /etc/profile.ksh or
+  $HOME/profile.ksh.
+
+- It is possible to enable command line editing by assigning values
+  to the environment variables EDITOR or VISUAL.
+
+For example, ``export VISUAL=vi'' will turn on Vi command line editing.
+
+- The shell has been optimized to decrease the startup time.
+
+- It is now possible to use `exit' inside the /etc/profile.ksh file.
+
+- The behavior of the 'typeset' options -u, -l, -R and -L have
+  changed.  For example, ``typeset +u'' now turns off the -u flag, but
+  does not turn on -l.
+
+  Similarly;
+	- +l does not imply -u
+	- +L does not imply -R
+	- +R does not imply -L
+
+- A number of minor bugs in 'getopts' have been fixed.  It should
+  behave as documented.
+
+- Using here documents in the original 3.2 KornShell exercised a
+  memory leak bug.  This has been fixed.
+
+- Extremely long command lines containing wildcards could cause the
+  original 3.2 KornShell to crash.  This has been fixed.
+
+- The original 3.2 KornShell would not execute ./profile.ksh (as
+  documented) if HOME was not set.  This has been fixed.
+
+- The behavior of ``typeset -H'' on DOS has been changed slightly:
+  variables with this option set will now have all occurrences of one or
+  more '/' characters replaced with a single '\' character.
+
+- This is useful for variables such as ENV.  If the HOME directory for
+  a user is 'c:/', then setting ENV=$HOME/environ.ksh results in a ENV
+  variable with the value 'c://environ.ksh'.  The ENV file will be
+  ignored, since the value is not a valid DOS filename.  Use the
+  following instead:
+
+	typeset -xH ENV=$HOME/environ.ksh
+
+- The command ``test -t'' with no numeric argument now defaults to
+  testing file descriptor 1.
+
+- In the original 3.2 KornShell, attempts to access default drives
+  fail since glob did not construct the path correctly.  It attempted to
+  place the default path indicator in front of the drive.
+
+  For example, the command ``b:install'' might have attempted to find
+  the file ".\b:install".
+
+  Now, any path name with a drive is ineligible for PATH search.
+
+- A redirection command may now be an operand in a logical AND or
+  logical OR statement.  For example, the following is a complete
+  command:
+
+	true && > creat_file
+
+-  :|; is now a valid command.
+
+- Here documents should no longer confuse the history list.  For
+  example, the following commands:
+
+	cat <<EOF
+	hi
+	EOF
+	history
+
+  produced a history list like:
+
+	1	cat <<EOF
+		hi
+		EOF
+	2$
+
+  Note that the $ is the prompt, coming out on the same line as the
+  next history number -- if another command such as echo hi
+  got into the history list, you would get
+
+	1	cat <<EOF
+		hi
+		EOF
+	23	echo hi
+
+  This problem is now fixed.
+
+- The here document error message no longer has a newline in it.
+  For example:
+
+	cat <<EOF
+	hi
+	^Z
+
+  now produces the message ``<<EOF unclosed''.
+
+- Redirection from an invalid file descriptor number now produces an
+  error message.  For example:
+
+	$ print foo >&10
+	bad file descriptor "10"
+
+- The behavior of the 'export', 'readonly' and 'typeset' built-ins has
+  changed slightly:
+
+  With no options/parameters, print all non-empty variables.  This is
+  allowed, as POSIX leaves unspecified what happens for export/readonly
+  with no parameters or options (and doesn't define "typeset").  This
+  behavior is consistent with Korn.
+
+  With the -p (portability) option, we print all variables (including
+  empty ones) in the specified format, suitable for later digestion by
+  the shell.
+
+- The `break' and `continue' commands will always succeed even when
+  the arg is greater than the number of enclosing loops.
+
+  For example, the following script fragment will work correctly:
+
+	while :
+	do
+		break 1000
+	done
+
+-------------------------------------------------------------------------------
+
+RELEASE NOTES (release 3.2d):
+
+NOTE: This section contains information from the release notes
+attached to version 3.2d of MKS Toolkit.  It is only useful if you are
+updating MKS Toolkit version 3.1 or earlier.
+
+NEW INSTALLATION
+
+To install this product, see the MKS Toolkit Installation Manual for
+DOS, included with the distribution.  The utilities may now be
+selectively installed.
+
+POSIX CONFORMANCE
+
+Commands have been brought up to date with the POSIX.2 (draft 11) and
+POSIX.2a (draft 8) standards.  This means that there have been many
+small changes to various commands.  Some options may have changed.
+Minor changes to the behavior of the utilities may be expected.  See
+individual online man pages for details.
+
+NEW COMMANDS
+
+New commands: bc(1), cksum(1), clear(1), csplit(1), getconf(1),
+getopts(1), man(1), mksinfo(1), pathchk(1), patch(1), printf(1),
+tsort(1).
+
+OBSOLETE COMMANDS 
+
+Deleted commands: posixconf(1), validfname(1), mktemp(1).  Recent
+drafts of POSIX.2 have removed these commands.  There is a mktemp.ksh
+script provided in the examples subdirectory which performs a similar
+function.
+
+NEW EXAMPLES STRUCTURE
+
+New examples directory: sample shell scripts, awk programs, vi macros
+and more.
+
+c: VERSUS c:/
+
+In previous releases all commands treated c: the same as c:/, that is,
+the root of the c drive.  This differs from the way DOS handles it, c:
+being the current directory on the c drive.  All commands have been
+updated to use the DOS semantics.
+
+DIRECT SCREEN WRITES
+
+The vi editor and the new `more' utility write their output directly
+to screen memory.  As a result, it is not possible to use these
+programs when you are giving commands from a device other than the
+console.  (For example, it is possible to establish a session on a
+serial line using `init -T com1' or `CTTY COM1'.)
+
+OTHER ENHANCEMENTS
+
+- compress:	Now defaults to 16-bit compression.
+- nm, prof:	Now understands tlink (turbo linker) and wlink (watcom 
+		linker) symbol tables.
+- cpio/pax/tar: Can all now directly write/read to/from raw floppy disk.
+- man:		Full reference manual now included online.
+- dd:		imsg and omsg options allow simple multi-volume support.
+- vi,bc,ed:	Now swapped either to EMS or a temporary file when 
+		calling other commands.
+- sh:		Many, many changes/enhancements/fixes.  See `Shell 
+		Additions and Changes in 3.2' appearing later in these 
+		release notes.
+- more:		No longer an option to pg. Contains a new interface which 
+		is more vi-like and POSIX-compatible.
+
+NOTES ON GENERAL USAGE
+
+- cp(1) no longer prompts before overwriting an existing file which does 
+  not have write permissions.
+
+- od(1) Due to POSIX requirements, the `-c' and `-C' options now behave 
+  in an identical manner.  The `-C' option will be removed in future 
+  releases of MKS Toolkit.
+
+GENERAL CHANGES
+
+This section serves as a short summary of the changes to general
+MKS Toolkit commands between versions 3.1 and 3.2.  Most of the changes 
+are minor.
+
+login(1):  Previous releases of MKS Toolkit always set COMSPEC to the 
+  same value as the SHELL specified in the user's /etc/passwd entry.  
+  This is no longer the case.  login now attempts to point COMSPEC at a 
+  copy of the command.com program.  It searches for a copy of command.com 
+  in the following places:
+
+	- the root directory of the drive which boots DOS
+	- the \DOS directory of the drive which boots DOS
+
+  If login fails to find a copy of command.com in either of these places,
+  it defaults to the old behavior; COMSPEC will have the same value as
+  SHELL.
+
+Vi CHANGES
+
+This section serves as a short summary of the changes to the vi editor
+between versions 3.1 and 3.2.  Most of the changes are minor.
+
+- By default, vi now edits files containing eight bit ASCII characters.
+  The editor always behaves as if the set option variables `national'
+  and `eightbits' are enabled.  Changing these variables has no effect.
+  They will be removed in a future release of MKS Toolkit.
+
+- The vi set option `bell' has been renamed `errorbells'.  The behavior 
+  is the same.
+
+- In all previous releases of the vi editor, special handling was 
+  required to embed a carriage return (control-M or ^M) into text, :map 
+  commands, etc.  This release of vi contains a small change that is 
+  intended to make the behavior of the editor more natural:
+
+  	A carriage return is treated as an ordinary character, unless
+	it is immediately followed by a linefeed.
+
+  This simplifies the process of creating an ex.rc file that must
+  contain a carriage return as part of the editor initialization
+  command.  For example, to map the ^Q (control-Q) character to a
+  sequence of keystrokes that save the current file and quit the
+  editor, just add a line to the ex.rc file like the following:
+
+  map ^Q :wq^M
+
+  The trailing ^M will be treated as part of the right hand side of the
+  map.  The editor will automatically add a <carriage return><newline> 
+  pair (end of line marker) to the end of the line when the ex.rc is 
+  written back to disk.
+
+- The handling of a trailing \ on a line in a :so file has been altered.
+  Previously, this was treated as a normal character in the text; this is 
+  now handled in a more reasonable manner, to escape a newline.
+
+- The handling of ^Z (obsolete EOF marker in DOS) in a :so file has been
+  altered.  Previously, this was treated as a regular character; it is now
+  treated as EOF.
+
+- Due to internal changes, older versions of examples/exrc are no longer
+  compatible.  A new examples/exrc file is included with this release.
+
+SHELL ADDITIONS AND CHANGES IN 3.2
+
+This section serves as a short summary of the changes to the KornShell
+between versions 3.1 and 3.2.  Most of the changes are minor.
+However, it is possible that the behavior of certain shell scripts may
+be changed.  If you find that a shell script no longer works
+correctly, you may find an explanation for the change in this list.
+
+- Important Note: The shell now has a POSIX command built into it called
+  `command'.  If you were used to calling DOS's command.com by typing
+  `command', you will now have to type `command.com'.  If you have no need
+  for the built-in, use the following in your environ.ksh:
+
+	alias -x command=command.com
+
+- The shell now tolerates scripts which are terminated with a ^Z
+  character.
+
+- getopts(1) is a new built-in command to the shell.
+
+- The history file is incompatible with the 3.1 release shell.
+  Remove your old history file before running the new shell.
+
+- A login shell no longer clears the history file; instead, it is truncated
+  to the last HISTSIZE entries.
+
+- In the 3.2 shell, when you run one interactive shell under another,
+  the parent shell will not get the command history from the sub-shell
+  unless you have loaded the DOS share.exe program.
+
+- `!' is now a shell reserved word, returning the logical negation of the
+  return value of its arguments.  Therefore, it is not eligible for alias
+  expansion as the first word of a command.  For example, the following
+  alias definition will not work as expected:
+
+	alias !="echo hello world"
+
+  Note that this command executes without error, and that the alias appears
+  in the list of defined aliases.  However, typing an unadorned `!' at the
+  shell prompt will not call the alias, since `!' will be interpreted as
+  a reserved word.  There may be situations where it is useful to define
+  an alias for a reserved word, to be expanded in other contexts.
+
+- The path search rules for the KornShell have changed.  If the shell must
+  perform a suffix search, this is the order in which file name suffixes are
+  searched: .com, .exe, .ksh, .bat, .cmd.
+
+- The commands in a pipeline are now run in subprocesses.  The most obvious
+  effect of this is that it is not possible to set the value of a shell
+  variable from inside a pipeline.   For example, the following command
+  will have no effect on the variable `x':
+
+  	date | read x
+
+- The KornShell variables LINENO, ERRNO, and PS4 have been added.
+
+- The KornShell DEBUG trap has been added.
+
+- Setting the environment variables EDITOR or VISUAL no longer affect the
+  command line editing mode used in the shell.  Use the `set' command
+  instead:
+
+	set -o vi
+	set -o emacs
+	set -o gmacs
+
+- Alias expansion has changed.  Aliases on a command line are expanded
+  repeatedly, unless recursion occurs. 
+
+- New option `-T'.  This option disables the shell's timer interrupt.
+  It can be used when a program causes a TSR (terminate-stay-resident)
+  to enable a timer interrupt, which would be disabled when the shell 
+  exits.  The only use for this is Sun's PC NFS `net start rdr' command 
+  in a shell script.
+
+- New option `-X'.  This option is synonymous with `set -o criterror'.
+  Setting this option installs a critical error handler.  This may be best
+  illustrated by a short example.  By default, the command `ls a:' will
+  produce a "directory not found" message if no diskette is in the A:
+  drive.  If criterror is set, the command would display the familiar
+  DOS "Abort, Retry, Fail" message instead.
+
+- The output of the following commands is now quoted: alias(1), set(1),
+  trap(1), typeset(1).
+
+- Shell variable expansion has been modified so that statements such as the
+  following now work as expected:
+
+  	HOME=c:/usr/mks
+	DRIVE=c:
+	echo ${HOME#$DRIVE}
+
+- The KornShell `set +-A ...' syntax has been implemented.  See set(1).
+
+- The following commands are built in to the shell: true(1), false(1),
+  echo(1), type(1).  They were exported aliases in version 3.1.
+
+- There are some known problems running the shell under DOS 2.1:
+
+  - If TMPDIR is undefined and /tmp does not exist, temp files of 
+    the form "./sh###.aa" are used.  These do not work in the root 
+    directory because DOS 2.1 does not recognize `.' in the root.  
+    In the shell this affects pipes, and here documents.  The best 
+    workaround is to set the environment variable `TMPDIR=/'.
+
+  - `cd a:' fails because `a:.' doesn't work in the root directory.
+     Use `cd a:/' instead.
+
+  - The command
+
+	sh -c 'date' 
+
+   results in the message "Invalid command.com".  DOS 2.1 does not 
+   like the environment at the top of memory.  The workaround is:
+
+	sh -c 'ulimit -e 1; date'
+	or put a ulimit in $ENV.
+
+INCOMPATIBILITIES
+
+- The df(1) command hangs under the dos compatibility box under OS/2.
+
+NOTES FOR WINDOWS 3.0 USERS
+
+- Appendix A of the DOS Installation Guide contains useful information for
+  Windows 3.0 users.  Please refer to it when configuring Windows to work
+  with MKS Toolkit.
+
+- The strip(1) command has been updated to work with Windows 3.0 binaries.
+
+-------------------------------------------------------------------------------
+
+RELEASE NOTES (release 3.1):
+
+NOTE: This section contains information from the release notes
+attached to version 3.1 of MKS Toolkit.  It is only useful if you are
+updating MKS Toolkit version 2.3 or earlier.
+
+sh(1)
+
+- The $ENV file is also included by login shells.  The .profile
+  (profile.ksh) now only needs to set the ENV variable; it no longer
+  needs to use ".  $ENV" to include it.  {make sure the example
+  profile.ksh is changed}
+
+- The new KornShell path name completion has been added to the editing
+  modes.
+
+Emacs	Vi	description
+META-=	=	list path names matching current word
+META-ESC \	complete path name. If unique completion add space.
+		If more than one path name only add characters common 
+                to all.
+META-*	*	expand path name. Expands to all path names.
+Only the latter form is documented in the manual.
+
+- The option "-o nolog" has been added to the "set" command to prevent
+  function definitions from being saved in the history file.
+
+- The history file may be opened earlier than in release 2.3.  A
+  function definition in the profile.ksh or $ENV file will cause the
+  history file to be opened (unless -o nolog is set).  This means
+  HISTFILE and HISTSIZE must be set before any function definitions.
+
+- When a function is called, the following are saved then restored
+  when the function returns.
+
+  - the positional parameters (already documented).
+  - the ERR and EXIT traps.
+  - the shell flags manipulated with the set command.
+
+regexp(5)
+
+- The \{ \} repetition operator can only follow a single character 
+  regular expression (a literal character, ".", and [ ] classes).
+
+--- end - of - file -----------------------------------------------------------
+

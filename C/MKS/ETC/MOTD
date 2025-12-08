@@ -1,0 +1,3 @@
+MKS Toolkit sample /etc/motd -- Replace or remove at will.
+By convention a "Message Of The Day" is placed here, to be printed
+at login time.

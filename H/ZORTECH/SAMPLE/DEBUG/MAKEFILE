@@ -1,0 +1,35 @@
+#
+#	makefile to build examples for the Zortech Debugger
+#
+MEM	=	s
+
+all : exam1.exe exam2.exe exam3.exe exam4.exe exam5.exe exam6.exe \
+      exam7.exe exam8.exe vectest.exe
+
+clean :
+	del *.obj
+	del *.exe
+	del *.map
+
+os2	: examos2.exe
+
+exam5.exe : exam5.c exam5a.c exam5b.c
+	ztc -g -m$(MEM) exam5 exam5a exam5b
+
+exam6.exe : exam6.c exam6a.obj
+	ztc -g -m$(MEM) exam6 exam6a.obj
+
+exam8.exe : exam8.c exam8a.c exam8b.c exam8c.c exam8d.c
+	ztc -g -c -mv exam8 exam8a exam8b exam8c exam8d
+	blink exam8+(exam8a)+(exam8b)+(exam8c)+(exam8d),exam8/co/noi/li/m;
+
+vectest.exe : vectest.cpp vector.cpp
+	ztc -g -m$(MEM) vectest vector
+
+.asm.obj :
+	MASM /Zi /MX /Z /DI8086$(MEM) $*.asm;
+
+.c.exe :
+	ztc -g -m$(MEM) $*
+
+

@@ -1,0 +1,6 @@
+# Default /etc/inittab
+# Put TSRs here as follows:
+# t1;2;wait;c:/tsr/foo.com
+rc;2;wait;bin/sh.exe etc/rc #Run commands
+# ENVSIZE=maximum environment size; adjust if necessary for your system
+co;34;respawn; ENVSIZE=512 bin/login.exe

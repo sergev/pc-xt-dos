@@ -1,0 +1,180 @@
+			New Library Functions
+                
+Copyright (c) 1991 Symantec Corporation. All rights reserved
+
+This is version 3.0.
+
+Zortech has a policy of continuous improvement to our products. This 
+means that changes will have been made since completion of the documentation.
+This file contains details of new functions added to the standard libraries.
+-----------------------------------
+Version : V3.0r4 Release
+Date	: October 15, 1991
+
+-----------------------------------
+New Library functions supported in this release.
+-----------------------------------
+alloca
+
+    Usage
+
+	#include <stdlib.h>
+	void __ss *alloca(size_t size);
+
+    Description
+
+	alloca() provides an efficient way to allocate a
+	temporary amount of storage within the current
+	stack frame. No corresponding free function is
+	necessary, since the stack frame is discarded when
+	the function returns. This means that a pointer to
+	an alloca'd buffer cannot be returned from a function.
+
+	alloca() is implemented as a compiler intrinsic,
+	that is, the compiler recognizes it and performs
+	special action to support it. This means that you
+	should never define your own alloca function. It also
+	means that alloca() is reliable.
+
+	alloca() cannot be used in functions that have the
+	Windows prolog/epilog in them, i.e. functions compiled
+	with the -W flag.
+
+    Example
+
+    Return Value
+
+	Returns NULL if an error occurred. Otherwise, returns
+	a pointer into the current stack frame of the allocated
+	data.
+
+	Although a stack-relative pointer is returned, this is
+	usually implicitly cast by the compiler into the correct
+	pointer type.
+
+    See Also
+
+	malloc, free
+
+    Compatibility
+
+	alloca() works across all Zortech implementations. It,
+	however, is not an ANSI C function. The implementation
+	quality of it varies considerably from compiler to
+	compiler, and is not even implemented by many compilers.
+-----------------------------------
+_beginthread
+
+    Usage
+
+	#include <process.h>
+	int _beginthread(void (_far *thread_func)(void _far *),
+		void _far *stack_buf, unsigned stack_size,
+		void _far *argument);
+
+    Description
+
+	Starts execution of a new thread starting at the
+	function thread_func. stack_buf is the address of
+	a memory buffer to be used as a stack by the thread.
+	stack_buf must be word aligned for 16 bit compiles,
+	and dword aligned for 32 bit compiles.
+	stack_size gives the size of that buffer, at least
+	2048 bytes. If stack_buf is NULL, the _beginthread()
+	will malloc a buffer for the stack.
+
+	argument is a 32 bit value to be passed to thread_func.
+	It is usually a pointer to the data that the thread function
+	is to operate on.
+
+	The thread is terminated by a call to _endthread() within
+	thread_func, or by the return from thread_func. A thread
+	created by _beginthread() must not be terminated by
+	a call to the OS/2 function DosExit().
+
+	It is necessary to use _beginthread()/_endthread() to start
+	and end threads whenever those threads will call routines
+	in the runtime library. These functions ensure that the
+	library routines are properly synchronized.
+
+    Example
+
+    Return Value
+
+	If successful, returns the thread id of the created thread.
+	Otherwise, -1 is returned and errno is set.
+
+    See Also
+
+	_endthread
+
+    Compatibility
+
+	Multithreaded programming is currently only supported
+	under OS/2.
+-----------------------------------
+_endthread
+
+    Usage
+
+	#include <process.h>
+	void _endthread(void);
+
+    Description
+
+	Terminates execution of a thread that was started
+	by _beginthread().
+
+    Example
+
+    Return Value
+
+	None.
+
+    See Also
+
+	_beginthread
+
+    Compatibility
+
+	Multithreaded programming is currently only supported
+	under OS/2.
+-----------------------------------
+_msize
+
+    Usage
+
+	#include <stdlib.h>
+	size_t _msize(void *p);
+
+    Description
+
+	Returns actual size of a block of memory allocated
+	by malloc/calloc/realloc.
+	This is implemented as a macro.
+
+    Example
+
+    Return Value
+
+	Size in bytes of block of memory.
+
+    See Also
+
+	malloc, calloc, realloc
+
+    Compatibility
+
+	ANSI		-
+	DOS		x
+	ZPM		x
+	DOS16RM		x
+	DOS386		x
+	Pharlap 386	x
+	OS/2 1.x	x
+	SCO Unix 386	-
+	Windows 3.0	x
+	Macintosh	-
+-----------------------------------
+
+

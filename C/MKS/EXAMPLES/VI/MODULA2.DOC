@@ -1,0 +1,418 @@
+From: Mitchell Wyle <watmath!inf.ethz.ch!wyle>
+Organization: Departement Informatik, ETH, Zurich
+
+
+VI:  History, Tips, and Macros; _On_Campus_ "The Sun Observer", May 1991
+
+
+Last month I told you a little about my own research here on campus.
+I still need more data for my experiments so if you are at all
+curious about the tremendous electronic subscription service I have
+built, please send the word "help" to the electronic mail address
+pasadena@a.ks.id.ethz.ch, i.e. type something like:
+
+% echo help | mail pasadena@a.ks.id.ethz.ch
+
+at your Sun.  I would be much obliged.
+
+It's been a few months since "on campus" covered vi and the level of
+your electronic fan mail to me has dropped off a bit (sniff sniff).
+Since I enjoy hearing from you all so much I decided to treat you to
+some more wonderful gossip and information about vi.
+
+Blasts from our Pasts
+
+New Sun Observer readers interested in vi should dig out back issues of
+my "On Campus" column to find earlier material on this topic.  January
+1990 carried "In Defense of Vi," May had "More on vi," June covered
+"Advanced vi," and November was called "Even More on vi."
+
+I am not going to re-hash the emotional attitudes of why everyone
+should be familiar with vi, how to teach vi to beginners, or the
+old macro-sets I wrote about in past issues.  Instead, this month
+I'll discuss changes to vi through the years, including new changes
+due to Sun-OS 4.1.1.  Then I'll give you all a large macro set for
+programming in modula-2, explain how to use buffers, markers, and
+registers more effectively, and present some tips for making vi macro
+sets, documentation, and reference material more easily available
+on-line.
+
+My, how vi changed!
+
+Being a big vi user, I don't normally try to edit binary data with a
+text editor.  However, I have seen people edit executable programs in
+emacs to change hard-coded path names or make patches to code
+segments.  I think that such neato features are a mis-use of a *text*
+editor.  Vi, the standard, vendor-supported unix editor uses the Unix
+tool-box approach to solving problems.  Vi is very good at editing
+text, especially program text.  It was not designed to edit binary
+data.
+
+Nonetheless, Sun decided that all software, including their standard
+text-editor vi should be "8-bit clean."  In other words, all programs
+in the new operating system releases should be able to handle
+non-ASCII characters.  The argument is that since Sun sells more than
+a quarter of its hardware abroad, the standard editor should be
+able to handle foreign character sets.
+
+Personally I consider such a decision to be a move towards creeping
+featurism.   One of the reasons that many people here on campus
+prefer using Suns to Macintoshes (for simple text editing tasks) is
+that the Sun keyboards and software are all the same and standardized.
+In the room next door to my office, there are three macs: one with
+a Swiss German keyboard, one with a German keyboard, and one with
+a Swiss French keyboard.  I won't begin to describe the disastrous
+differences in system software between those machines!  In that
+same area, the Sun IPC, Sun-3/80 and Sun-3/160c all have the same
+keyboards and software.  What a relief from musical keyboards!
+
+I think that Sun Microsystems' changes towards foreign character sets,
+weirdo keyboards, foreign language operating systems and other
+"internationalisms" are the wrong move.  As a matter of fact, I was
+discussing this issue with a friend of mine from my undergraduate
+days at Case Western Reserve University who is now one of the
+decision makers at Sun.  He decided to go with the System-V Unix
+version of vi instead of BSD vi almost exclusively for this "8-bit
+cleanliness" reasoning.
+
+Oh well, I'm digressing and this "international" issue is probably big
+enough for another column.  The upshot of this discussion is that in
+newer releases of Sun-OS, you can edit binary data files with vi.  Of
+course you are still subject to vi's line length limit, so don't go try
+editing compiled programs!
+
+The new vi will also show you a mode line at the bottom of the
+screen if you turn on the showmode feature.  The vi command :set
+showmode turns the mode line on.  With this variable set, changing
+among the command, insert and append modes causes a little textual
+reminder to appear on the bottom (message window) line of your
+screen.  This message keeps you informed about the mode vi is
+currently in.
+
+Interestingly enough, the showmode variable was always in Sun-OS
+vi.  I had had the line :set showmode in my .exrc file for a very
+long time, and suddenly under Sun-OS 4.1, I started seeing that
+silly message on the bottom of my screen.  Needless to say, I
+immediately changed the offending line to :set noshowmode _post_haste_!
+Real men want to see the text they are editing and no whimpy
+indications of current line number, word number, character position,
+column, latitude, longitude, altitude, or editor modus.  The best
+part of having this new feature as far as this columnist is concerned
+is the ability to turn it off!
+
+Having insulted my friend at sun and the new features he added to
+vi, I suppose I should say some good things about the new vi.  The
+macro interpreter is more robust.  It interprets macros with extra
+control-Vs inserted in them but does not need these extra escapes
+in every case.  It won't dump core on some of my more exotic and
+complicated ex script files (as the old one did).  It's just as
+fast (faster when you run the tmpfs file system) and I have yet to
+find any new (added) bugs. Then again, I have not been looking very
+hard for new bugs.
+
+Dark Days of Vi's Development
+
+Back in the 1970s when the Berkeley boys were designing BSD Unix, Sun
+co-founder Bill Joy took it upon himself to extend the ed editor.  His
+effort became `ex' (for "extended" editor).  Bill then realized he
+wanted cursor-based screen capabilities.  So, along with some buddies,
+he invented the termcap database that all Unix people now know and love
+(sic).  Released from the confines of a line-oriented editor, Bill put
+on his "super-coder" hat and went slightly bananas, adding gadzillions
+of new commands and features.  Working on the old reliable PDP-11 with
+its limited program address space, he quickly ran out of room for all
+the new features.  Undaunted, Bill changed all of vi's data structures
+and programming style to fit everything into the tiny address space.
+
+After re-writing a lot of code in a terrible, hacky style, Bill
+found he had a lot of room on the PDP-11 address space to spare.
+He also happened to have a lot of creative energy to write even
+more features into his masterpiece.  Bill added a windowing feature
+where one or several files could be edited, viewed, and zoomed on
+a single screen just like the modern emacsen we all know and hate
+(sic).  Then one day the disk crashed on the PDP-11 used by Bill
+Joy.  The backup device Bill and company were using at the time was
+also broken.  All of his work on these windowing features was lost.
+Now, almost twenty years later, no one has ever been able to reproduce
+the window features Bill Joy had built into the vi editor.  The
+source code is just too hacky.
+
+At some point after vi lost it's multi-file windowing capabilities,
+Mark Horton took over the development and maintenance of BSD Unix's
+*vi*sual editor.  Mark wrote up some documentation, fixed bugs, added
+minor features and changed some of the commands.  The design
+committee decided that the original design was weak in some areas.
+For example, the double-letter commands for line editing in visual
+mode such as yy and dd are Mark's code.  Before that, vi users had
+to type y_ and d_ (blech!).  Mark eventually left the BSD developers
+to do more exciting things and since then, no one has done any
+real vi development at Berkeley.  If you have a Sun-OS or BSD source 
+license, take a look at the ex sources.  They really are messy.
+
+markers and buffers
+
+In previous vi articles I have expounded on how wonderful markers
+are, and why you should always type things like:
+
+ma}}}jjjd`a1G}p
+
+ma  (mark with marker a)
+}}} (move forward 3 paragraphs)
+jjj (down three more lines)
+d`a (delete from here to marker a)
+1G  (go to line 1)
+}   (forward a paragraph)
+p   (Put the delete buffer)
+
+to move large text areas around.  This kind of edit sequence can
+be dangerous.  It is far too easy to lose the default (delete)
+buffer.  This situation typically happens when you find some other
+text to change before the move operation is completed.  A safer
+way of moving a large text chunk is to put the text in a *named*
+buffer.  Using the same example as above, the keystroke sequence:
+
+ma}}}jjj"zd`a1G}"zp
+
+is better because the deleted text is safer in the named buffer z
+than in the default delete buffer.  Putting text in named buffers
+adds the capability of moving or copying the text to more than one
+place.  Also, since you have 26 buffers, you can fill them up
+sequentially and re-view which text is in which buffer.
+
+If you hop around between files a lot without leaving vi, named
+buffers are especially useful.  All of these buffers come with you
+when you visit the next file.  They are the best method of transferring
+text around between files without leaving vi.
+
+Let's C an example
+
+Suppose you are writing a C program that is spread around in several
+different files in one directory.  Further assume you just changed
+a function in a low-level module to accept more parameters and
+return a Boolean result.  After changing the function, you have to
+change all the other functions that call it.  What is the best way
+to do this kind of thing?
+
+Some programmers will just search for the function as in:
+
+% grep changed_function *.[ch]
+
+and then edit the files that contain calls to changed_function.
+
+Others have done this kind of thing so often that they have aliases
+or shell functions that call grep with with the -l option to display
+*only* the file names containing matches *once* and then invoke vi
+on the result.  These clever coders put the line:
+
+alias VI 'vi `grep -l \!*`'  
+
+in their .cshrc files.
+
+But what do you do once you are in vi and have all these files waiting
+to be edited?  Why, you write the change to your code once and use a 
+named buffer to put the change into all the rest of calls to the changed
+function, of course!
+
+% vi module1.c module2.c module3.c module4.c
+
+or for people using the VI alias,
+
+% VI changed_function *.c
+
+In vi you change the old call to changed_function from something like
+this:
+
+changed_function(param1, param2, param3);
+assert(it_worked);
+
+to something like:
+
+if ( ! changed_function(param1, param2, param3, param4 ) {
+    fprintf(stderr,  "%s: change didn't work, skipping.\n",ME); 
+    fprintf(log_file,"%s: change didn't work, skipping.\n",ME); 
+}
+  
+Then you put those four lines into a named buffer and continue to
+look for calls to the changed_function in the current and all subsequent
+files.
+
+"a4yy               (put 4 lines into buffer a)
+/changed_function^M (search for next occurence of function)
+"ap                 (put new version of call to function here)
+n                   (search for next occurence)
+:n                  (go to next file)
+
+There are many other uses for named buffers and they really are safer
+than using the default delete buffer.  I recommend that advanced users
+get into the habit of using them all the time.  You'll be surprised
+how beneficial they can be.
+
+Organize libraries!
+
+Now that the new object orientation fad has resurrected the age-old
+wisdom of re-using things again, it's time to organize your vi
+documentation and macro libraries into one central, reusable place.
+Stop pushing the size limits of your ~/.exrc file and EXINT environment
+variable and start modularizing!  That means you!!
+
+Most people use their text editor for editing several different
+kinds of documents.  I edit latex files, C-programs, E-mail messages,
+letters, Modula-2 programs, and even "On Campus" articles.  When editing
+C-programs, I don't really need to have macros and mappings for editing
+latex files.  Also, my m6 (Mitch's minimal mail message manipulating
+mechanism) vi macro family takes up a lot of mapping space.  
+
+Therefore, I keep separate macro families in the directory
+/usr/local/lib/vi.  In that directory there are reference guides,
+Mark Horton's vi documentation and tutorials, on-line help documents
+for novice vi users, and three or four macro sets.
+
+When I find myself editing a C program and the ;cc macro is undefined,
+I just source the /usr/local/lib/vi/c macro set and all our local C
+macros become available.  Actually being the lazy person I am, I have a
+macro source the file for me.  My ~/.exrc contains the lines:
+
+map ;cmac :source /usr/local/lib/vi/c^M
+map ;lmac :source /usr/local/lib/vi/latex^M
+map ;mmac :source /usr/local/lib/vi/m2^M
+
+As I keep pointing out in these vi articles, the documentation for
+vi is poor.  Even the books about vi are really bad.  I can't
+encourage system administrators enough to make the vi reference
+guides and all on-line vi documentation available to the vi users
+at your sites.
+
+Which vi references are those?  First and foremost there is Maarten
+Litmaath's vi reference document.  It is much better than the
+commercial pocket guides because it is free, contains no errors, and is
+continually updated by the authors.  Then there are the documents
+written by Bill Joy, Mark Horton and the other Berkeley boys.  These
+documents include "An Introduction to Display Editing with Vi," by
+William Joy and Mark Horton, the "Ex Quick Reference," and the "Vi
+Command and Function Reference," by Alan Hewett and Mark Horton.
+I keep all of these documents in /usr/local/lib/vi/docs.
+
+It always amazes me that Sun and other vendors don't give you these
+documents when they deliver your computer.  They are part of BSD Unix
+and freely available on uunet and other places.  The vi man page is
+also a disaster.  I have integrated Maarten's reference guide and some
+of my own documentation into our local man page here.  One of the joys
+of Unix is being able to call up man pages and references to the system
+while programming on it.  Not having on-line vi documentation is a real
+handicap.  So tell your systems administrators to get these documents
+and install them!  The easiest way to get them is to ftp them from uunet.
+I suppose I could mail them to you if you don't have internet access.
+
+Electric Modula-2
+
+Here at the ETH we still have occasion to write Modula-2 programs.  In
+order to save typing in long repetitive program segments, I wrote the
+following set of macros.  I must admit that I find some of these macros
+superfluous.  However, other programmers here were used to pushing two
+buttons to have the word INTEGER appear, so I kept the extra macros in
+the set.  Some of the other macros, such as the ;pr command are more
+impressive.  ;pr creates an entire PROCEDURE skeleton and puts you in
+change-word mode on the procedure name.  If you need a machine readable
+version of these, drop me a line.
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+map ;ce iCARDINAL var ^V^[bcw
+map ;C iLONGCARD var ^V^[bcw
+map ;in iINTEGER var ^V^[bcw
+map ;re iREAL var ^V^[bcw
+map ;R iLONGREAL var ^V^[bcw
+map ;bi iBITSET var ^V^[bcw
+map ;bo iBOOLEAN var ^V^[bcw
+map ;se iSET OF var ^V^[bcw
+map ;ar iARRAY OF var ^V^[bcw
+map ;pr iPROCEDURE proc(vars) : BOOLEAN;^V^M(* PreConditions:  *)
+^V^M(*PostConditions: *)^V^MEND proc;^V^M^V^[kkkkwcw
+map ;pt iPOINTER TO var ^V^[bcw
+map ;ex iEXPORT var^V^[bcw
+map ;im iIMPLEMENTATION MODULE mod; ^V^[bbcw
+map ;fr iFROM mod IMPORT vars; ^V^[bbbbcw
+map ;im iIMPORT module; ^V^[bbcw
+map ;if iIF ( cond ) THEN^V^M  statement ^V^MEND;^V^M^V^[kkkwwcw
+map ;ie iIF ( cond ) THEN^V^M  statement ^V^MELSE^V^M
+statement2^V^MEND;V^M^^V^[5kwwcw
+map ;ii iELSEIF ( cond2 ) THEN^V^M  stmnt2^V^MELSEIF ( cond3 ) THEN^V^M
+stmnt3^V^M^V^[
+map ;wh iWHILE ( cond ) DO^V^M  statement^V^MEND;^V^M^V^[kkkwwcw
+map ;wi iWITH var DO^V^M  statement^V^MEND;^V^M^V^[kkkwcw
+map ;fo iFOR var := low TO high DO^V^M  statement^V^MEND;^V^M^V^[kkkwcw
+map ;rp iREPEAT^V^M  statement^V^MUNTIL ( condition );^V^M^V^[kkwcw
+map ;lo iLOOP^V^M  statement^V^M  IF ( cond ) THEN EXIT
+END;V^MEND;V^[kkkwc^^w
+map ;rc ivar = RECORD^V^M  var1 : t1^V^M  var2 : t2^V^MEND;^V^M^V^[kkkkcw
+map ;ca iCASE var OF^V^M  case1 : stmnt1 ^V|^V^M  case2 : stmnt2
+^V|^V^Mcase3 :
+stmnt3^V^M  ELSE default^V^MEND; (* case *)^V^M^V^[
+map ;ws iWriteString("str");^V^M^V^[kwwcw
+map ;wl iWriteLn;^V^M^V^[
+map ;de i(* debug *)^V^MWriteString("string"); WriteInt(var);
+WriteLn;V^M^V^^[kwwcw
+
+Figure 1:  Electric Modula-2 vi macro set
+--------------------------------------------------------------------------
+
+Primitive Programming
+
+Although the vi command language is turing complete, map commands are
+not the most comfortable language in which to write programs.  Still,
+advanced vi users should familiarize themselves with the @ command.
+The @ command executes vi commands stored in your file.  It's a bit
+like the lisp eval function.
+
+If you have a complicated edit command to perform on your text, it is
+often advantageous to save the command for future use.  Another, more
+compelling reason to save the complicated command is in case
+the command is not quite what you want.  Suppose you want to clean up
+your program to use longer variable names so that other people will
+understand it easier.  The program segment:
+
+          j = 0; 
+          q = p->first;
+          noise = 0.0;
+          while ( q ) {
+              j++;
+              if (q->freq) {
+                  fr  = ((float) q->freq) / ttf;
+                  noise = noise - ( fr  * log2(fr) );
+              }
+              q = q->next;
+          }
+
+must be changed to something more easily understandable.  If you
+blindly change the variable tf to term_frequency, you might
+accidentally change ttf to tterm_frequency by mistake.
+
+The idea behind using the @ function is to build a complicated command
+in the file you are editing, delete the command  into a named buffer,
+then execute that buffer.  In addition to being able to take advantage
+of all the normal vi commands while you are creating the complex edit
+sequence, you can also examine the results of the changes after
+executing the command, and if you are unhappy, simply type u to undo
+the changes.  Then you can yank the command back into the file, edit
+the sequence, and try again.  I'll use named buffer e, but any letter
+will do:
+
+a:s/tf/term_frequency/g^]    (Put edit sequence into current file)
+"edd                         (delete the line into buffer e)
+@e                           (execute commands in buffer e)
+u                            (oops, its not perfect; UN-do changes)
+"eP                          (put contents of e back into file)
+
+
+This feature makes life much easier for those of us who have problems
+getting the edit sequence correct the first time.  There are even more
+advanced uses of the @ command.  You can use it to create
+self-modifying programs, but I'll save those applications for another
+time.
+
+Next month I plan to talk about my own research again.  If you would
+like me to write about some other topics in my column, drop me a line.
+(internet: wyle@inf.ethz.ch)  Otherwise, I'll see you on campus.
+
+
+

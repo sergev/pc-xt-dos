@@ -1,0 +1,66 @@
+" 	Turing Machine Emulation Macros.
+" 
+" 	Written 1987 by Dave Hitz. 
+" 	Leave this notice to satisfy my ego.
+" 
+"	UUCP: {decvax,ucbvax,ihnp4}!decwrl!mips!hitz 	
+"	DDD: hitz@408-991-0345
+" 
+" 	To use these macros, vi a TM, source this file,
+" 	and type "g" (for go) from ESC mode.
+" 
+set remap
+"
+" setup BOT and START then start the main loop "S"
+map g	:%s/^/ /1G/^ ####$/mtQ1G/^ START/msQS
+"
+" 'tlT1GkwVvX's@b        - get the current symbol (from tape) and look it
+"                          up in the current STATE table
+" f:lmsW'tkwmtO`s        - then replace it with the new symbol from the 4-tuple
+" f:lmsW@bQ`s            - Move the current tape marker
+" f:le1GkwEX@bmn`sq`nQms - switch to the STATE defined in the 4-tuple
+" s                      - Loop until STATE not found
+map S	'tlT1GkwVvX's@bf:lmsW'tkwmtO`sf:lmsW@bQ`sf:le1GkwEX@bmn`sq`nQmss
+map s	S
+"
+" clear the current line
+map k	D
+"
+" tape movement R(ight) L(eft) N(one)
+map R	't+mt
+map L	't-mt
+map N	'tmt
+"
+" used to get a command to @b  VvX's@b  and  EX@b
+map X	"bY
+"
+" get a symbol from tape
+map T	"by$
+"
+" get a word (new symbol or direction)
+map W	"byt:
+"
+" get a new state name
+map e	"byt}
+"
+" put words back from "T", "W" or "e"
+"
+" MKS: POSIX.2a D6 - P/p commands always place the cursor at the 
+" last character of a 'partial line' insertion from a buffer.
+map w	mp"bP`p
+"
+" set a mark (STATE mark or TAPE mark)
+map Q	0r*
+"
+" insert a space, used when putting the new symbol onto the tape.
+map O	I 
+"
+" clear the current STATE pointer
+map q	?\*0r l
+"
+" setup a search string for the current tape symbol in the current STATE
+map V	I/{
+map v	A:
+"
+" search for a STATE name
+map E	I/^[* ]

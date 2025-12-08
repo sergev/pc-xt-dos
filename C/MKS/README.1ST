@@ -1,0 +1,86 @@
+                        MKS Toolkit for DOS
+                        Release 4.1
+			Read This First
+                        October 30, 1992
+
+MKS Toolkit is distributed on a number of floppies.  The readme.1st
+file and a number of configuration files are kept on the first floppy
+of the set; you will need that floppy any time you want to reconfigure
+MKS Toolkit.
+
+In addition to the readme.1st file, the first floppy contains the
+following files:
+
+config.cfg	Configuration files.
+install.cfg 
+
+config.exe	Configuration program for MKS Toolkit.
+
+errata		Contains corrections to the printed documentation.
+
+install.exe	Installation program for MKS Toolkit.
+
+question.txt	Contains the most recent Frequently Asked Questions 
+		list.
+
+relnotes 	Contains up-to-the-minute release notes.
+
+toolkit.lst	Installation files.
+toolkit.txt 
+
+As well, a large number of files are available in the bin, etc,
+examples, and guide directories on the first floppy and subsequent
+floppies.
+
+TO INSTALL
+
+Please refer to the MKS Toolkit Installation Manual for DOS. It
+contains valuable information concerning the installation process.
+
+Run the install program on the first floppy of the MKS Toolkit
+distribution.  If you already use MKS Toolkit, the value of the
+variable ROOTDIR will be used to determine the default place to
+install the new system; otherwise, you will be prompted for the
+device:/directory.
+
+NOTE for Windows Users:  Under DOS, MKS Toolkit supports Windows 3.0
+and later.  If you install the Windows Support Files package,
+all of the icons and PIF files are installed.  Any commands needed
+from the General Toolkit package (awk(1), find(1), grep(1), help(1),
+and sh(1)) are also installed.  Commands from other packages are
+not installed unless you are installing that package.
+For example, the icons for make(1) and man(1) are installed,
+but make(1) and man(1) are not installed unless you have installed
+the Make and Man packages.
+
+NOTE for OS/2 2.0 Users:  If you want to run the DOS MKS Toolkit
+under OS/2 2.0, please use either configuration #1 or #2.  If you
+select configuration #1, the configuration program will present
+you with the option of patching command.com.  Avoid patching
+command.com by selecting "no" at this prompt.  The patch program
+does not work correctly with the OS/2 2.0 command.com.  If the
+copy of command.com is accidentally patched, the original may be
+restored with the following steps:
+
+	1. Close all DOS sessions.
+	2. Open an OS/2 cmd.exe session.
+	3. cd \os2\mks
+	4. copy command.mks command.com
+	5. del command.mks
+
+
+When installing MKS Toolkit on DOS under OS/2, you must not install the
+Microsoft Windows Support Files or use the Toolkit with Windows
+configuration.  MKS Toolkit on DOS does not support Windows under OS/2.
+
+TO CONFIGURE
+
+Please refer to the MKS Toolkit Installation Manual for DOS. It
+contains valuable information concerning the configuration process.
+
+Shut down the system and reboot so that you are configuring your
+system with the values for ROOTDIR and TMPDIR that were set up in your
+config.sys when you installed the Toolkit.
+
+Run the config program found on the first floppy of the MKS Toolkit 
+distribution.

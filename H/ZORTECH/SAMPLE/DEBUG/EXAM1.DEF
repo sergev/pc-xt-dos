@@ -1,0 +1,20 @@
+; module-definition file for winmain apps -- used by LINK.EXE
+
+NAME	     EXAM1	   ; application's module name
+
+DESCRIPTION  'WinC program for Windows'
+
+EXETYPE      WINDOWS	   ; required for all Windows applications
+
+STUB	     'WINSTUB.EXE' ; Generates error message if application
+			   ; is run without Windows
+
+;CODE can be moved in memory and discarded/reloaded
+CODE  PRELOAD MOVEABLE DISCARDABLE
+
+;DATA must be MULTIPLE if program can be invoked more than once
+DATA  PRELOAD MOVEABLE MULTIPLE
+
+HEAPSIZE     1240
+STACKSIZE    5120	   ; recommended minimum for Windows applications
+

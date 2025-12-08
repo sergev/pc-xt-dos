@@ -1,0 +1,141 @@
+
+
+Here is a thing for those times when the shell input/output facilities
+just wont let you do what you want to in any simple manner. Basically
+it's a multi-input multi-output pipe command.
+
+Call it "pipe".
+
+The idea is that the input is sequentially assembled from possibly several 
+sources and written (at possibly different times during the assembly) to 
+possibly several destinations. 
+
+The input sources can be the terminal or the output of any other command -
+even the output of another "pipe".
+
+The output can be to the terminal, or to any normal command - including a 
+normal pipeline, or to the input of another "pipe".
+
+The syntax is easy. Command line arguments are one of three things, 
+
+        1) the word "-in"
+        2) the word "-out"
+        3) a command
+    
+-in switches you to "pipe input mode", -out switches you to "pipe output mode".
+A pipe always begins in input mode. An example might make this clear...
+    
+        % pipe -in "echo hello" -out "|wc"
+        1       1       6
+
+Which is to say, "Go into input mode, take input from the 
+command 'echo hello' (which of course produces the single word 'hello'), 
+switch to output mode, and send the output so far into the command '|wc'"
+
+Notice that the commands above ("echo hello" and "|wc") must be passed to 
+pipe as a single argument. Thus it is necessary to enclose multi-word commands 
+in quotes. Also it is necessary to escape characters such as "|" and ">" from 
+the shell. "" quotes do both of these jobs nicely, while still allowing for the
+expansion of environment variable and commands in backquotes.
+
+"-in" and "-out" can be abbreviated to "-i" and "-o" respectively and so 
+this could have been written as 
+pipe -i "echo hello" -o "|wc"
+
+or, (since we start off in input mode) as
+pipe "echo hello" -o "|wc"
+
+Now this could have been done easily with "echo hello | wc" using a normal
+one-in, one-out pipeline. More sophisticated examples will be coming up.
+
+To take input from standard input, or write to standard output, use a "-"
+So,
+        % pipe - -o -
+        hello there
+        ^D              # have to close standard input with EOF
+        hello there
+        %
+
+does the same thing as "cat" (alone on a line) would have done, 
+reading from the terminal and writing back to the terminal.
+
+If you immediately go into output mode, pipe will assume you want to provide
+initial input from standard input, so the above could be written as
+"pipe -o -". If you don't give an output directive, pipe will assume you want
+standard output, so the last example could have been written simply as "pipe".
+
+That's about all there is to know, here are some examples
+
+        % pipe - "grep tcjones /etc/passwd" - -o "|mail tcjones" -
+        Here is my entry in /etc/passwd
+        ^D
+        Hope it's what you want.
+        Terry.
+        ^D
+        %
+        Here is my entry in /etc/passwd
+        tcjones:Wwo5wq.gu/wd.:134:113:Crocodile Dundee,MC6129x6687,8843852,88463
+        38,103 minota hagey residence:/u2/tcjones:/usr/public/itcsh
+        Hope it's what you want.
+        Terry.
+        %
+
+Which takes a line from my terminal, concatenates the output of grep, 
+concatenates another line from my terminal, sends it all off in mail to me, and
+puts the output on the screen as well. Decidably more useful than the earlier 
+examples.
+
+Here's another,
+
+        % pipe - "cat last_lines" -o "|sort >sorted" ">unsorted" "|wc -l"
+        here is a sample line
+        here is another
+        and a third
+        ^D
+               32
+        %
+
+which takes lines from my terminal, concatenates the contents of the file
+last_lines, sends all that into sort (which sorts the lot and leaves the output
+in the file "sorted"), puts a copy in the file "unsorted" and also sends the 
+lot to "wc -l" so I can see how many lines there were.
+
+(The last_lines file already contained 29 lines)
+
+It is always possible to omit the "-" command from a "-o" or "-i" section,
+provided that there is no other command in this section - which is to say that
+the section must be left empty.
+
+It is possible to switch back and forth between input and output modes,
+
+        % pipe -o "|wc" -i -o "|wc" -i -o "|wc"
+        this
+        ^D
+               1       1       5
+        is
+        ^D
+               2       2       8
+        the first
+        ^D
+               3       4      18
+        %
+
+which takes lines from the terminal until an EOF, sends them to "wc",
+switches back to input mode (note there are no commands and so standard input
+will be used) to read more lines from the terminal, sends the current input to
+"wc" and so on and on... To have the whole thing sent to the screen at the end
+I could have appended a "-" OR used another "-o" with no command.
+
+Notice that the output of wc in each case reflects the cumulative way in which
+the input is being assembled.
+
+As a final example, you can intermix pipes with unix pipelines and i/o
+redirection to create complicated things like
+
+        % pipe "echo this" | pipe - "pipe 'echo is'" | pipe - "echo dumb"
+        this
+        is
+        dumb
+        %
+
+Which could be used to do more useful things. That's probably enough...

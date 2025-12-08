@@ -1,0 +1,364 @@
+#_ makefile   August 14, 1990
+# Copyright (C) 1985-1991 by Walter Bright
+# All Rights Reserved
+# Written by Walter Bright
+# Modified by Joe Huffman January 2, 1991
+
+# makefile for the library zps.lib (Phar Lap DOS386).
+
+MODEL=S
+
+# Macros for DOS386 version
+OS=DOS386
+O=obj
+CFLAGS=
+A=&
+XFLG=
+LB=zp$(MODEL)
+OLB=oldstrx
+
+INC=..\..\include
+C=..\clib
+ZTC= ztc -c -r -o+space -m$(MODEL) -I$C $(XFLG) -3 -O
+MMASM=masm -DI8086S -DOMF=1 -DCOFF=0 -D$(OS) -DX386 -DM_I386 -I$(INC)\ -Mx
+#MASM=386asm -D I8086S -D $(OS) -D M_I386 -TWOC -I $(INC)\ -NOL
+MASM= ztc -c -m$(MODEL) $(XFLG) -3 -O
+
+#### ASSEMBLY SOURCES ####
+A1 = mathtrn.$O mathtrnf.$O atoi.$O sysint.$O exec2.$O clock.$O
+A2 = getenv.$O port.$O inter.$O
+A3 = getdos.$O double.$O float.$O alloc.$O io.$O disp.$O jmp.$O sound.$O
+A4 = msmouse.$O math87.$O getcwd.$O find.$O bios.$O rot.$O
+A5 = cputype.$O page.$O cinit.$O getthd.$O
+A6 = dosdate.$O doserr.$O dosfil.$O filelen.$O locking.$O
+A7 = dup.$O chsize.$O dos_find.$O alloca.$O strtoul.$O itoa.$O
+A8 = controlc.$O cerror.$O flt87.$O ldexp.$O realmode.$O
+
+#### ASSEMBLY ROUTINES FROM STRINGS.ASM ####
+ST1 = memset.$O index.$O memchr.$O strlen.$O strcat.$O strncat.$O
+ST2 = strcpy.$O strncpy.$O strcmp.$O strncmp.$O memcpy.$O memcmp.$O
+ST3 = stpcpy.$O _memint.$O movedata.$O strcmpl.$O memicmp.$O
+
+#### ASSEMBLY ROUTINES FROM TIME2.ASM ####
+TIME2 = time2.$O utime.$O
+
+#### ASSEMBLY ROUTINES FROM sys_pl.asm ####
+SYS_PL = seg.$O sbrk.$O _exit.$O memlock.$O
+
+#### C SOURCES ####
+C1 = printf.$O scanf.$O matherr.$O
+C2 = ungetc.$O stat.$O
+C3 = flush.$O ctype.$O ecvt.$O fputc.$O putenv.$O
+C4 = system.$O qsort.$O response.$O
+C5 = stack.$O rand.$O okbigbuf.$O unmangle.$O
+C6 = strtol.$O signal.$O mbyte.$O _main.$O
+
+#### C++ SOURCES ####
+CPP1 = ios.$O strmbuf.$O manip.$O iostream.$O
+CPP2 = statics.$O osint.$O isfloat.$O isint.$O
+CPP3 = osfloat.$O strsbuf.$O strstrm.$O stdiobuf.$O iostdio.$O istream6.$O
+CPP4 = istream1.$O istream2.$O istream3.$O istream4.$O istream5.$O
+CPP5 = filebuf1.$O filebuf2.$O filebuf3.$O filebuf4.$O filebuf5.$O
+CPP6 = fstream1.$O fstream2.$O fstream3.$O fstream4.$O
+CPP7 = ostream1.$O ostream2.$O ostream3.$O ostream4.$O
+CPP8 = assign1.$O assign2.$O assign3.$O 
+CPP9= _new.$O vector.$O _delete.$O _handler.$O
+CPP10 = fg.$O complex.$O coperat.$O cstrm.$O ctrig.$O
+
+#### C SOURCES FROM IS.C ####
+IS1 = toascii.$O toupper.$O tolower.$O isprint.$O
+IS2 = isgraph.$O isascii.$O isupper.$O
+IS3 = ispunct.$O islower.$O isdigit.$O isxdigit.$O
+IS4 = isalnum.$O isspace.$O isalpha.$O iscntrl.$O
+
+#### FROM MATH.C #####
+MATHOBJ = MATH1.$O TRIG.$O SQRT.$O LOG.$O ATRIG.$O HYPER.$O _TRIGERR.$O ROUND.$O IEEE.$O
+
+#### FROM FCLOSE.C #####
+FCLOSE = fopen.$O freopen.$O _fopen.$O iob.$O fclose.$O fflush.$O setmode.$O
+FCLOSE2 = atexit.$O exit.$O flushall.$O fcloseal.$O fmacros.$O fdopen.$O
+FCLOSE3 = tmpnam.$O
+
+#### FROM FLTENV.C #####
+FLTENV = fltenv1.$O feexcept.$O
+
+#### FROM TIME.C ####
+TIME = asctime.$O ctime.$O loctime.$O mktime.$O sleep.$O strf.$O time3.$O
+
+#### FROM FREAD.C ####
+FREAD = fread.$O fwrite.$O puts.$O gets.$O fgets.$O fputs.$O
+
+#### FROM DISP2.C ####
+DISP2 = dprintf.$O disp2.$O
+
+#### FROM LOCALE.C ####
+LOCALE = setlc.$O lconv.$O
+
+#### FROM PERROR.C ####
+PERROR = assert.$O perror.$O
+
+#### FROM STRINGS2.C ####
+STRINGS2A = strcspn.$O strpbrk.$O strrchr.$O strspn.$O strnicmp.$O
+STRINGS2B = strtok.$O strdup.$O strlwr.$O strupr.$O strnset.$O strrev.$O
+STRINGS2C = strset.$O swab.$O strstr.$O
+
+#### FROM STRTOD.C ####
+STRTOD = strtod.$O strtof.$O atof.$O
+
+#### FOR OLDSTREAMS ####
+OLDSTR= form.$O circbuf.$O filebuf.$O stream.$O
+
+#### FROM IN.CPP ####
+IN1= in1.$O in2.$O in3.$O in4.$O in5.$O in6.$O in7.$O
+IN2= in8.$O in9.$O in10.$O in11.$O in12.$O in13.$O
+IN3= in14.$O in15.$O in16.$O in17.$O in18.$O in19.$O in20.$O
+
+#### FROM OUT.CPP ####
+OUT= out1.$O out2.$O out3.$O out4.$O out5.$O out6.$O out7.$O out8.$O
+
+.c.$O:
+	$(ZTC) $*
+
+.cpp.$O:
+	$(ZTC) $*
+
+.asm.$O:
+	$(MASM) $*
+
+library: cx.$O _mainp.$O ip.$O realmode.$O $(LB).lib $(OLB).lib
+
+$(LB).lib : $(A1) $(A2) $(A3) $(A4) $(A5) $(A6) $(A7) $(A8) \
+	 $(ST1) $(ST2) $(ST3) $(TIME2) $(SYS_PL)\
+	 $(C1) $(C2) $(C3) $(C4) $(C5) $(C6) $(IS1) $(IS2) $(IS3) $(IS4) \
+	 $(FCLOSE) $(FCLOSE2) $(FCLOSE3) $(TIME) $(STRINGS2A) $(STRINGS2B) $(STRINGS2C) \
+	 $(STRTOD) $(FLTENV) \
+	 $(CPP1) $(CPP2) $(CPP3) $(CPP4) $(CPP5) $(CPP6) $(CPP7) $(CPP8) $(CPP9) $(CPP10) \
+	 cp.$O $(FREAD) $(DISP2) $(LOCALE) $(PERROR) $(MATHOBJ) $(LB).cmd x386.lib
+	del $(LB).lib
+	zorlib @$(LB).cmd
+
+$(A1) $(A2) $(A3) $(A4) $(A5) $(A6) $(A7) $(A8) $(SYS_PL) : $(INC)\macros.asm
+
+$(C1) $(C2) $(C3) $(C4) $(C5) $(C6) $(CPP1) $(CPP2) $(CPP3) $(CPP4) $(CPP5) \
+$(CPP6) $(CPP7) $(CPP8) $(CPP9) $(CPP10) $(OLDSTR) :
+	$(ZTC) $C\$* -o$*.$O
+
+$(ST1) $(ST2) $(ST3) : $(INC)\macros.asm strings.asm
+	$(ZTC) -DA$* strings -o$*
+
+$(TIME2) : $(INC)\macros.asm time2.asm
+	$(ZTC) -DA$* time2 -o$*
+
+$(SYS_PL) : $(INC)\macros.asm sys_pl.asm
+	$(ZTC) -DA$* sys_pl -o$*
+
+$(IS1) $(IS2) $(IS3) $(IS4) : $C\is.c
+	$(ZTC) -DA$* $C\is -o$*.$O
+
+$(MATHOBJ) : $(INC)\stdio.h $(INC)\errno.h $(INC)\math.h \
+	$(INC)\float.h $C\math.c
+	$(ZTC) -D$* $C\math -o$*.$O
+
+$(FCLOSE) $(FCLOSE2) $(FCLOSE3) : $(INC)\stdio.h $(INC)\io.h $(INC)\fcntl.h \
+	$(INC)\string.h $(INC)\process.h $(INC)\stdlib.h $C\fclose.c
+	$(ZTC) -DA$* $C\fclose -o$*.$O
+
+$(FLTENV) : $(INC)\float.h $(INC)\fltenv.h $(INC)\signal.h $C\fltenv.c
+	$(ZTC) -DA$* $C\fltenv -o$*.$O
+
+$(FREAD) : $(INC)\stdio.h $C\fread.c
+	$(ZTC) -DA$* $C\fread -o$*.$O
+
+$(DISP2) : $(INC)\stdio.h $(INC)\disp.h $(INC)\stdarg.h $C\disp2.c
+	$(ZTC) -DA$* $C\disp2 -o$*.$O
+
+$(LOCALE) : $(INC)\locale.h $(INC)\limits.h $(INC)\string.h $C\locale.c
+	$(ZTC) -DA$* $C\locale -o$*.$O
+
+$(PERROR) : $(INC)\stdio.h $(INC)\errno.h $(INC)\assert.h \
+	$(INC)\string.h $(INC)\stdlib.h $C\perror.c
+	$(ZTC) -DA$* $C\perror -o$*.$O
+
+$(TIME) : $(INC)\stdio.h $(INC)\time.h \
+	$(INC)\errno.h $(INC)\string.h $C\time.c
+	$(ZTC) -DA$* $C\time -o$*.$O
+
+$(STRINGS2A) $(STRINGS2B) $(STRINGS2C) : $(INC)\stdio.h $(INC)\ctype.h \
+	$(INC)\stddef.h $(INC)\string.h $C\strings2.c
+	$(ZTC) -DA$* $C\strings2 -o$*.$O
+
+$(STRTOD) : $(INC)\stdlib.h $(INC)\ctype.h $(INC)\math.h \
+	$(INC)\string.h $(INC)\float.h $C\strtod.c
+	$(ZTC) -DA$* $C\strtod -o$*.$O
+
+$(IN1) $(IN2) $(IN3) : $C\in.cpp $(INC)\stream.hpp
+	$(ZTC) -DA$* $C\in -o$*.$O
+
+$(OUT) : $C\out.cpp $(INC)\stream.hpp
+	$(ZTC) -DA$* $C\out -o$*.$O
+
+_mainp.$O : $(INC)\stdio.h $(INC)\dos.h $C\_main.c
+	$(ZTC) $C\_main -o_mainp.$O
+
+cx.$O: $(INC)\macros.asm c.asm x386mac.asm
+	masm -DI8086S -DOMF=1 -DCOFF=0 -DX386 -DM_I386 -I$(INC)\ -Mx c,$*;
+
+cp.$O: $(INC)\macros.asm c.asm
+	$(MASM) c -ocp.obj
+
+$(LB).cmd : makefile
+	echo $(LB) >$(LB).cmd
+	echo yes >>$(LB).cmd
+	echo +cp$A >> $(LB).cmd
+	echo $(FCLOSE)$A >> $(LB).cmd
+	echo $(FCLOSE2)$A >> $(LB).cmd
+	echo $(FCLOSE3)$A >> $(LB).cmd
+	echo $(FLTENV)$A >> $(LB).cmd
+	echo $(TIME)$A >> $(LB).cmd
+	echo $(STRINGS2A)$A >> $(LB).cmd
+	echo $(STRINGS2B)$A >> $(LB).cmd
+	echo $(STRINGS2C)$A >> $(LB).cmd
+	echo $(STRTOD)$A >> $(LB).cmd
+	echo $(FREAD)$A >> $(LB).cmd
+	echo $(DISP2)$A >> $(LB).cmd
+	echo $(LOCALE)$A >> $(LB).cmd
+	echo $(PERROR)$A >> $(LB).cmd
+	echo $(MATHOBJ)$A >> $(LB).cmd
+	echo $(A1)$A >> $(LB).cmd
+	echo $(A2)$A >> $(LB).cmd
+	echo $(A3)$A >> $(LB).cmd
+	echo $(A4)$A >> $(LB).cmd
+	echo $(A5)$A >> $(LB).cmd
+	echo $(A6)$A >> $(LB).cmd
+	echo $(A7)$A >> $(LB).cmd
+	echo $(A8)$A >> $(LB).cmd
+	echo $(ST1)$A >> $(LB).cmd
+	echo $(ST2)$A >> $(LB).cmd
+	echo $(ST3)$A >> $(LB).cmd
+	echo $(TIME2)$A >> $(LB).cmd
+	echo $(SYS_PL)$A >> $(LB).cmd
+	echo $(C1)$A >> $(LB).cmd
+	echo $(C2)$A >> $(LB).cmd
+	echo $(C3)$A >> $(LB).cmd
+	echo $(C4)$A >> $(LB).cmd
+	echo $(C5)$A >> $(LB).cmd
+	echo $(C6)$A >> $(LB).cmd
+	echo $(IS1)$A >> $(LB).cmd
+	echo $(IS2)$A >> $(LB).cmd
+	echo $(IS3)$A >> $(LB).cmd
+	echo $(IS4)$A >> $(LB).cmd
+	echo $(CPP1)$A >>$(LB).cmd
+	echo $(CPP2)$A >>$(LB).cmd
+	echo $(CPP3)$A >>$(LB).cmd
+	echo $(CPP4)$A >>$(LB).cmd
+	echo $(CPP5)$A >>$(LB).cmd
+	echo $(CPP6)$A >>$(LB).cmd
+	echo $(CPP7)$A >>$(LB).cmd
+	echo $(CPP8)$A >>$(LB).cmd
+	echo $(CPP9)$A >>$(LB).cmd
+	echo $(CPP10)$A >>$(LB).cmd
+	echo x386.lib >>$(LB).cmd
+	echo $(LB).lst >>$(LB).cmd
+
+#################### Oldstreams library ####################
+
+$(OLB).lib : $(OLDSTR) $(IN1) $(IN2) $(IN3) $(OUT) $(OLB).cmd
+	del $(OLB).lib
+	zorlib @$(OLB).cmd
+
+$(OLB).cmd	: makefile
+	echo $(OLB) >$(OLB).cmd
+	echo $(OLB)/pagesize:16 >$(OLB).cmd
+	echo yes >>$(OLB).cmd
+	echo +$(OLDSTR)$A >>$(OLB).cmd
+	echo $(IN1)$A >>$(OLB).cmd
+	echo $(IN2)$A >>$(OLB).cmd
+	echo $(IN3)$A >>$(OLB).cmd
+	echo $(OUT) >>$(OLB).cmd
+	echo $(OLB).lst >>$(OLB).cmd
+
+###################### Miscellaneous ##########################
+
+clean: cleana cleanc
+
+cleanc:
+	for %f in ($(C1)) do del %f
+	for %f in ($(C2)) do del %f
+	for %f in ($(C3)) do del %f
+	for %f in ($(C4)) do del %f
+	for %f in ($(C5)) do del %f
+	for %f in ($(C6)) do del %f
+	for %f in ($(IS1)) do del %f
+	for %f in ($(IS2)) do del %f
+	for %f in ($(IS3)) do del %f
+	for %f in ($(IS4)) do del %f
+	for %f in ($(FCLOSE)) do del %f
+	for %f in ($(FCLOSE2)) do del %f
+	for %f in ($(FCLOSE3)) do del %f
+	for %f in ($(FLTENV)) do del %f
+	for %f in ($(FREAD)) do del %f
+	for %f in ($(DISP2)) do del %f
+	for %f in ($(LOCALE)) do del %f
+	for %f in ($(PERROR)) do del %f
+	for %f in ($(TIME)) do del %f
+	for %f in ($(MATHOBJ)) do del %f
+	for %f in ($(STRINGS2A)) do del %f
+	for %f in ($(STRINGS2B)) do del %f
+	for %f in ($(STRINGS2C)) do del %f
+	for %f in ($(STRTOD)) do del %f
+	for %f in ($(CPP1)) do del %f
+	for %f in ($(CPP2)) do del %f
+	for %f in ($(CPP3)) do del %f
+	for %f in ($(CPP4)) do del %f
+	for %f in ($(CPP5)) do del %f
+	for %f in ($(CPP6)) do del %f
+	for %f in ($(CPP7)) do del %f
+	for %f in ($(CPP8)) do del %f
+	for %f in ($(CPP9)) do del %f
+	for %f in ($(CPP10)) do del %f
+	for %f in ($(OLDSTR)) do del %f
+	for %f in ($(IN1)) do del %f
+	for %f in ($(IN2)) do del %f
+	for %f in ($(IN3)) do del %f
+	for %f in ($(OUT)) do del %f
+
+cleana:
+	if exist *.bak del *.bak
+	for %f in ($(A1)) do del %f
+	for %f in ($(A2)) do del %f
+	for %f in ($(A3)) do del %f
+	for %f in ($(A4)) do del %f
+	for %f in ($(A5)) do del %f
+	for %f in ($(A6)) do del %f
+	for %f in ($(A7)) do del %f
+	for %f in ($(A8)) do del %f
+	for %f in ($(ST1)) do del %f
+	for %f in ($(ST2)) do del %f
+	for %f in ($(TIME2)) do del %f
+	for %f in ($(ST3)) do del %f
+	for %f in ($(SYS_PL)) do del %f
+	for %f in (cp.$O) do del %f
+	if exist *.lst del *.lst
+
+########################## Dependencies ######################
+
+# ASM files
+fputc.$O : $(INC)\stdio.asm fputc.asm
+inter.$O : $(INC)\macros.asm inter.asm
+msmouse.$O: $(INC)\macros.asm msmouse.asm
+realmode.$O: $(INC)\macros.asm realmode.asm
+rot.$O : $(INC)\macros.asm rot.asm
+
+# C files
+#ctype.$O : $(INC)\ctype.h $C\ctype.c
+#cxferr.$O : $(INC)\stdio.h $C\cxferr.c
+#ecvt.$O : $(INC)\stdlib.h $C\ecvt.c
+#fltenv.$O : $(INC)\fltenv.h $(INC)\float.h $C\fltenv.c
+#flush.$O : $(INC)\stdio.h $(INC)\stdlib.h $(INC)\io.h $C\flush.c
+#matherr.$O : $(INC)\stdio.h $(INC)\errno.h $(INC)\math.h \
+#	$(INC)\string.h $C\matherr.c
+#printf.$O : $(INC)\stdio.h $(INC)\stdarg.h $C\printf.c
+#rand.$O : $(INC)\stdlib.h $C\rand.c
+#scanf.$O : $(INC)\stdio.h $(INC)\stdarg.h $(INC)\ctype.h $C\scanf.c
+#strtol.$O : $(INC)\ctype.h $(INC)\errno.h $(INC)\stdlib.h $C\strtol.c
+#ungetc.$O : $(INC)\stdio.h $(INC)\io.h $C\ungetc.c

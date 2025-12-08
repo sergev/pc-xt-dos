@@ -1,0 +1,135 @@
+			Documentation Errata
+
+Copyright (c) 1991 Symantec Corporation. All rights reserved
+
+-----------------------------------
+Version : V3.0r4 Release
+Date    : October 15, 1991
+
+-----------------------------------
+INTRODUCTION
+This document corrects some errors in the Zortech C++ documentation set.
+It has three parts:
+
+	o UPDATES includes new information about Zortech C++ that 
+	  wasn't included in the manuals.
+	o THE BLINK COMMAND corrects some mistakes in Chapter 3,
+	  "Linking Applications," of the Window Programming Tools 
+	  manual about the BLINK command.
+	o THE QUICK REFERENCE CARD corrects some mistakes on the 
+	  Quick Reference Card for Microsoft Windows 3.0.
+
+-----------------------------------
+UPDATES
+This section includes new information about Zortech C++ that wasn't 
+included in the manuals.
+
+
+The Developer's Edition
+
+The manuals refer to the version of Zortech C++ that does not contain the
+Numerics Programming Guide or the M++ Library as the Developer's Edition. 
+That's the old name of that version. It is now called, simply, Zortech C++. 
+The version that does contain the Numerics Programming Guide and the M++
+Class Library is still called the Engineering and Science Edition.
+-----------------------------------
+THE BLINK COMMAND
+This correction corrects some information in Chapter 3, "Linking 
+Applications," of the Window Programming Tools manual about the BLINK 
+command.
+
+
+Here is some general information:
+
+o Each application can have only one .RES file.
+
+o The sample command lines are incorrect. The following command 
+  lines link the application object file SAMPLE.OBJ with the 
+  standard Windows library LIBW.LIB:
+
+	BLINK SAMPLE.OBJ, SAMPLE.EXE, SAMPLE.MAP,, SAMPLE.DEF, SAMPLE.RES
+
+	BLINK SAMPLE, SAMPLE, SAMPLE,, SAMPLE, SAMPLE
+
+  Notice that in each example there are two commas after the 
+  map-file argument.
+
+
+Here are options BLINK does not accept:
+
+o /pause
+o /segments
+o /warmfixup
+
+
+Here are options you may use when linking, despite the warning on page 37:
+
+o /nogroupassociation
+o /disallocate
+o /high		
+
+
+Here is corrected documentation for some options:
+
+o /alignment:size
+	There's no need to set the alignment to 16 or less (or 
+	to 32 or less for applications over one megabyte).
+
+o /codeview
+        Lets you use any codeview compatible debugger.
+
+
+These are switches that BLINK accepts that weren't included in the manual.
+These are similar to options for the ZRC command:
+
+o /ems  For a dynamic link library, changes the default location
+	of global memory from below the EMS bank line to above 
+	the EMS bank line.
+
+	The minimum abbreviation for this option is /em.
+
+o /k	Disables the load-optimization feature of BLINK (?). If 
+	this option is not specified the compiler arranges 
+	segments and resources in the executable file so that 
+	all preloaded information is contiguous. This feature 
+	allows Windows to load the application much more quickly.
+
+	If you do not specify the /K option, all data segments, 
+	nodiscardable code segments, and the entry-point code 
+	segment will be preloaded, unless any segment and its 
+        relocation information exceed 64K. If the PRELOAD
+	attribute is not assigned to these segments in the 
+	module-definition (.DEF) file when you link your 
+	application, the compiler will add the preload attribute 
+	and display a warning. Resources and segments will have 
+        the same segment alignment. This alignment should be as
+	small as possible to prevent the final executable file 
+	from growing unnecessarily large. you can set the 
+	alignment using the /alignment option.
+
+o /lim32	
+	Tells Windows that the application uses expanded memory 
+        directly according to the Lotus Intel Microsoft
+	Expanded Memory Specification (EMS), version 2.2. 
+
+	The minimum abbreviation for this option is /l.
+
+o /multinst
+	When Windows is running with the EMS 4.0 memory 
+	configuration, this switch assigns each instance of the 
+	application task to a distinct EMS bank. (By default, 
+	all instances of a task share the same EMS bank.)
+
+	The minimum abbreviation for this option is /mu.
+
+o /t	Creates an application that runs only with Windows in 
+	protected (standard or 386 enhanced) mode. If the user 
+	attempts to run the application in read mode, Windows 
+	will display a message box telling the user that the 
+	application cannot run in real mode.
+-----------------------------------
+THE QUICK REFERENCE CARD
+Under "Combobox Messages" in the "Control Class Messages" 
+section, you should add CB_ERR.
+
+EOF
