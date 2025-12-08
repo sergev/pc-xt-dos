@@ -1,0 +1,31 @@
+DEFINITION MODULE GR_Text;
+
+    (*
+    **  Author : Peter Jardine
+    **
+    **  Version:
+    **  1.0      9 Mar 92   New file - based on the work of 
+    **                      Michael McCarthy & John Pfitzner,
+    **                      CSP-960 Project, Semester 2, 1991
+    **
+    **
+    **  A GPM Modula-2 graphics library module.
+    **
+    *)
+
+PROCEDURE WriteGChar(ch : CHAR; col, row : INTEGER);
+PROCEDURE WriteNDCChar(ch : CHAR; x, y : REAL);
+    (*
+    **  Write a character with the top left corner of the cell at pixel
+    **  col,row)
+    *)
+
+PROCEDURE WriteGString(str : ARRAY OF CHAR; col, row : INTEGER);
+PROCEDURE WriteNDCString(str : ARRAY OF CHAR; x, y : REAL);
+    (*
+    **  Write a character string with the top left corner of the first
+    **  character cell at pixel (col,row)
+    *)
+
+END GR_Text.
+

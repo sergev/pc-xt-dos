@@ -1,0 +1,64 @@
+DEFINITION MODULE StdChans;
+(* Standard and default channels *)
+
+IMPORT IOLink;
+
+TYPE
+  ChanId = IOLink.ChanId;
+  (* Values of this type are used to identify channels *)
+
+(* The following functions return the standard channel values.
+   These channels cannot be closed *)
+
+PROCEDURE StdInChan() : ChanId;
+(* Returns a value identifying the implementation-defined standard source
+   for program input *)
+
+PROCEDURE StdOutChan() : ChanId;
+(* Returns a value identifying the implementation-defined standard sink
+   for program output *)
+
+PROCEDURE StdErrChan() : ChanId;
+(* Returns a value identifying the implementation-defined standard
+   destination for program error messages *)
+
+(* The null device throws away all data written to it and gives an
+   immediate end of input indication on reading *)
+
+PROCEDURE NullChan() : ChanId;
+(* Returns a value identifying a channel open to the null device *)
+
+(* The default channel values *)
+
+PROCEDURE InChan() : ChanId;
+(* Returns the identity of the current default input channel,
+   as used by input procedures that do not take a channel parameter.
+   Initially this is the value returned by the procedure StdInChan. *)
+
+PROCEDURE OutChan() : ChanId;
+(* Returns the identity of the current default output channel,
+   as used by output procedures that do not take a channel parameter.
+   Initially this is the value returned by the procedure StdOutChan. *)
+
+PROCEDURE ErrChan() : ChanId;
+(* Returns the identity of the current default error message channel.
+   Initially this is the value returned by the procedure StdErrChan. *)
+
+(* The following procedures allow for redirection of the default channels *)
+
+PROCEDURE SetInChan (cid: ChanId);
+(* Sets the current default input channel identity to that given by the
+   value of the parameter cid. *)
+
+PROCEDURE SetOutChan (cid: ChanId);
+(* Sets the current default Output channel identity to that given by the
+   value of the parameter cid. *)
+
+PROCEDURE SetErrChan (cid: ChanId);
+(* Sets the current default error channel identity to that given by the
+   value of the parameter cid. *)
+
+
+END StdChans.
+
+

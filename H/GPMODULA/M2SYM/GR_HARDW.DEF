@@ -1,0 +1,250 @@
+DEFINITION MODULE GR_Hardware;
+
+    (*
+    **  Author : Peter Jardine
+    **
+    **  Version:
+    **  1.0      17 Apr 92   New file - based on the work of 
+    **                       Michael McCarthy & John Pfitzner,
+    **                       CSP-960 Project, Semester 2, 1991.
+    **      kb      Nov 92   Add SVGA
+    *)
+
+IMPORT GrafCore;
+IMPORT SvgaCore;
+
+CONST
+    (* ======================== Video modes ========================= *)
+
+    (*
+    **  On MCGA, EGA, or VGA, mode 0 is the same as mode 1, and mode 2 is
+    **  the same as mode 3.  CGA colour burst is disabled in modes 0 and 2.
+    *)
+    TEXT_BW40  = 0;             (* 40 column text, 16 (grey on CGA) *)
+    TEXT_CO40  = 1;             (* 40 column text, 16               *)
+    TEXT_BW80  = 2;             (* 80 column text, 16 (grey on CGA) *)
+    TEXT_CO80  = 3;             (* 80 column text, 16               *)
+
+    (*
+    **  CGA modes. On EGA, MCGA and VGA adapters, modes 4 and 5 are
+    **  identical. On CGA colour displays, mode 5 gives a cyan-red-white
+    **  palette, while on mono displays it gives better gray shade
+    **  differentiation. Mode 4 allows selection of 2 different
+    **  palettes on colour displays; the standard cyan-violet-white, or
+    **  green-red-yellow. See procedure SetPal4 to switch palettes.
+    *)
+    CGA_Mode_4 = 4;             (* 320x200 4 colours                        *)
+    CGA_Mode_5 = 5;             (* 320x200 4 colours, colour burst disabled *)
+    CGA_Mode_6 = 6;             (* 640x200 monochrome                       *)
+
+
+    TEXT_MONO  = 7;             (* 80 column text, 2 colours  *)
+
+    (*
+    ** EGA modes. Note that on 64K EGA cards, only 4 colours are
+    ** available in mode 16
+    *)
+    EGA_Mode_13 = 13;           (* 320x200 16 colours *)
+    EGA_Mode_14 = 14;           (* 640x200 16 colours *)
+    EGA_Mode_16 = 16;           (* 640x350 16 colours *)
+
+    VGA_Mode_18 = 18;           (* 640x480 16 colours *)
+
+    (* Not supported modes *)
+            EGA_Mode_15  = 15;  (* 640x350    2 colours .. not supported *)
+            VGA_Mode_17  = 17;  (* 640x480    2 colours .. not supported *)
+            VGA_Mode_19  = 19;  (* 320x200  256 colours .. not supported *)
+            SEGA_Mode_60 = 60;  (* 800x600   16 colours .. not supported *)
+            SEGA_Mode_61 = 61;  (* 1024x768  16 colours .. not supported *)
+            SEGA_Mode_62 = 62;  (* 1280x1024 16 colours .. not supported *)
+
+    (*
+    ** Hercules monochrome adapters. Note that this mode number has no
+    **   meaning to the BIOS, or anything else outside this module!
+    *)
+    HGC_Graphics_Mode = 31;     (* 720x348 monochrome *)
+
+
+    (*
+    ** Super VGA modes. Note that as with the Hercules graphics mode these
+    ** mode numbers have no meaning to the BIOS, they are just defined for
+    ** the convenience of GPM Graphics Library
+    *)
+    SVGA_Mode_80 = 80;          (* 640x400   256 colours *)
+    SVGA_Mode_81 = 81;          (* 640x480   256 colours *)
+    SVGA_Mode_82 = 82;          (* 800x600   256 colours *)
+    SVGA_Mode_83 = 83;          (* 1024x768  256 colours *)
+    SVGA_Mode_84 = 84;          (* 1280x1024 256 colours *)
+
+
+    (* Automatic Mode selections - Used ONLY in SetVideoMode() *)
+    Max_Colours_Mode    = 83;
+    Max_Resolution_Mode = 83;
+    Initial_Video_Mode  = 83;
+
+
+    (* ===================== Video adapters ========================= *)
+    MDA_Adapter         = 1;
+    CGA_Adapter         = 2;
+    EGA_Adapter         = 3;
+    MCGA_Adapter        = 4;
+    VGA_Adapter         = 5;
+    SVGA_256K_Adapter   = 6;
+    SVGA_512K_Adapter   = 7;
+    SVGA_1Meg_Adapter   = 8;
+    HGC_Adapter         = 80H;
+    HGC_Plus_Adapter    = 81H;
+    InColour_Adapter    = 82H;
+
+    (* ===================== Video displays ========================= *)
+    MDA_Display         = 1;
+    CGA_Display         = 2;
+    EGA_Colour_Display  = 3;
+    PS2_Mono_Display    = 4;
+    PS2_Colour_Display  = 5;
+
+    (* =============== Super VGA Adapters =========================== *)
+    NoSVGA              = -1;
+    VESA                = 0; 
+    ATI                 = 1;  
+    Everex              = 2;
+    Compaq              = 3; 
+    NCR                 = 4;
+    Trident8800         = 5;
+    Trident8900         = 6;
+    Video7              = 7; 
+    Genoa               = 8;
+    Cirrus              = 9;
+    Paradise            = 10; 
+    ChipsTech           = 11; 
+    Tseng3000           = 12;
+    Tseng4000           = 13;
+    AheadA              = 14;
+    AheadB              = 15; 
+    OAK                 = 16;
+
+
+    (* =============== Super VGA Ram ================================ *)
+    Ram256K             = 0;
+    Ram512K             = 1;
+    Ram1Meg             = 2;
+
+
+TYPE
+    AdapterSet = SET OF [MDA_Adapter..SVGA_1Meg_Adapter];       
+
+    ModeSet = SET OF [TEXT_BW40..SVGA_Mode_84];
+
+    SvgaSet = [NoSVGA..OAK];
+    RamSet = [Ram256K..Ram1Meg];
+
+    Palette256 = SvgaCore.Palette256; (* ARRAY [0..768] OF BYTE *)
+    Palette16  = GrafCore.Palette16;  (* ARRAY [0..16] OF BYTE *)
+
+
+    (* ===================== Video Config ========================== *)
+
+    VideoConfig = RECORD
+        mode                   : CARDINAL;
+        xPixels,    yPixels    : INTEGER;
+        xNDCPixels, yNDCPixels : INTEGER;
+        textCols,   textRows   : CARDINAL;
+        charHeight, charWidth  : CARDINAL;
+        colours                : CARDINAL;
+        adapter,    monitor    : CARDINAL;
+    END;
+
+    VideoMode = [TEXT_BW40 .. Initial_Video_Mode];
+
+
+PROCEDURE SetVideoMode(mode : VideoMode) : BOOLEAN;
+    (*
+    **  Switches video mode. Assumes that vmode is one of the supported
+    **  graphics modes - [4..6,13,14,16,18,31] - or an alphanumeric mode
+    **  [0..3,7]. If vmode is not one of these values, does nothing.
+    *)
+
+PROCEDURE SetPal16(pal : Palette16);
+    (*
+    **  Sets the colour palette for 16 colour modes. The first 16 bytes of
+    **  pal are the colour register values, and the 17th is the border register
+    **  value (used only by VGA adapters). For EGA, colour values are in the
+    **  range 0..64, while for VGA, 0..255. The variable StdPal16 is provided
+    **  for restoring the adapter to its default colour palette state.
+    *)
+
+PROCEDURE SetPal256(pal : Palette256);
+    (*
+    **  Sets the colour palette for 256 colour modes. Each palette entry is
+    **  comprised of 3 bytes, one for each primary colour (red,green and 
+    **  blue). Each primary has a range of 0..63
+    *)
+
+PROCEDURE SetPal4(altPalette : BOOLEAN);
+    (*
+    **  Allows toggling between two 4 colour palettes for CGA graphics mode 4.
+    **  The default palette is black-cyan-violet-white (altPalette = FALSE),
+    **  while the alternate palette is black-green-red-yellow.
+    **  Note that CGA mode 5 provides another palette that is more suitable
+    **  for monochrome or composite monitors. On a colour monitor the display
+    **  is in black-cyan-red-white.
+    *)
+
+PROCEDURE SetSVGAVideoAdapter(card : SvgaSet; ram : RamSet);
+
+    (*
+    **  Allows user to force the SVGA driver to configure to the requested
+    **  card type. Useful for when the library incorrectly identifes an
+    **  adapter. 
+    **             card -> svga card library is to configure to
+    **             ram  -> amount of ram on card
+    **
+    **  It is recommended that this only be used as a last resort. If there
+    **  are any problems with the driver please fully document and contact
+    **  the appropriate support person.
+    *)
+
+PROCEDURE GetPal16(VAR pal : Palette16);
+    (*
+    **  Returns the current 16 colour palette and overscan register values.
+    **  This is only functional for VGA adpaters.
+    *)
+
+PROCEDURE GetPal256(VAR pal : Palette256);
+    (*
+    **  Returns the current 256 colour palette. 
+    **  This is only functional for VGA adapters and Super VGA adapters.
+    *)
+
+PROCEDURE GetVideoConfig(VAR configInfo : VideoConfig);
+    (*
+    **  Get the details of the current video mode.
+    *)
+
+PROCEDURE GetVideoMode(VAR mode : VideoMode);
+    (*
+    **  Get the current video mode.
+    *)
+
+PROCEDURE GetSVGAVideoAdapter(VAR card : SvgaSet; VAR ram : RamSet);
+    (*
+    **  Get the current SVGA adapter type and amount of ram on board. This 
+    **  is useful in determining if the Super VGA adapter has been identified 
+    **  correctly by the internal detection routine. If a card has been 
+    **  incorrectly identified try using SetSVGAVideoAdapter to configure
+    **  library.
+    *)
+
+PROCEDURE WaitForRetrace;
+    (*
+    **  Sometimes useful for synchronization. Waits for the vertical retrace
+    **  interrupt to occur befor returning control to the caller. On return
+    **  there is a brief time interval (of the order of ?? millisecs) during
+    **  which no screen refreshing takes place. This may give the caller time
+    **  to perform a series of graphics write operations before scanning
+    **  recommences, which can help to reduce or eliminate image flicker
+    **  during animations.
+    *)
+
+END GR_Hardware.
+

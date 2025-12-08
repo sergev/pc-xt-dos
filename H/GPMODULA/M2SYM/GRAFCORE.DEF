@@ -1,0 +1,402 @@
+
+FOREIGN DEFINITION MODULE GrafCore;
+
+(*
+**  Michael McCarthy & John Pfitzner,
+** CSP-960 Project, Semester 2, 1991
+**
+** A module of graphics routines for GPM Modula-2.
+** Most procedures were adapted from  Richard Wilton's
+** "Programmers guide to PC and PS/2 VIDEO SYSTEMS",
+** Microsoft Press, 1987
+**
+** Last revision  : 30/10/91
+**
+** IMPORTANT NOTES:
+**
+**      (i)  For the routines in this module to work correctly, it is
+**           ESSENTIAL that all video mode changes are done via SetVideoMode
+**           rather than via external procedure(s).
+**
+**     (ii)  The low level facilities provided in this module are intended
+**           only for export to a native Modula-2 library module such as
+**           Graph. Programmers are strongly advised to use Graph rather
+**           than to import directly from GrafCore, since the latter has no
+**           initialization section or error handling capabilities.
+**
+**     (iii) Since this is a "bottom level" module absolutely NO CHECKING
+**           for legality of parameter values is carried out. At the very
+**           least, passing row or column values that are off screen has
+**           unpredictable consequences. Be warned !!
+**
+**      (iv) All coordinate parameters are passed in (column,row) order,
+**           where column refers to the horizontal or x coordinate, and
+**           row is the vertical or y coordinate. Legal column and row
+**           values for the various graphics modes are given below.
+*)
+
+IMPORT IMPLEMENTATION FROM "Grafcore.obj" ;
+
+FROM SYSTEM IMPORT ADDRESS, BYTE;
+FROM Types  IMPORT SHORTCARD;
+
+    (* ======================= Colours ============================== *)
+
+    (*
+    ** Standard 4 colour CGA palette:  Black;  Cyan;  Magenta;  White;
+    **
+    ** Alternative 4 colour CGA palette:  Black;  Green;  Red;  Yellow;
+    **
+    ** 16 colour EGA/VGA palette:
+    **
+    **   Dark colors       Light colors
+    **
+    **   Black     =  0;   DarkGray     =  8;
+    **   Blue      =  1;   LightBlue    =  9;
+    **   Green     =  2;   LightGreen   = 10;
+    **   Cyan      =  3;   LightCyan    = 11;
+    **   Red       =  4;   LightRed     = 12;
+    **   Magenta   =  5;   LightMagenta = 13;
+    **   Brown     =  6;   Yellow       = 14;
+    **   LightGray =  7;   White        = 15;
+    *)
+
+
+    (* ======================== Video modes ========================= *)
+
+    (*
+    **  On MCGA, EGA, or VGA, mode 0 is the same as mode 1, and mode 2 is
+    **  the same as mode 3.  CGA colour burst is disabled in modes 0 and 2.
+    **
+    **  TEXT_BW40  = 0;             (* 40 column text, 16 (grey on CGA) *)
+    **  TEXT_C40   = 1;             (* 40 column text, 16               *)
+    **  TEXT_BW80  = 2;             (* 80 column text, 16 (grey on CGA) *)
+    **  TEXT_C80   = 3;             (* 80 column text, 16               *)
+    **
+    **
+    **  CGA modes. On EGA, MCGA and VGA adapters, modes 4 and 5 are
+    **  identical. On CGA colour displays, mode 5 gives a cyan-red-white
+    **  palette, while on mono displays it gives better gray shade
+    **  differentiation. Mode 4 allows selection of 2 different
+    **  palettes on colour displays; the standard cyan-violet-white, or
+    **  green-red-yellow. See procedure SetPal4 to switch palettes.
+    **
+    **  CGA_Mode_4 = 4;             (* 320x200 4 colours                      *)
+    **  CGA_Mode_5 = 5;             (* 320x200 4 colours, col. burst disabled *)
+    **  CGA_Mode_6 = 6;             (* 640x200 monochrome                     *)
+    **
+    **
+    **  TEXT_MONO  = 7;             (* 80 column text, 2 colours  *)
+    **
+    **
+    **  EGA modes. Note that on 64K EGA cards, only 4 colours are
+    **  available in mode 16
+    **
+    **  EGA_Mode_13 = 13;           (* 320x200 16 colours *)
+    **  EGA_Mode_14 = 14;           (* 640x200 16 colours *)
+    **  EGA_Mode_16 = 16;           (* 640x350 16 colours *)
+    **
+    **  VGA_Mode_18 = 18;           (* 640x480 16 colours *)
+    **
+    **  ### Not supported modes ###
+    **  ### EGA_Mode_15 = 15;   (* 640x350   2 colours .. not supported *)
+    **  ### VGA_Mode_17 = 17;   (* 640x480   2 colours .. not supported *)
+    **  ### VGA_Mode_19 = 19;   (* 320x200 256 colours .. not supported *)
+    **
+    **
+    **  Hercules monochrome adapters. Note that this mode number has no
+    **  meaning to the BIOS, or anything else outside this module!
+    **
+    **  HGC_Graphics_Mode = 31;     (* 720x348 monochrome *)
+    *)
+
+
+    (* ===================== Video adapters ========================= *)
+
+    (*
+    **  MDA_Adapter      = 1;
+    **  CGA_Adapter      = 2;
+    **  EGA_Adapter      = 3;
+    **  MCGA_Adapter     = 4;
+    **  VGA_Adapter      = 5;
+    **  HGC_Adapter      = 80H;
+    **  HGC_Plus_Adapter = 81H;
+    **  InColor_Adapter  = 82H;
+    *)
+
+
+    (* ===================== Video displays ========================= *)
+
+    (*
+    **  MDA_Display       = 1;
+    **  CGA_Display       = 2;
+    **  EGA_Color_Display = 3;
+    **  PS2_Mono_Display  = 4;
+    **  PS2_Color_Display = 5;
+    *)
+
+
+TYPE  
+    Palette16 = ARRAY [0..16] OF BYTE;
+    WriteMode = (replaceMode, andMode, orMode, xorMode);
+    VideoHW = RECORD
+                  Adapter1, Display1 : BYTE;(* primary adapter & display *)
+                  Adapter2, Display2 : BYTE (* secondary video, if fitted *)
+              END;
+
+(* ================== Mode independent procedures ============== *)
+
+PROCEDURE SetVideoMode(vmode : CARDINAL);
+    (*
+    **  Switches video mode. Assumes that vmode is one of the supported
+    **  graphics modes - [4..6,13,14,16,18,31] - or an alphanumeric mode
+    **  [0..3,7]. If vmode is not one of these values, does nothing.
+    *)
+
+PROCEDURE GetVideoMode(VAR textcols : CARDINAL) : CARDINAL;
+    (*
+    **  Returns the current video mode, and sets the variable textcols to
+    **  the number of text columns for that mode.
+    *)
+
+PROCEDURE SetWriteMode(wmode : WriteMode) ;
+    (*
+    **  Sets the default method for interaction with background pixels in
+    **  line drawing, block restoration, and char/string output.
+    **  If default method is replaceMode, object overwrites the current screen
+    **  contents; if the default method is xorMode, the object is XORed with
+    **  the current screen contents, and so on.
+    **  This function is only implemented for all write functions in EGA/VGA
+    **  modes. For CGA and Hercules modes, it is only functional for WrPxlXXX
+    **  and BlockRestoreXXX.
+    *)
+
+PROCEDURE GetVideoHW( VAR vstruc : VideoHW) ;
+    (*
+    **  Fills out a VideoHW record with information on the video adapter
+    **  and display type. Also detects a secondary adapter and display if
+    **  there is one.
+    *)
+
+
+(* ================== Mode dependent procedures ================== *)
+
+(*   ______________________________________________________
+**   The following table defines legal values for column,
+**   row and colour parameters in the procedures below.
+**
+**   Video    Column    Row       Colour
+**    Mode     Range    Range     Range
+**   -----------------------------------
+**     4,5    0..320    0..199    0..3
+**       6    0..639    0..199    0..1
+**      13    0..319    0..199    0..15
+**      14    0..639    0..199    0..15
+**      16    0..639    0..349    0..15
+**      18    0..639    0..479    0..15
+**      31    0..719    0..347    0..1
+**   -----------------------------------
+*)
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==    Return the colour value of a specified pixel    ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE RdPxl10(col,row: INTEGER) : CARDINAL;   (* Modes 13,14,16,18 *)
+PROCEDURE RdPxl06(col,row: INTEGER) : CARDINAL;   (* Mode 6 *)
+PROCEDURE RdPxl04(col,row: INTEGER) : CARDINAL;   (* Modes 4 and 31 *)
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==          Set a pixel in specified colour           ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE WrPxl10(col,row : INTEGER; color : CARDINAL);  (* Modes 13,14,16,18 *)
+PROCEDURE WrPxl06(col,row : INTEGER; color : CARDINAL);  (* Mode 6 *)
+PROCEDURE WrPxl04(col,row : INTEGER; color : CARDINAL);  (* Modes 4 and 31 *)
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==   Draw a line from (col1,row1) to (col2,row2) in   ==*)
+(*==                specified colour                    ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE Line10( col1, row1,           (* Modes 13,14,16,18 *)
+                  col2, row2 : INTEGER;
+                  color      : CARDINAL
+                );
+PROCEDURE LineCGA( col1, row1,          (* Modes 4 and 6 *)
+                   col2, row2 : INTEGER;
+                   color      : CARDINAL
+                 );
+PROCEDURE LineHGC( col1, row1,          (* Hercules mono *)
+                   col2, row2 : INTEGER;
+                   color : CARDINAL
+                 );
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==       Clear the screen with specified colour       ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE Cls10(color:CARDINAL);    (* Modes 13,14,16,18 *)
+PROCEDURE Cls06(color:CARDINAL);    (* Mode 6 *)
+PROCEDURE Cls04(color:CARDINAL);    (* Mode 4 *)
+PROCEDURE ClsHGC(color:CARDINAL);   (* Hercules *)
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*== Write a character at specified screen position     ==*)
+(*== (col,row) refers to coordinates of top-left hand   ==*)
+(*== corner of the rectangular cell in which the char   ==*)
+(*== is drawn. The character itself is drawn in the     ==*)
+(*== colour "fg", while the rest of the cell is in      ==*)
+(*== colour "bg". For monochrome graphics modes, bg is  ==*)
+(*== ignored, and the cell background is the inverse of ==*)
+(*== fg. As noted above, the current writeMode only has ==*)
+(*== effect for EGA/VGA modes.                          ==*)
+(*== The character cell is 8 pixels wide except for     ==*)
+(*== Hercules adapters, which provide for a width of 9  ==*)
+(*== in hardware - the 9th pixel is the same as the 8th ==*)
+(*== For all EGA modes, the cell has 14 pixel rows,     ==*)
+(*== while for CGA and Hercules, it has 8.              ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE WrChar10(ch : CHAR; col, row : INTEGER; fg, bg : CARDINAL);
+PROCEDURE WrChar04(ch : CHAR; col, row : INTEGER; fg, bg : CARDINAL);
+PROCEDURE WrChar06(ch : CHAR; col, row : INTEGER; fg, bg : CARDINAL);
+PROCEDURE WrCharHGC(ch : CHAR; col, row : INTEGER; fg, bg : CARDINAL);
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==    Write a string at a specified screen position   ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE WrStr(str : ARRAY OF CHAR; col, row : INTEGER; fg, bg : CARDINAL);
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==  Save a rectangular region of the screen to memory ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE BlockSave10( blockAddress : ADDRESS;
+                       col1, row1,
+                       col2, row2   : INTEGER
+                     ) : SHORTCARD;
+    (*
+    ** Stores graphics data in colour plane bitmap format at the
+    ** specified address. Used for modes 13,14,16 and 18.
+    **
+    ** IT IS THE RESPONSIBILITY OF THE CALLER TO ENSURE THAT ENOUGH
+    ** CONTIGUOUS ALLOCATED MEMORY IS AVAILABLE AT THE SPECIFIED ADDRESS !
+    **
+    ** The space required can be calculated via the formula
+    **
+    **    4*(row2 - row1 + 1)*(INT((col2 - col1 + 1)/8) + x) + 5
+    **
+    **    where x = 0 if (col2 - col1 + 1) MOD 8 = 0
+    **              1 otherwise
+    **
+    **    e.g. for 175 full screen rows,
+    **        4 * 175 * (INT(640/8)) + 5 = 4*175*80 + 5 = 56,005 bytes
+    **
+    ** IMPLEMENTATION RESTRICTION : THE LARGEST MEMORY BLOCK THAT CAN BE
+    ** WRITTEN IN A SINGLE CALL IS 64k bytes.
+    **
+    ** Returns the number of bytes storage actually written.
+    *)
+
+PROCEDURE BlockSaveCGA( blockAddress : ADDRESS;
+                        col1, row1,
+                        col2, row2   : INTEGER
+                      ) : SHORTCARD;
+    (*
+    ** As above, for CGA modes 4,5 and 6.
+    **
+    ** The space required is given by the formula
+    **
+    **    (row2 - row1 + 1) * (INT((col2 - col1 + 1)/b) + x) + 5
+    **
+    **    where b = 4 (modes 4 and 5)
+    **           or 8 (mode 6)
+    **      and
+    **          x = 0 if (col2 - col1 + 1) MOD b = 0
+    **              1 otherwise
+    *)
+
+PROCEDURE BlockSaveHGC( blockAddress : ADDRESS;
+                        col1, row1,
+                        col2, row2   : INTEGER
+                      ) : SHORTCARD;
+    (*
+    ** As above for Hercules monochrome graphics mode. Space required is
+    ** calculated by thesame formula as for CGA mode 6.
+    *)
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*== Restore a rectangular region from memory to screen ==*)
+(*==     The duals of BlockSave10, BlockSaveCGA, and    ==*)
+(*==                   BlockSaveHGC.                    ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE BlockRestore10(blockAddress : ADDRESS; col, row : INTEGER);
+PROCEDURE BlockRestoreCGA(blockAddress : ADDRESS; col, row : INTEGER);
+PROCEDURE BlockRestoreHGC(blockAddress : ADDRESS; col, row : INTEGER);
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==  Set/Get the EGA/VGA 16 colour palette registers   ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE SetPal16(pal : Palette16);
+    (* Sets the EGA 16 colour palette and border registers *)
+
+PROCEDURE GetPal16(VAR pal : Palette16);
+    (*
+    ** Gets the EGA 16 colour palette and border registers ..
+    ** ONLY WORKS FOR VGA ADAPTERS
+    *)
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==                 Miscellaneous                      ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE SetPal4(altPalette : BOOLEAN) ;
+    (*
+    ** Sets the CGA 4 colour palette to one of two possible sets.
+    ** N.B. FALSE gives standard  cyan-violet-white palette,
+    **      TRUE  gives alternate green-red-yellow palette
+    ** Only works for video mode 4
+    *)
+
+PROCEDURE WaitForRetrace();
+    (*
+    ** Waits for vertical retrace .. used for synchronizing updates for small
+    ** animations
+    *)
+
+END GrafCore.
+

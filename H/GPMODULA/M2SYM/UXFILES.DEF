@@ -1,0 +1,119 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE UxFiles;
+
+  IMPORT IMPLEMENTATION FROM "uxfiles.obj";
+
+(*
+ * WARNING WARNING: THIS IS THE MSDOS VERSION.  FILE    *
+ * PERMISSION BITS ARE DIFFERENT TO THE UNIX VERSIONS   *
+ *
+ * This module provides the low level interface to the	*
+ * UNIX file system, it links to the library <stdio.h>  *
+ * The user programs are protected against the UNIX	*
+ * identifiers which are introduced in the header file  *)
+
+FROM SYSTEM   IMPORT ADDRESS, BYTE;
+
+TYPE
+  File;
+  OpenMode = (ReadOnly, WriteOnly, ReadWrite);
+
+  FilePermissionBits =
+	(rdOnly,hidden,system,volId,subDir,archive);
+  FileMode = 
+	SET OF FilePermissionBits;
+
+  FileAttrib = FilePermissionBits; (* synonyms for the  *)
+  FileAttSet = FileMode;           (* WildCards library *)
+
+PROCEDURE GetMode(  name : ARRAY OF CHAR;
+		VAR mode : FileMode;
+		VAR done : BOOLEAN);
+(* precondition  : name must be a nul-terminated variable
+		   array,or a literal string.
+   postcondition : if done then mode has permission bits *)
+
+PROCEDURE SetMode(  name : ARRAY OF CHAR;
+		    mode : FileMode;
+		VAR done : BOOLEAN);
+(* precondition  : name must be a nul-terminated variable
+		   array,or a literal string.
+   postcondition : if done then file has permission bits *)
+
+PROCEDURE Open(VAR f:    File;       (* Open an existing file *)
+                   name: ARRAY OF CHAR;
+                   mode: OpenMode;
+               VAR done: BOOLEAN);
+
+PROCEDURE Create(VAR f:    File;     (* Open a new file *)
+                     name: ARRAY OF CHAR;
+                 VAR done: BOOLEAN);
+
+PROCEDURE Close(VAR f:    File;      (* Close a file *)
+                VAR done: BOOLEAN);
+
+PROCEDURE Delete(str : ARRAY OF CHAR;
+             VAR ok  : BOOLEAN);
+
+PROCEDURE Reset(f: File);
+(* Position the file at the beginning and set to "ReadMode"   *)
+
+PROCEDURE ReadNBytes(    f:              File;
+                         buffPtr:        ADDRESS;
+                         requestedBytes: CARDINAL;
+                     VAR read:           CARDINAL);
+  (* Read requested bytes into buffer at address *)
+  (* 'buffPtr', number of effectively read bytes *)
+  (* is returned in 'read'                       *)
+
+PROCEDURE WriteNBytes(    f:              File;
+                          buffPtr:        ADDRESS;
+                          requestedBytes: CARDINAL;
+                      VAR written:        CARDINAL);
+  (* Write requested bytes from buffer at address    *)
+  (* 'buffPtr', number of effectively written bytes  *)
+  (* is returned in 'written'                        *)
+
+PROCEDURE ReadByte(    f: File;      (* Read a byte from file *)
+                   VAR b: BYTE);
+(* b = 377C if an attempt is made to read past end   *)
+(* thus (b= 377C) AND EndFile(f) is cheap eof test   *)
+
+PROCEDURE WriteByte( f: File;     (* Write a word to file *)
+                     b: BYTE);
+
+PROCEDURE EndFile( f : File) : BOOLEAN;
+  (* returns true if an attempt has been made
+     to read past the physical end of file   *)
+
+PROCEDURE GetPos(   f : File;
+		VAR p : CARDINAL);
+
+PROCEDURE SetPos( f : File;
+		  p : CARDINAL);
+  (* GetPos and SetPos get and set the file position *)
+
+PROCEDURE AccessTime(path     : ARRAY OF CHAR;
+		     VAR time : CARDINAL;
+		     VAR ok   : BOOLEAN);
+  (* finds time of last access to named file *)
+
+PROCEDURE ModifyTime(path     : ARRAY OF CHAR;
+		     VAR time : CARDINAL;
+		     VAR ok   : BOOLEAN);
+  (* finds time of last modification to file *)
+
+PROCEDURE StatusTime(path     : ARRAY OF CHAR;
+		     VAR time : CARDINAL;
+		     VAR ok   : BOOLEAN);
+  (* finds time of last status change of file *)
+
+PROCEDURE FileSize(filePath  : ARRAY OF CHAR;
+                   VAR size  : CARDINAL;
+                   VAR ok    : BOOLEAN);
+  (* returns size of file "filePath" *)
+
+END UxFiles.

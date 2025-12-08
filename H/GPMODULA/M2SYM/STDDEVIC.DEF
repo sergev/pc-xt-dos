@@ -1,0 +1,204 @@
+FOREIGN DEFINITION MODULE StdDevice;
+(* Procedures forming the interface to channels connected to
+   the Standard device. *)
+
+IMPORT IMPLEMENTATION FROM "StdDevice.obj";
+
+
+IMPORT ChanConsts;
+IMPORT IOConsts;
+IMPORT IOLink;
+IMPORT RndFile;
+FROM   SYSTEM    IMPORT ADDRESS;
+
+
+CONST
+  (* Device Errors - implementation dependent *)
+  InvalidChannel = -1;    (* channel not connected to this device *)
+  NoError        =  0;
+  MaxSoftDevErr  = 18;    (* soft device errors in range 1..18 *)
+  MinHardDevErr  = 19;    (* hard device errors >= 19 *)
+
+
+  (* Codes for the Standard Channels connected to the StdDevice *)
+  StdBad  = -2;
+  StdNull = -1;
+  StdIn   =  0;
+  StdOut  =  1;
+  StdErr  =  2;
+
+
+TYPE
+  StdChanCode = [StdBad..StdErr];
+
+  OpenResults    = ChanConsts.OpenResults;
+  ReadResults    = IOConsts.ReadResults;
+  DeviceTablePtr    = IOLink.DeviceTablePtr;
+  ChanId            = IOLink.ChanId;
+  DeviceData        = IOLink.DeviceData;
+  DeviceErrNum      = IOLink.DeviceErrNum;
+  FilePos           = RndFile.FilePos;
+  OpenMode          = (ReadOnly, WriteOnly, ReadWrite);
+
+
+(* Text operations - these perform any required translation between
+   the internal and external representation of text. *)
+
+PROCEDURE Look (    dtp : DeviceTablePtr;
+                VAR ch  : CHAR;
+                VAR res : ReadResults);
+(* If there is a character as the next item in the given input stream,
+   assigns its value to the parameter ch without removing it from the stream.
+   Otherwise, the value of the parameter ch is not defined.
+   The parameter res, and the stored read result, is set to the value
+   allRight, endOfLine, or endOfInput. *)
+
+
+PROCEDURE Skip (dtp : DeviceTablePtr);
+(* If the input has ended, the exception skipAtEnd is raised,
+   otherwise, the next character or line mark in the input is removed. *)
+
+
+PROCEDURE SkipLook (    dtp : DeviceTablePtr;
+                    VAR ch  : CHAR;
+                    VAR res : ReadResults);
+(* If the stream has ended, the exception skipAtEnd is raised,
+   otherwise, the next character or line mark is removed.
+   If there is a character as the next item in the given input stream,
+   assigned its value to the parameter ch without removing it from the stream.
+   Otherwise, the value of the parameter ch is not defined.
+   The parameter res, and the stored read result, is set to the value
+   allRight, endOfLine or endOfInput. *)
+
+
+PROCEDURE TextRead (    dtp      : DeviceTablePtr;
+                        to       : ADDRESS;
+                        maxChars : CARDINAL;
+                    VAR charsRead : CARDINAL);
+(* Reads at most maxChars characters from the current line and assigns
+   corresponding values to successive locations, starting at the address
+   given by the parameter to, and continuing at increments corresponding
+   to the address difference between successive components of an ARRAY OF
+   CHAR. The number of characters read is assigned to the parameter
+   charsRead. *)
+
+
+PROCEDURE TextWrite (dtp   : DeviceTablePtr;
+                     from  : ADDRESS;
+                     chars : CARDINAL);
+(* Writes a number of characters given by the value of the parameter chars,
+   starting as the address given by the parameter from and continuing at
+   increments corresponding to the address difference between successive
+   components of an ARRAY OF CHAR. *)
+
+
+PROCEDURE WriteLn (dtp : DeviceTablePtr);
+(* Writes a line mark over the channel *)
+
+
+
+(* Binary operations *)
+
+PROCEDURE BinRead (    dtp      : DeviceTablePtr;
+                       to       : ADDRESS;
+                       maxLocs  : CARDINAL;
+                   VAR locsRead : CARDINAL);
+(* Reads at most maxLocs items and assigns corresponding values to
+   successive locations, starting at the address given by the parameter
+   to.
+   The number of items read is assigned to the parameter locsRead. *)
+
+
+PROCEDURE BinWrite (dtp  : DeviceTablePtr;
+                    from : ADDRESS;
+                    locs : CARDINAL);
+(* Writes a number of items given by the value of the parameter locs from
+   successive locations starting as the address given by the parameter
+   from. *)
+
+
+
+(* Common operations *)
+
+PROCEDURE GetName (    dtp : DeviceTablePtr;
+                   VAR s   : ARRAY OF CHAR);
+(* Copies to the parameter s a name associated with the channel,
+   possibly truncated depending on the capacity of s. *)
+
+
+PROCEDURE Reset (dtp : DeviceTablePtr);
+(* Reset to a state defined by the device module *)
+
+
+PROCEDURE Flush (dtp : DeviceTablePtr);
+(* Flush any data buffered by the device module out to the destination *)
+
+
+PROCEDURE Free (dtp : DeviceTablePtr);
+(* Carries out the operations involved in closing the
+   corresponding channel, including flushing buffers, but do
+   not unmake the channel. *)
+
+
+
+(* Channel operations *)
+
+PROCEDURE MakeStdChanDeviceData (chanCode : StdChanCode) : DeviceData;
+(* Returns the device data to be held for all standard
+   channels connected to the StdDevice. *)
+
+
+PROCEDURE OpenChannel (    dtp     : DeviceTablePtr;
+                           oldFile : ARRAY OF CHAR;
+                           mode    : OpenMode;
+                       VAR res     : OpenResults);
+(* If a channel can be opened to the existing oldFile on the
+   standard device, then creates dtp with the fields cd and errNum
+   initialized, and res is set to opened.
+   Otherwise, the value of the parameter res indicates
+   the reason for the failure. *)
+
+
+PROCEDURE CreateChannel (    cd      : DeviceData;
+                             newFile : ARRAY OF CHAR;
+                             mode    : OpenMode;
+                         VAR res     : OpenResults);
+(* If a channel can be opened to the newFile on the
+   standard device, then creates dtp with the fields cd and errNum
+   initialized, and res is set to opened.
+   Otherwise, the value of the parameter res indicates
+   the reason for the failure. *)
+
+
+PROCEDURE Delete (    name : ARRAY OF CHAR;
+                  VAR done : BOOLEAN);
+(* If done, the file called name has been deleted. *)
+
+
+PROCEDURE SetPos (cd  : DeviceData;
+                  pos : FilePos);
+(* Sets the read/write position to the value given by the
+   parameter pos. *)
+
+
+PROCEDURE GetPos (cd : DeviceData) : FilePos;
+(* Returns the current read/write position *)
+
+
+PROCEDURE StartPos (cd : DeviceData) : FilePos;
+(* Returns the first position of the file *)
+
+
+PROCEDURE EndPos (cd : DeviceData) : FilePos;
+(* Returns the first position at or after which there have been
+   no writes *)
+
+
+PROCEDURE FileExists (fileName : ARRAY OF CHAR) : BOOLEAN;
+(* Does the file exist? *)
+
+
+
+END StdDevice.
+
+                    

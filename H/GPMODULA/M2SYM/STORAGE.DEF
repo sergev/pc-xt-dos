@@ -1,0 +1,21 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+(* 14-May-92  jrh  Modula implementation with DEALLOCATE     *)
+(* ========================================================= *)
+
+(* !LIBRARY *) DEFINITION MODULE Storage;
+
+  FROM SYSTEM IMPORT ADDRESS;
+
+  PROCEDURE ALLOCATE(VAR ptr : ADDRESS; size : CARDINAL);
+  (* postcondition : returns a ptr to object of size bytes   *)
+  (*                 rounded up to a whole number of words,  *)
+  (*                 or NIL if unable to allocate            *)
+
+  PROCEDURE DEALLOCATE(VAR ptr : ADDRESS; size : CARDINAL);
+  (* precondition  : ptr^ must have been gained from heap    *)
+  (* postcondition : (pre-ptr)^ is disposed, ptr = NIL       *)
+
+END Storage.
+

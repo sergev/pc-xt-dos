@@ -1,0 +1,79 @@
+DEFINITION MODULE GR_Primitives;
+
+    (*
+    **  Author : Peter Jardine
+    **
+    **  Version:
+    **  1.0      9 Mar 92   New file - based on the work of 
+    **                      Michael McCarthy & John Pfitzner,
+    **                      CSP-960 Project, Semester 2, 1991
+    **
+    **
+    **  A GPM Modula-2 graphics library module.
+    **
+    *)
+
+PROCEDURE ClearDisplay;
+    (*
+    **  Clear fill the screen with specified background colour. If clipping
+    **  is on, clear fills only clipping rectangle.
+    *)
+
+PROCEDURE Bezier(nCtrl : CARDINAL; VAR col, row : ARRAY OF INTEGER);
+PROCEDURE BezierNDC(nCtrl : CARDINAL; VAR x, y : ARRAY OF REAL);
+    (*
+    **  Draw a Bezier curve between the first and last points in the array
+    **  of coordinates, using the intermediate points as the control points.
+    **  nCtrl must be >= 1.  VAR parameters are used for efficiency.  These 
+    **  routines will not alter the contents of the arrays.
+    *)
+
+PROCEDURE Circle(radius : CARDINAL; colCentre, rowCentre : INTEGER);
+PROCEDURE CircleNDC(radius, xCentre, yCentre : REAL);
+    (*
+    **  Draw a "circle" of given radius, and centre. This is faster than
+    **  the routine below.  Circles will appear elliptical unless drawn in a 
+    **  square aspect mode (MaxXAspect or MaxYAspect).
+    *)
+
+PROCEDURE Ellipse(col1, row1, col2, row2 : INTEGER);
+PROCEDURE EllipseNDC(x1, y1, x2, y2 : REAL);
+    (*
+    **  Draw an ellipse bounded by the rectangle (col1, row1), (col2, row2).
+    *)
+
+PROCEDURE FillArea(col, row : INTEGER);
+PROCEDURE FillNDCArea(x, y : REAL);
+    (*
+    **  Fill the area containing the seed coordinate.
+    *)
+
+PROCEDURE Line(col1, row1, col2, row2 : INTEGER);
+PROCEDURE LineNDC(x1, y1, x2, y2 : REAL);
+    (*
+    **  Draw a line between (col1,row1) & (col2,row2)
+    *)
+
+PROCEDURE PolyLine(nPoints : CARDINAL; VAR col, row : ARRAY OF INTEGER);
+PROCEDURE PolyNDCLine(nPoints : CARDINAL; VAR x, y : ARRAY OF REAL);
+    (*
+    **  Draw polyline whose coordinates are stored in the arrays col and
+    **  row. This is equivalent to npoints calls to Line of the form
+    **  Line(col[i],row[i], col[i+1],row[i+1]).    VAR parameters are used for 
+    **  efficiency.  These routines will not alter the contents of the arrays. 
+    *) 
+
+PROCEDURE WritePixel(col, row : INTEGER);
+PROCEDURE WriteNDCPixel(x, y : REAL );
+    (*
+    **  Write a pixel at coordinates (col,row)
+    *)
+
+PROCEDURE ReadPixel(col, row : INTEGER; VAR colour : CARDINAL);
+PROCEDURE ReadNDCRGBPixel(x, y : REAL; VAR red, green, blue : REAL);
+    (*
+    **  Returns the colour value of a specified pixel
+    *)
+
+END GR_Primitives.
+

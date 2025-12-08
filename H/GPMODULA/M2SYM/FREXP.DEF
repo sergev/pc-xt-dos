@@ -1,0 +1,15 @@
+FOREIGN DEFINITION MODULE FREXP;
+(* UNIX versions are INTERFACE --- this for the pc interpreter.  *)
+(* interface to the standard C functions which manipulate REALs  *)
+(* there is no need to specify that the implementation is in -lc *)
+
+  PROCEDURE frexp(val : REAL; VAR exp : INTEGER) : REAL;
+  (* returns the mantissa, and the exponent in exp *)
+
+  PROCEDURE ldexp(val : REAL; exp : INTEGER) : REAL;
+  (* returns val * 2^exp *)
+
+  PROCEDURE modf(val : REAL; VAR iPart : REAL) : REAL;
+  (* returns signed fraction part, and integer part in iPart *)
+
+END FREXP.

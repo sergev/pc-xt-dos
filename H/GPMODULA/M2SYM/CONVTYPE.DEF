@@ -1,0 +1,40 @@
+DEFINITION MODULE ConvTypes;
+
+(* Proposed BSI/ISO Standard Modula-2 I/O Library
+ * Copyright Roger Henry, University of Nottingham
+ * Version WG/4.01, February 1989
+ * Permission is given to copy this Definition Module, with the
+ * copyright notice intact, for the purposes of evaluation and test.
+ * At the stage of a formal draft standard, Copyright will be transferred
+ * to BSI (and through BSI to other recognised standards bodies).
+ * Status: for review by BSI/IST/5/13;
+           for review by ISO/IEC JTC1/SC22/WG13
+ -- * This copy editted to conform to D105 by kjg September 1989 *--
+*)
+
+    (* result of a conversion operation *)
+
+TYPE
+  ConvResults = (
+    allRight,     (* data is as expected or as required *)
+    outOfRange,   (* data cannot be represented         *)
+    wrongFormat,  (* data not in expected format        *)
+    noData,       (* no data or insufficient data       *)
+    noRoom);      (* no room to store input data        *)
+
+  (* types for lexical scanners *)
+
+TYPE
+  ScanProgress = (
+    ignore,       (* leading or padding character       *)
+    accept,       (* character that was expected        *)
+    reject,       (* character that was not expected    *)
+    stop);        (* character that terminates the item *)
+
+  ScanProc = PROCEDURE(CHAR, VAR ScanProgress, VAR ScanProc);
+
+  (* type and constants for alignment of text *)
+
+  Alignment = (left, centre, right);
+
+END ConvTypes.

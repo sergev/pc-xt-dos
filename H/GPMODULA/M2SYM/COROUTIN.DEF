@@ -1,0 +1,20 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE Coroutines;(* coroutines as in PIM *)
+
+  IMPORT IMPLEMENTATION FROM "coroutines.obj";
+  FROM SYSTEM IMPORT ADDRESS;
+
+  TYPE Coroutine = ADDRESS;  (* use of this type avoids SYSTEM import *)
+
+  PROCEDURE NEWPROCESS (code  : PROC;		(* body of coroutine  *)	
+			space : ADDRESS;	(* ptr to workspace   *)
+			size  : CARDINAL;	(* size of workspace  *)
+		    VAR this  : Coroutine);	(* returned coroutine *)
+
+  PROCEDURE TRANSFER (VAR thisCo : Coroutine;	(* current saved here *)
+		      VAR destCo : Coroutine);  (* target to activate *)
+
+END Coroutines.

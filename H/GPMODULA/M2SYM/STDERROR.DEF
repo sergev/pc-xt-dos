@@ -1,0 +1,23 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE StdError;
+
+   IMPORT IMPLEMENTATION FROM  "stderror.obj";
+
+(* these procedures are identical to the     *)
+(* procedures from module Terminal with the  *)
+(* same names, except that output goes to    *)
+(* the standard UNIX error stream "stderr"   *)
+
+  PROCEDURE WriteString(str : ARRAY OF CHAR);
+
+  PROCEDURE WriteLn;
+
+  PROCEDURE WriteCard(card  : CARDINAL;
+                      width : CARDINAL);
+
+  PROCEDURE Write(ch : CHAR);
+
+END StdError.

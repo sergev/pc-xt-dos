@@ -1,0 +1,39 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE Terminal;
+
+  IMPORT IMPLEMENTATION FROM "terminal.obj";
+
+(* this is the bare-bones version for testing *)
+(* output always goes to the UNIX std output  *)
+(* input always comes from the UNIX std input *)
+
+  PROCEDURE WriteString(str : ARRAY OF CHAR);
+
+  PROCEDURE WriteLn;
+
+  PROCEDURE WriteCard(card  : CARDINAL;
+                      width : CARDINAL);
+
+  PROCEDURE Write(ch : CHAR);
+
+  PROCEDURE Read(VAR ch : CHAR);
+
+  PROCEDURE EofIn() : BOOLEAN; (* returns "input ended" *)
+  PROCEDURE EofOut();          (* closes stdout stream  *)
+
+  PROCEDURE GetKeyStroke(VAR ch : CHAR);
+  (* gets keystroke without waiting for <EOL> *)
+  (* does not echo the character, there is no *)
+  (* erase and kill processing. Restores tty  *)
+  (* mode after reading each character in     *)
+  
+  PROCEDURE WasKeyPressed(VAR wasKey : BOOLEAN; VAR ch : CHAR);
+  (* Pre:  TRUE                               *)
+  (* Post: wasKey AND ch = key                *)
+  (*       OR                                 *)
+  (*       NOT wasKey                         *)
+
+END Terminal.

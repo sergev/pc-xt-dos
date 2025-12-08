@@ -1,0 +1,118 @@
+DEFINITION MODULE ArgDevice;
+(* Procedures forming the interface to channels connected to
+   the standard program argument device. *)
+
+FROM   IOConsts  IMPORT ReadResults;
+IMPORT IOLink;
+FROM   SYSTEM    IMPORT ADDRESS;
+
+CONST
+  (* Identifier of the standard argument channel *)
+  StdArg = -3;
+
+  (* Device Errors *)
+  NoError = 0;
+
+
+TYPE
+  DeviceTablePtr    = IOLink.DeviceTablePtr;
+  DeviceData        = IOLink.DeviceData;
+
+
+(* Text operations - these perform any required translation between
+   the internal and external representation of text. *)
+
+PROCEDURE Look (    dtp : DeviceTablePtr;
+                VAR ch  : CHAR;
+                VAR res : ReadResults);
+(* If there is a character as the next item in the given input stream,
+   assigns its value to the parameter ch without removing it from the stream.
+   Otherwise, the value of the parameter ch is not defined.
+   The parameter res, and the stored read result, is set to the value
+   allRight, endOfLine, or endOfInput. *)
+
+PROCEDURE Skip (dtp : DeviceTablePtr);
+(* If the input has ended, the exception skipAtEnd is raised,
+   otherwise, the next character or line mark in the input is removed
+   and the stored read result is set to the value allRight. *)
+
+PROCEDURE SkipLook (    dtp : DeviceTablePtr;
+                    VAR ch  : CHAR;
+                    VAR res : ReadResults);
+(* If the stream has ended, the exception skipAtEnd is raised,
+   otherwise, the next character or line mark is removed.
+   If there is a character as the next item in the given input stream,
+   assigned its value to the parameter ch without removing it from the stream.
+   Otherwise, the value of the parameter ch is not defined.
+   The parameter res, and the stored read result, is set to the value
+   allRight, endOfLine or endOfInput. *)
+
+PROCEDURE TextRead (    dtp      : DeviceTablePtr;
+                        to       : ADDRESS;
+                        maxChars : CARDINAL;
+                    VAR charsRead : CARDINAL);
+(* Reads at most maxChars characters from the current line and assigns
+   corresponding values to successive locations, starting at the address
+   given by the parameter to, and continuing at increments corresponding
+   to the address difference between successive components of an ARRAY OF
+   CHAR. The number of characters read is assigned to the parameter charsRead.
+   The read result is set to the value allRight, endOfLine, or endOfInput. *)
+
+PROCEDURE TextWrite (dtp   : DeviceTablePtr;
+                     from  : ADDRESS;
+                     chars : CARDINAL);
+(* Writes a number of characters given by the value of the parameter chars,
+   starting as the address given by the parameter from and continuing at
+   increments corresponding to the address difference between successive
+   components of an ARRAY OF CHAR. *)
+
+PROCEDURE WriteLn (dtp : DeviceTablePtr);
+(* Writes a line mark over the channel *)
+
+
+(* Binary operations *)
+
+PROCEDURE RawRead (    dtp      : DeviceTablePtr;
+                       to       : ADDRESS;
+                       maxLocs  : CARDINAL;
+                   VAR locsRead : CARDINAL);
+(* Reads at most maxLocs items and assigns corresponding values to
+   successive locations, starting at the address given by the parameter
+   to.
+   The number of items read is assigned to the parameter locsRead.
+   The read result is set to the value allRight or endOfInput. *)
+
+PROCEDURE RawWrite (dtp  : DeviceTablePtr;
+                    from : ADDRESS;
+                    locs : CARDINAL);
+(* Writes a number of items given by the value of the parameter locs from
+   successive locations starting as the address given by the parameter
+   from. *)
+
+
+(* Common operations *)
+
+PROCEDURE GetName (    dtp : DeviceTablePtr;
+                   VAR s   : ARRAY OF CHAR);
+(* Copies to the parameter s a name associated with the channel,
+   possibly truncated depending on the capacity of s. *)
+
+PROCEDURE Reset (dtp : DeviceTablePtr);
+(* Reset to a state defined by the device module *)
+
+PROCEDURE Flush (dtp : DeviceTablePtr);
+(* Flush any data buffered by the device module out to the destination *)
+
+PROCEDURE Free (dtp : DeviceTablePtr);
+(* Carries out the operations involved in closing the
+   corresponding channel, including flushing buffers, but do
+   not unmake the channel. *)
+
+PROCEDURE MakeArgChanDeviceData () : DeviceData;
+(* Returns the device data to be held for the standard
+   argument channel *)
+
+
+END ArgDevice.
+
+                    

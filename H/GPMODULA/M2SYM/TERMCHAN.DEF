@@ -1,0 +1,23 @@
+DEFINITION MODULE TermChan;
+(* Extra interface(s) to the terminal channel,
+   not included in the Standard *)
+
+FROM   IOConsts  IMPORT ReadResults;
+IMPORT IOLink;
+
+
+TYPE
+  ChanId            = IOLink.ChanId;
+
+
+PROCEDURE LookKey (    cid : ChanId;
+                   VAR ok  : BOOLEAN;
+		   VAR ch  : CHAR;
+		   VAR res : ReadResults);
+(* Performs 'no-wait' input:
+   If there is a character available on TermFile channel cid, return ok TRUE
+   and the results of a Look(cid/dtp, ch, res);
+   otherwise return ok FALSE. *)
+
+
+END TermChan.

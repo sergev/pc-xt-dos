@@ -1,0 +1,136 @@
+DEFINITION MODULE GR_Attributes;
+
+    (*
+    **  Author : Peter Jardine
+    **
+    **  Version:
+    **  1.0      17 Apr 92   New file - based on the work of 
+    **                       Michael McCarthy & John Pfitzner,
+    **                       CSP-960 Project, Semester 2, 1991.
+    *)
+
+IMPORT GrafCore;
+
+CONST
+    (* ======================= Colours ============================== *)
+
+    (*
+    ** Standard 4 colour CGA palette:  Black;  Cyan;  Magenta;  White;
+    **
+    ** Alternative 4 colour CGA palette:  Black;  Green;  Red;  Yellow;
+    *)
+        CGA_Black   = 0;
+        CGA_Cyan    = 1;    CGA_Green  = 1;
+        CGA_Magenta = 2;    CGA_Red    = 2;
+        CGA_White   = 3;    CGA_Yellow = 3;
+    (*
+    ** 16 colour EGA/VGA palette:
+    **
+    **  Dark colours        Light colours
+    *)
+        Black     =  0;     DarkGray     =  8;
+        Blue      =  1;     LightBlue    =  9;
+        Green     =  2;     LightGreen   = 10;
+        Cyan      =  3;     LightCyan    = 11;
+        Red       =  4;     LightRed     = 12;
+        Magenta   =  5;     LightMagenta = 13;
+        Brown     =  6;     Yellow       = 14;
+        LightGray =  7;     White        = 15;
+
+    (* ===================== Aspect Settings ======================= *)
+    DefaultAspect = 0;
+    MaxXAspect    = 1;
+    MaxYAspect    = 2;
+
+    (* ======================= Write Modes ========================= *)
+    (*
+    ** These are made visible by the WriteMode Type declaration.
+    **
+    replaceMode;
+    andMode;
+    orMode;
+    xorMode;
+    *)
+
+TYPE
+    AspectSetting = [DefaultAspect .. MaxYAspect];
+    WriteMode     = GrafCore.WriteMode;
+                        (* replaceMode, andMode, orMode, xorMode *)
+
+PROCEDURE GetNDCAspect(VAR aspect : AspectSetting);
+    (*
+    **  Get the current aspect setting in use by the NDC routines.
+    *)
+
+PROCEDURE GetBgColour(VAR colour : CARDINAL);
+PROCEDURE GetRGBBgColour(VAR red, green, blue : REAL);
+    (*
+    **  Get the background colour being used for all display operations.
+    *)
+
+PROCEDURE GetColour(VAR colour : CARDINAL);
+PROCEDURE GetRGBColour(VAR red, green, blue : REAL);
+    (*
+    **  Get the foreground colour being used for all display operations.
+    *)
+
+PROCEDURE GetWriteMode(VAR penMode : WriteMode);
+    (*
+    **  Get the current pixel placement method.
+    *)
+
+PROCEDURE SetNDCAspect(aspect : AspectSetting);
+    (*
+    **  Set the aspect ratio to use for NDC routines.  Legal values are 
+    **  DEFAULT which uses the full resolution of the display, MaxXAspect,
+    **  or MaxYAspect which may use less than the full resoultion of the
+    **  display, but squares will be square, and circles will be circular.
+    *)
+
+PROCEDURE SetBgColour(colour : CARDINAL);
+PROCEDURE SetRGBBgColour(red, green, blue : REAL);
+    (*
+    **  Set the background colour to use for all display operations.
+    *)
+
+PROCEDURE SetColour(colour : CARDINAL);
+PROCEDURE SetRGBColour(red, green, blue : REAL);
+    (*
+    **  Set the foreground colour to use for all display operations.
+    *)
+
+PROCEDURE SetClipping(switch : BOOLEAN);
+    (*
+    **  Turns clipping on or off. Note that all write operations run
+    **  significantly slower with clipping on. When developing programs,
+    **  however, it is generally a good idea to set clipping to the full
+    **  screen rectangle, and turn it on, since the low level routines
+    **  perform no bounds checking whatsoever.  The default value is
+    **  clipping set to the full screen rectangle and enabled.  Be sure
+    **  your program does not write outside the screen area if you turn
+    **  clipping off.  Attempts to write outside the screen area when
+    **  clipping is disabled could have unpredictable results.
+    *)
+
+PROCEDURE SetClipRect(col1, row1, col2, row2 : INTEGER);
+PROCEDURE SetNDCClipRect(x1, y1, x2, y2 : REAL);
+    (*
+    **  Sets the boundaries of the clipping rectangle, so that all graphics
+    **  write operations are clipped to the interior and boundary of the
+    **  rectangle.
+    *)
+
+PROCEDURE SetWriteMode(penMode : WriteMode);
+    (*
+    **  Sets the default method for interaction with background pixels in
+    **  line drawing, block restoration, and char/string output.
+    **  If default method is replaceMode, object overwrites the current screen
+    **  contents; if the default method is xorMode, the object is XORed with
+    **  the current screen contents, and so on.
+    **  This function is only implemented for all write functions in EGA/VGA
+    **  modes. For CGA and Hercules modes, it is only functional for WrPxl,
+    **  BlockRestore, Circle and Ellipse.
+    *)
+
+END GR_Attributes.
+

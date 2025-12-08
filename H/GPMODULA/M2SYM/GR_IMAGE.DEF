@@ -1,0 +1,180 @@
+DEFINITION MODULE GR_Image;
+
+    (*
+    **  Author : Kevin Baker
+    **
+    **  Version:
+    **  1.0      8 Aug 92   
+    **                      
+    **  Function:                    
+    **      Save and Restore Image files
+    *)
+
+FROM   UxFiles  IMPORT File;
+
+(* ===================== constant definitions ======================= *)
+
+CONST
+    (* ================== Image File Parameterss =================== *)
+
+    PCX     = 0; (* PCX ZSoft file format       *)
+    GIF     = 3; (* not currently supported     *)
+    TIFF    = 4; (* not currently supported     *)
+
+
+
+
+(* ======================== Type definitione ======================= *)
+
+TYPE
+
+    FileFormat = [PCX .. TIFF];
+
+
+    ErrorType   = ( OK, NotPCXFile, CoordinatesOutOfBounds, MemoryExhausted, 
+                    CorruptFile, IncompatibleVideoModes, UnsupportedFormat);
+
+    (*
+    ** ErrorType is used to query the result of a call to GR_Image 
+    ** ImageRead or ImageWrite.  
+    **
+    ** ErrorType indicates whether or not a error occured during processing
+    **           of the Image file
+    **
+    **           OK                     - No problems
+    **           NotPCXFile             - File is not a PCX file (Read only)
+    **           CoordinatesOutOfBounds - col,row were out of bounds
+    **           MemoryExhausted        - unable to allocate internal storage
+    **           CorruptFile            - file was corrupt
+    **           IncompatiblaVideoModes - Image file was written in a display
+    **                                    mode incompatible with the current
+    **                                    video mode
+    *)
+
+    ModeType    = ( monoMode, cgaMode, egaMode, vgaMode, trueColourMode,
+                    unknownMode );
+    (*
+    **          
+    ** ModeType used in determining the mode an Image file was written in   
+    **          
+    **          monoMode       - Hercules of CGA_Mode_6                       
+    **          cgaMode        - CGA_Mode_4, CGA_Mode_5                       
+    **          egaMode        - all 16 colour modes (4 planes, 1 bit/pixel)  
+    **          vgaMode        - all 256 colour modes                         
+    **          trueColourMode - 24 bit colour (3 planes, 8 bits/pixel)       
+    **          unknownMode    - mode was undetermined                       
+    *)
+
+
+    (*
+    ** Image record used for general Image file information
+    *)
+
+    Image = RECORD 
+              Xpixels,
+              Ypixels  : CARDINAL; (* Image dimensions in pixels      *)
+              Mode     : ModeType; (* Video Mode image was created in *)
+              Size     : CARDINAL; (* Size of decoded Image in Bytes  *)
+            END;
+
+
+
+
+
+(* ======================= File functions =========================== *)
+
+PROCEDURE ImageRead(    col1, row1,             (* target location     *)
+                        cOfs, rOfs : INTEGER;   (* start point in file *)
+                        cols, rows : CARDINAL;  (* image area to read  *)
+                        format     : FileFormat;
+                    VAR file       : File
+                   );
+ (* 
+ ** (0,0)                                          
+ **   ------------------------     Image file -> --------------------------
+ **   |                      |                   |                        |
+ **   |  col1,row1           | <-- Video screen  |                        |
+ **   |     ...........      |                   |  cOfs,rOfs             |
+ **   |     :         :      |                   |     ..............^    |
+ **   |     :         : <--------- area Image    |     :             :    |
+ **   |     :         :      |     is to be      |     :             :    |
+ **   |     :        rows    |     restored to   |     :             :    |
+ **   |     :         :      |                   |     :             :    |
+ **   |     :         :      |                   |     :           rows   |
+ **   |     :         :      |     portion of  ------> :             :    |
+ **   |     :         :      |     image to be   |     :             :    |
+ **   |     <- cols ->V      |     restored      |     :             :    |
+ **   |                      |                   |     <--- cols --->v    |
+ **   |                      |                   |                        |
+ **   ------------------------                   --------------------------
+ **                          ^
+ **                          |
+ **                        (VideoConfig.xPixel-1,VideoConfig.yPixel-1)
+ **
+ **   Restores to area delimited by col1, row1  col1 + cols,row1 + rows  the
+ **   portion of image file delimited by cOfs,rOfs  cOfs + cols,rOfs + rows.
+ **   All coodinates are clipped to screen and file image boundaries.
+ *)
+
+PROCEDURE ImageNDCRead(    x1, y1       : REAL;
+                           xOfs, yOfs   : REAL;
+                           xFrac, yFrac : REAL;
+                           format       : FileFormat;
+                       VAR file         : File
+                      );
+ (*
+ **   As for ImageRead but in Normalized Device Coordinates              
+ *)
+
+PROCEDURE ImageWrite(    col1, row1,
+                         col2, row2 : INTEGER;
+                         format     : FileFormat;
+                     VAR file       : File
+                    );
+ (* 
+ **  0,0
+ **   ------------------------
+ **   |                      |
+ **   |  col1,row1           | <-- Video screen
+ **   |     ...........      |
+ **   |     :         :      |
+ **   |     :         : <--------- Image area to be written 
+ **   |     :         :      |
+ **   |     :.........:      |
+ **   |               col2,row2
+ **   |                      |
+ **   ------------------------
+ **                         VideoConfig.xPixel-1,VideoConfig.yPixel-1
+ **
+ **   Takes the image are specified by coordinates col1,row1  col2,row2 and
+ **   saves it to file. Specify a file format to be read.
+ *)
+
+PROCEDURE ImageNDCWrite(    x1, y1,
+                            x2, y2 : REAL;
+                            format : FileFormat;
+                        VAR file   : File
+                       );
+
+ (*
+ **   As for ImageWriter but in Normalized Device Coordinates               
+ *)
+
+PROCEDURE ImageInfo(     format : FileFormat;
+                     VAR image  : Image;
+                         file   : File)  : BOOLEAN;
+ (*
+ ** Obtain Image details from file. Returns true if successfully
+ ** retrieved details. If false use ErrorQuery to determine nature of error
+ *)
+
+PROCEDURE ErrorQuery() : ErrorType;
+
+ (*
+ ** Query the result of the most recently called Image function.
+ ** Returns a value of TYPE ErrorType
+ *)
+
+END GR_Image.
+
+

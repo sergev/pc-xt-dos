@@ -1,0 +1,21 @@
+DEFINITION MODULE SRawIO;
+(* Reading and writing data over default channels using raw operations,
+   that is, with no conversion or interpretation. The read result is of
+   the type IOConsts.ReadResults.
+*)
+
+FROM SYSTEM    IMPORT LOC;
+
+
+PROCEDURE Read (VAR to       : ARRAY OF LOC);
+(* Reads storage units and assigns to successive components of the
+   parameter to.
+   The read result is set to the value allRight, wrongFormat, or
+   endOfInput *)
+
+PROCEDURE Write (from    : ARRAY OF LOC);
+(* Writes storage units from successive components of the
+   parameter from *)
+
+END SRawIO.
+                                 

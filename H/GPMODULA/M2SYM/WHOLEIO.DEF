@@ -1,0 +1,47 @@
+DEFINITION MODULE WholeIO;
+(* Input and output of whole numbers in decimal text form over specified
+   channels.
+   The read result is of the type IOConsts.ReadResults.
+*)
+
+FROM IOLink IMPORT ChanId;
+
+(* The text form of a signed whole number is
+     ["+"|"-"], decimal digit, {decimal digit}
+
+   The text form of an unsigned whole number is
+        decimal digit, {decimal digit}
+*)
+
+PROCEDURE ReadInt (    cid : ChanId;
+                   VAR int : INTEGER);
+(* Skips leading space and removes any remaining characters
+   that form part of a signed whole number.
+   A corresponding value is assigned to the parameter int.
+   The read result is set to the value allRight, outOfRange, wrongFormat,
+   endOfLine, or endOfInput. *)
+
+PROCEDURE WriteInt (cid   : ChanId;
+                    int   : INTEGER;
+                    width : CARDINAL);
+(* Writes the value of the parameter int in text form in a field of the
+   given minimum width. *)
+
+PROCEDURE ReadCard (    cid  : ChanId;
+                    VAR card : CARDINAL);
+(* Skips leading space and removes any remaining characters
+   that form part of an unsigned whole number.
+   A corresponding value is assigned to the parameter card.
+   The read result is set to the value allRight, outOfRange, wrongFormat,
+   endOfLine, or endOfInput. *)
+
+PROCEDURE WriteCard (cid   : ChanId;
+                     card  : CARDINAL;
+                     width : CARDINAL);
+(* Writes the value of the parameter card in text form in a field of the
+   given minimum width. *)
+
+END WholeIO.
+
+
+

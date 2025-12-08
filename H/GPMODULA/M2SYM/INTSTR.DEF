@@ -1,0 +1,62 @@
+(* !LIBRARY! *) DEFINITION MODULE IntStr;
+
+(* Proposed BSI/ISO Standard Modula-2 I/O Library
+ * Copyright Roger Henry, University of Nottingham
+ * Version WG/4.01, February 1989
+ * Permission is given to copy this Definition Module, with the
+ * copyright notice intact, for the purposes of evaluation and test.
+ * At the stage of a formal draft standard, Copyright will be transferred
+ * to BSI (and through BSI to other recognised standards bodies).
+ * Status: for review by BSI/IST/5/13;
+           for review by ISO/IEC JTC1/SC22/WG13
+ --* this version editted to conform to D105 kjg September 1989 *--
+*)
+
+IMPORT ConvTypes;
+FROM   ConvTypes IMPORT ScanProgress, ScanProc;
+
+(* the text form of a signed whole number is                      *)
+(*           [whitespace] ["+" | "-"] digit {digit}               *)
+
+PROCEDURE Scan(
+      this: CHAR; VAR progress: ScanProgress; VAR nextScanner: ScanProc);
+(* corresponds to the start state of a FSA scanner for integers *)
+
+TYPE ConvResults = ConvTypes.ConvResults;
+
+PROCEDURE Format(str: ARRAY OF CHAR): ConvResults;
+  (* pre:  "str" has a string value                              *)
+  (* post: returned value corresponds to format of string        *)
+  (*       value with respect to the type CARDINAL               *)
+
+PROCEDURE Value(str: ARRAY OF CHAR): INTEGER;
+  (* pre:  "str" has a string value                              *)
+  (*       and format is "allRight" with respect to INTEGER      *)
+  (* post: returned value is the corresponding INTEGER           *)
+
+PROCEDURE Take(
+  str: ARRAY OF CHAR; VAR int: INTEGER; VAR format: ConvResults
+);
+  (* pre:  "str" has a string value                              *)
+  (* post: either value of "format" is "allRight",               *)
+  (*         value of "int" is the corresponding INTEGER         *)
+  (*       or value of "format" is "outOfRange",                 *)
+  (*         value of "int" is MAX(INTEGER) or MIN(INTEGER)      *)
+  (*       or value of "format" is "wrongFormat"                 *)
+  (*         value of "int" is undefined                         *)
+  (*       or value of format is "noData"                        *)
+  (*         value of "int" is unchanged                         *)
+
+TYPE Alignment = ConvTypes.Alignment; (* left, centre, right *)
+
+PROCEDURE Length(int: INTEGER): CARDINAL;
+
+PROCEDURE Give(
+  VAR str: ARRAY OF CHAR; int: INTEGER; width: CARDINAL; where: Alignment);
+  (* post: as far as capacity of "str" allows,                             *)
+  (*       the character representation of "int" is contained in "str"     *)
+  (*       in a field of at least "width" characters                       *)
+  (*	   left, centre (numeric), or right justified;                     *)
+  (*       for the special case of "width" = 0, a leading space is written *)
+
+END IntStr.

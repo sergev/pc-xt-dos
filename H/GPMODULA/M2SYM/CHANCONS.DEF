@@ -1,0 +1,89 @@
+DEFINITION MODULE ChanConsts;
+(* Common types and values for device open requests and results *)
+
+(* Device modules may allow combinations of the following flags to be given
+   when a channel is opened. An open procedure may not accept or honor all
+   combinations. *)
+
+TYPE
+  ChanFlags = (
+    readFlag,
+        (* input operations are requested/available *)
+    writeFlag,
+        (* output operations are requested/available *)
+    oldFlag,
+        (* a file may/must/did exist before the channel
+           was opened *)
+    textFlag,
+        (* text operations are requested/available *)
+    rawFlag,
+        (* raw operations are requested/available *)
+    interactiveFlag,
+        (* interactive use is requested/available *)
+    echoFlag
+        (* echoing by interactive device on removal of
+           characters from input stream requested/applies *)
+  );
+  FlagSet = SET OF ChanFlags;
+
+(* Singleton values of FlagSet, to allow for example, read+write. *)
+CONST
+  read        = FlagSet{readFlag};
+        (* input operations are requested/available *)
+  write       = FlagSet{writeFlag};
+        (* output operations are requested/available *)
+  old         = FlagSet{oldFlag};
+        (* a file may/must/did exist before the channel
+           was opened *)
+  text        = FlagSet{textFlag};
+        (* text operations are requested/available *)
+  raw      = FlagSet{rawFlag};
+        (* raw operations are requested/available *)
+  interactive = FlagSet{interactiveFlag};
+        (* interactive use is requested/available *)
+  echo        = FlagSet{echoFlag};
+        (* echoing by interactive device on removal of
+           characters from input stream requested/applies *)
+
+
+(* Possible results of open requests: *)
+TYPE
+  OpenResults = (
+    opened,
+        (* the open succeeded as requested *)
+    wrongNameFormat,
+        (* given name is in the wrong format for the implementation *)
+    wrongFlags,
+        (* given flahs include a value that does not apply to the device *)
+    tooManyOpen,
+        (* this device cannot support any more open channels *)
+    outOfChans,
+        (* no more channels can be allocated *)
+    wrongPermissions,
+        (* file or directory permissions do not allow request *)
+    noRoomOnDevice,
+        (* storage limits on the device prevent the open *)
+    noSuchFile,
+        (* a needed file does not exist *)
+    fileExists,
+        (* a file of the given name already exists when a new one is
+           required *)
+    wrongFileType,
+        (* the file is of the wrong type to support the required operations *)
+    noTextOperations,
+        (* text operations have been requested but are not supported *)
+    noRawOperations,
+        (* raw operations have been requested but are not supported *)
+    noMixedOperations,
+        (* text and binary operations have been requested but they are
+           not supported in combination *)
+    alreadyOpen,
+        (* the source/destination is already open for operations not supported
+        in combination with the requested operations *)
+    otherProblem
+        (* open failed for some other reason *)
+  );
+
+END ChanConsts.
+
+

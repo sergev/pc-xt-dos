@@ -1,0 +1,74 @@
+Gardens Point Modula - IBM PC & compatibles version of 15 July 1994
+-------------------------------------------------------------------
+The PC version of the Gardens Point Modula compiler (gpm) is comprised of the
+following files. 
+Copy the following files to your floppy disk:
+
+                GPMPCxxx.zip     <- main distribution file
+                install.com      <- installation program files
+                ~~~~~.com
+                ~~~~.com
+                ~~~.com
+                unzip.exe        <- unarchiving utility
+
+Running install from the floppy disk will install GPM onto your hard disk.
+Install will create a sub directory on the hard disk nominated and copy the
+relevant files.  Install will also update your autoexec.bat file to include
+some environment variables used by GPM.
+
+This package uses the MS-DOS editor EDIT as the default editor.   NOTE:  This
+editor comes standard with all versions of DOS from 5.0 onwards.  To use other 
+editors (PC-Write, QEdit) see either the notes in the file README.TOO or 
+consult the GPM documentation.
+
+Please report bugs via the GPM bug report forms (available from the labs)
+or mail.
+
+            sinfield@fit.qut.edu.au      
+     or     hynd@fit.qut.edu.au                                                   
+
+Changes since version of September 94 
+-------------------------------------
+1) Full implementation of ISO Input/Output procedures.
+   (See separate documents - usingiso.stu  <- introduction to using ISO I/O
+                             wirthiso      <- converting InOut etc. to ISO)
+2) Implementation of some basic cursor manipulations (Use in conjunction with
+   ANSISYS) - allows cursor to be hidden and restored, resized and gets the
+   screen current attributes at the cursor.
+
+Changes since version of June 95
+---------------------------------
+1) A number of inconsistent results have been fixed in RealIO
+2) The utility module DebugWrite has been added to the distribution - See
+   the .def file for details.
+
+Changes since version of July 95
+---------------------------------
+1) A minor bug fix in the run time system.
+2) Fixed a bug in ProgArgs, which sometimes truncated user's arguments
+3) Separation of the graphics libraries from the normal distribution.
+   When the graphics libraries were produced in late 1992, attempts were made
+   to try and include data about as many known SVGA video cards as possible.
+   Since then a lot more cards (VESA etc) have become available, with differing
+   setups and initialisations.  The SVGA autodetect facility can't always 
+   correctly set up the card if it is not known to to the libraries.  Hence 
+   some users have experienced problems.  Beginning with this distribution, 
+   the graphics libraries will be packaged as a VGA and SVGA version 
+   (gr_svga.zip and gr_vga.zip).  The contents of these two zips are the 
+   necessary files in m2sym and m2lib directories.  Just uncompress the version
+   require using => unzip gr_svga 
+                 or unzip gr_vga.
+
+Changes since version of August 95
+----------------------------------
+1) An error in compiling the ISO libraries could lead to a linker failure,
+   with an apparent double inclusion of StdDevice.
+
+Changes since version of November 95
+------------------------------------
+1) An minor bug fix to StdStrings
+2) Fix to a build problem (inconsistent keys) with the graphics support
+   libraries.  PLEASE NOTE :  The graphics libraries come in an SVGA and VGA
+   versions (see above).   As the .def and .syx files are identical for both
+   they are now include in ..\m2sym.  In ..\m2lib are two directories ..\vga
+   and ..\svga.  Copy the files from the sub-directory for the adapter you want.

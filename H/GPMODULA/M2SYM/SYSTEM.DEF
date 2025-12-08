@@ -1,0 +1,52 @@
+  (* ========================================================= *)
+  (* Preliminary library module for Gardens Point Modula       *)
+  (* ========================================================= *)
+
+(* !SYSTEM! *) DEFINITION MODULE $SYSTEM$;
+
+  (* This is a system module; it is known to the compiler and  *)
+  (* activated by import. It is pre-loaded, and thus has no    *)
+  (* symbol file. Some of the following declarations are sym-  *)
+  (* bolic only and use generic forms which cannot be compiled *)
+  (* The system types have special semantics in most cases.    *)
+
+  TYPE  SAL  = "smallest addressable unit";
+	BIN  = [0 .. 31]; (* BITSET = SET OF BIN *)
+	WORD = "natural word size";
+	BYTE = SAL;
+	ADDRESS = POINTER TO SAL;
+
+  PROCEDURE ADR   (VAR v : AnyType) : ADDRESS;
+  (* returns storage address of the parameter *)
+
+  PROCEDURE INCADR(a : ADDRESS; i : CARDINAL) : ADDRESS;
+  (* returns the address a "incremented" by i *)
+
+  PROCEDURE DECADR(a : ADDRESS; d : CARDINAL) : ADDRESS;
+  (* returns the address a "decremented" by i *)
+
+  PROCEDURE DIFADR(a, b : ADDRESS) : INTEGER;
+  (* returns the difference (a - b) in bytes  *)
+
+  PROCEDURE TSIZE (AnyType; optional tags) : CARDINAL;
+  (* returns storage size of t, ignoring tags *)
+
+  PROCEDURE CAST  (AnyType1; x : AnyType2) : AnyType1;
+  (* returns x cast to type AnyType1, if poss *)
+  (* ! there are some hardware restrictions ! *)
+
+  PROCEDURE SHIFT (VAR b : BITSET, n : INTEGER);
+  PROCEDURE ROTATE(VAR b : BITSET; n : INTEGER);
+  (* the direction of shifts and rotates is   *)
+  (* such that
+	b := BITSET{0};
+	SHIFT(b,1);
+     leaves b = BITSET{1}, rotate is same     *)
+
+  PROCEDURE CALL(callBody : AnyProcType;
+		 ... args for body if needed ...
+		 onError  : Exceptions.RecoveryProc);
+  (* semantics are as for Exceptions.Call, except  *)
+  (* that parameters may be passed to the callBody *)
+  
+END SYSTEM.

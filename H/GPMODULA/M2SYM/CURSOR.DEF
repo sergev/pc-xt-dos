@@ -1,0 +1,109 @@
+FOREIGN DEFINITION MODULE Cursor;
+(*
+     CURSOR.DEF - Provides some basic cursor manipulations, e.g. hiding
+                  and displaying the cursor, changing it's shape and getting
+                  the attributes of the current cursor.
+ 
+     Initial Release : 08-Aug-94
+                       Philip Sinfield - Programming Languages & Systems
+                                         Group - GPM 
+*)
+
+IMPORT IMPLEMENTATION FROM "cursor.obj";
+
+FROM Types IMPORT BYTECARD;      
+(*
+     Note : The use of BYTECARD is important as the low level BIOS routines
+            return byte sized results (i.e. half 16 bit registers)
+*) 
+
+(* ************************************************************************ *)
+    
+PROCEDURE Hide ();
+(*   Hides the cursor from view 
+     Pre : A visible cursor exists
+     Post: Cursor is hidden from display
+*)
+
+(* ************************************************************************ *)
+    
+PROCEDURE Restore ();
+(*   Restore the cursor to the screen 
+     Pre : Cursor is not visible
+     Post: Cursor is made visible
+*)
+
+(* ************************************************************************ *)
+    
+(*  
+     The next two procedures are dependent on the graphics hardware of
+     an individual PC.  The values for "start" and "end" (0 -20H) are for
+     VGA & SVGA hardware.  If VGA or SVGA hardware is not being used, then
+     the scan line limits will need to be obtained from relevant technical
+     documents.
+*)
+
+(* ************************************************************************ *)
+    
+PROCEDURE SetShape (start : BYTECARD; end : BYTECARD);
+(*   Sets the shape of the cursor 
+     Pre : A visible cursor exists
+           0 <= start <= 020H
+           0 <=  end  <= 01fH
+     Post: Cursor shape is set by scan line "start" and
+           scan line "end".  
+           If start = 20H then cursor is "hidden"
+*)
+
+(* ************************************************************************ *)
+    
+PROCEDURE GetShape (VAR start : BYTECARD; VAR end : BYTECARD);
+(*   Returns the size of the current cursor                 
+     Pre : A visible cursor exists
+     Post: Current cursor shape is defined by scan line "start" and
+           scan line "end".  
+           0 <= start <= 020H
+           0 <=  end  <= 01fH
+           If start = 20H then cursor is "hidden"
+*)
+
+(* ************************************************************************ *)
+    
+PROCEDURE GetAttribute (VAR ch : CHAR; VAR bg : BYTECARD;
+                                       VAR fg : BYTECARD;
+                                       VAR h  : BYTECARD;
+                                       VAR b  : BYTECARD);
+(*   Returns the character at the cursor and its attributes
+     Pre : TRUE
+     Post: ch is the character at the cursor
+           bg is the background colour -> 00H - Black
+                                          01H - Blue
+                                          02H - Green
+                                          03H - Cyan
+                                          04H - Red
+                                          05H - Magenta
+                                          06H - Brown
+                                          07H - White
+           fg is the foreground colour -> 00H - Black
+                                          01H - Blue
+                                          02H - Green
+                                          03H - Cyan
+                                          04H - Red
+                                          05H - Magenta
+                                          06H - Brown
+                                          07H - White
+                                          08H - Grey
+                                          09H - Bright Blue
+                                          0aH - Bright Green
+                                          0bH - Bright Cyan
+                                          0cH - Bright Red
+                                          0dH - Bright Magenta
+                                          0eH - Yellow
+                                          0fH - Bright White
+          h is the highlight attribute -> 1 - Bright
+                                          0 - Normal
+          b is the blink attribute     -> 1 - Blinking
+                                          0 - No Blink
+*)
+
+END Cursor.

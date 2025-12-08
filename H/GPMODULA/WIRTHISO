@@ -1,0 +1,172 @@
+From Wirth to ISO - for those used to gpm's 'Wirth' I/O library (InOut, etc),
+an introduction to the ISO Standard Modula-2 I/O libraries.
+=============================================================================
+
+
+
+Simple I/O from stdin and to stdout
+-----------------------------------
+
+InOut is replaced by
+- STextIO for ReadChar, WriteChar, ReadString, WriteString and WriteLn;
+  it adds SkipLine, ReadRestLine, ReadToken.
+- SWholeIO for ReadCard, ReadInt, WriteCard, WriteInt.
+- SIOResult for ReadResult.
+RealInOut is replaced by
+- SRealIO
+
+So the changes are:
+- minor name changes (the modules, and ReadChar/WriteChar)
+
+- no Done; instead check for SIOResult.ReadResult() = allRight;
+  the full SIOResult.ReadResults enumeration is:
+	notKnown,     (* no read result is set *)
+	allRight,     (* data is as expected or as required *)
+	outOfRange,   (* data cannot be represented *)
+	wrongFormat,  (* data not in expected form *)
+	endOfLine,    (* end of line seen before expected data *)
+	endOfInput    (* end of input seen before expected data *)
+  examples are:
+  outOfRange: a string too long to fit the array supplied,
+    negative value for cardinal, numberic value too largeo;
+  wrongFormat: non-numeric input to ReadCard/Int;
+  endOfLine: see below
+  
+- no TermCh; thus Read procedures consume only what they were intended to, and
+  the 'terminating character' is still to be read; it can be checked without
+  consuming it by IOChan.Look, which returns a ReadResults and a CHAR
+  
+- the endOfLine value of ReadResults highlights a significant (unfortunate?)
+  change: Read procedures will not read through an end-of-line; in particular,
+  ReadChar will return endOfLine, and an undefined ch parameter, and will
+  continue to do so on successive calls; ReadCard/Int, though they skip through
+  leading spaces (and tabs) will similarly fail repeatedly if they encounter
+  an end-of-line before a valid number is found.
+  To consume an end-of-line, you must use SkipLine, which discards all
+  characters up to and including the next end-of-line (cf Pascal Readln()).
+  This slightly complicates processing loops; for examples see USINGISO.
+  It does mean that a common bug will be an infinite loop due to omitting the
+  endOfLine handling, causing a Read loop to block at an end-of-line.
+
+
+
+I/O from/to files.
+-----------------
+
+The simplest way is to redirect stdin and stdout using command-line
+redirection (<, >); all the SxxxxIO facilities still  apply.
+For access to multiple files:
+
+UxFiles is replaced by
+- StreamFile for Open and Close
+TextInOut is replaced by
+- TextIO, WholeIO, IOResult
+- RealIO
+
+Open takes a file name and an open mode flag set, and returns an opaque ChanId
+(cf UxFiles FILE) and an OpenResults enumeration value.
+
+Streamfile exports various singleton values of FlagSet, to allow for example,
+read+write:
+CONST
+  read  = FlagSet{readFlag};  (* input operations are requested/available *)
+  write = FlagSet{writeFlag}; (* output operations are requested/available *)
+  old   = FlagSet{oldFlag};   (* a file may/must/did exist before the channel
+                                 was opened *)
+  text  = FlagSet{textFlag};  (* text operations are requested/available *)
+  raw   = FlagSet{rawFlag};   (* raw operations are requested/available *)
+
+with some useful defaults: unless binary is set, text is implied, and if read
+is set, old is implied. Again, some examples such as those in USINGISO help.
+
+The OpenResults values are:
+TYPE
+  OpenResults = (
+    opened,
+    wrongNameFormat,
+    wrongFlags,
+    tooManyOpen,
+    outOfChans,
+    wrongPermissions,
+    noRoomOnDevice,
+    noSuchFile,
+    fileExists,
+    wrongFileType,
+    noTextOperations,
+    noRawOperations,
+    noMixedOperations,
+    alreadyOpen,
+    otherProblem
+  );
+see the DEF file for details; usually just a check for "opened" suffices.
+
+The TextIO, WholeIO, IOResult and RealIO modules export exactly the same
+facilities as their "S" versions, but take an additional first ChanId
+parameter.
+
+StdError is replaced by TextIO/WholeIO/RealIO using the channel id
+StdChans.StdErrChan().
+
+
+
+Other data streams
+------------------
+StreamFile makes files (and standard channels such as stdin, stdout,  stderr,
+null and bad) accessible as "sequential data streams"; other libraries
+offering similar interfaces are:
+
+RndFile	"random access files" - OpenOld, OpenClean, StartPos, CurrentPos,
+				EndpOs, NewPos, SetPos, Close
+SeqFile "rewindable sequential files" - OpenWrite/OpenAppend/OpenRead, Reread,
+					Rewrite, Close
+TermFile "the single terminal device" - echo flag - see below
+
+
+Terminal I/O
+------------
+
+Terminal is replaced by
+- TermFile plus normal I/O modules
+
+The Standard treats terminal I/O by the TermFile device module; having opened
+the implied device it returns a ChanId for use in TextIO, WholeIO, etc calls.
+
+The Open call allows an extra flag: echo. If echo is set, "single character
+mode" is used for all calls - input is not buffered, and echoing is controlled
+by the user: a Read will echo the character as it is read, but a Look, Skip
+pair will remove it without echo.
+If echo is not set, "line mode" is used - input is buffered and echoed, just
+as for StreamFile input.
+
+Thus, the functionality of Terminal.GetKeyStroke is provided by opening the
+terminal in single-sharacter mode and using Look/Skip.
+
+Since the current implementation buffers StreamFile and TermFile line mode
+input, care should be exercised when mixing these with single character mode.
+Recommendations: if single character mode is to be used, use only TermFile;
+multiple channels can be opened with TermFile at one time, allowing mixed
+line and single character input; however the user should ensure that an entire
+line is read in line mode (ie the buffer is empty) before using single
+character mode.
+
+There is no equivalent of Terminal.WasKeyPressed - we are currently looking at
+implementing it as an extension in TermDevice - see below.
+
+
+Additions/Omissions
+-------------------
+
+The Standard includes no provision for deleting a file (Open procedures will
+create a file if it does not exist and old is not required).
+We have provided Delete in StdDevice - one of the implementation-dependant
+modules which also provide the low-level implementation of the facilities of
+StreamFile, TextIO, etc; apart from Delete, users should have no need for
+StdDevice procedures. Users should stick to the StreamFile/TextIO/... level,
+with the occasional need to use the IOChan level.
+
+
+
+Raw (binary) I/O
+----------------
+to come
+

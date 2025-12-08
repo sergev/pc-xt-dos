@@ -1,0 +1,117 @@
+DEFINITION MODULE RndFile;
+(* Random access files *)
+
+IMPORT IOLink;
+IMPORT ChanConsts;
+FROM   ChanConsts IMPORT ChanFlags;
+FROM   SYSTEM IMPORT TSIZE;
+
+TYPE
+  ChanId  = IOLink.ChanId;
+  FlagSet = ChanConsts.FlagSet;
+  OpenResults = ChanConsts.OpenResults;
+
+
+(* Accept singleton values of FlagSet *)
+CONST
+  read        = FlagSet{readFlag};
+        (* input operations are requested/available *)
+  write       = FlagSet{writeFlag};
+        (* output operations are requested/available *)
+  old         = FlagSet{oldFlag};
+        (* a file may/must/did exist before the channel
+           was opened *)
+  text        = FlagSet{textFlag};
+        (* text operations are requested/available *)
+  raw      = FlagSet{rawFlag};
+        (* raw operations are requested/available *)
+
+PROCEDURE OpenOld (VAR cid   : ChanId;
+                       name  : ARRAY OF CHAR;
+                       flags : FlagSet;
+                   VAR res   : OpenResults);
+(* The old flag is implied;
+   without the write flag, read is implied;
+   without the text flag, binary is implied.
+   If successful, assigns to the parameter cid the identity of a channel
+   open to a random access file of the given name and assigns the value
+   opened to the parameter res.
+   The read and/or write position is at the start of ther file.
+   If a channel cannot be opened as required, the value of the parameter
+   res indicates the reason and cid identifies the bad channel. *)
+
+PROCEDURE OpenClean (VAR cid   : ChanId;
+                         name  : ARRAY OF CHAR;
+                         flags : FlagSet;
+                     VAR res   : OpenResults);
+(* The write flag is implied;
+   without the text flag, binary is implied.
+   If successful, assigns to the parameter cid the identity of a channel
+   open to a random access file of the given name and assigns the value
+   opened to the parameter res.
+   The file is of zero length.
+   If a channel cannot be opened as required, the value of the parameter
+   res indicates the reason and cid identifies the bad channel. *)
+
+PROCEDURE IsRndFile (cid : ChanId) : BOOLEAN;
+(* Tests if the channel is open to a random access file *)
+
+TYPE
+  RndFileExceptionEnum = (
+    rndFileNoException,
+        (* there is no exception in this context *)
+    notRndFileException,
+        (* there is an exception in this context, but from another source *)
+    posRange
+        (* required new file position cannot be represented as a value
+           of type FilePos *)
+  );
+
+PROCEDURE IsRndFileException () : RndFileExceptionEnum;
+(* returns the RndFileExceptionEnum value for the current context *)
+
+CONST
+  FilePosSize = TSIZE(CARDINAL);
+
+TYPE
+  FilePos = CARDINAL;  (* ARRAY [1..FilePosSize] OF LOC *)
+
+PROCEDURE StartPos (cid : ChanId) : FilePos;
+(* If the channel is not open to a random access file, the exception
+   wrongDevice is raised. Otherwise, returns the position of the
+   start of the file. *)
+
+PROCEDURE CurrentPos (cid : ChanId) : FilePos;
+(* If the channel is not open to a random access file, the exception
+   wrongDevice is raised. Otherwise, returns the current
+   read/write position. *)
+
+PROCEDURE EndPos (cid : ChanId) : FilePos;
+(* If the channel is not open to a random access file, the exception
+   wrongDevice is raised. Otherwise, returns the first position at
+   or after which there have been no writes. *)
+
+PROCEDURE NewPos (cid       : ChanId;
+                  chunks    : INTEGER;
+                  chunkSize : CARDINAL;
+                  from      : FilePos) : FilePos;
+(* If the channel is not open to a random access file, the exception
+   wrongDevice is raised. Otherwise, returns the position
+   chunks*chunkSize relative to the parameter from or raises the
+   exception posRange if the required position cannot be represented
+   as a value of type FilePos. *)
+
+PROCEDURE SetPos (cid : ChanId;
+                  pos : FilePos);
+(* If the channel is not open to a random access file, the exception
+   wrongDevice is raised. Otherwise, sets the read/write position to
+   the value given by the parameter pos. *)
+
+PROCEDURE Close (VAR cid : ChanId);
+(* If the channel is not open to a random access file, the exception
+   wrongDevice is raised. Otherwise, the channel is closed and the value
+   identifying the bad channel is assigned to the parameter cid. *)
+
+END RndFile.
+                
+

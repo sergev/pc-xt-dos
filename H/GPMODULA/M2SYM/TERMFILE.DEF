@@ -1,0 +1,57 @@
+DEFINITION MODULE TermFile;
+(* Channels opened by this module are connected to a single terminal
+   device; typed characters are distributed between channels according
+   to the sequence of read requests. *)
+
+IMPORT IOLink;
+IMPORT ChanConsts;
+FROM   ChanConsts IMPORT ChanFlags;
+
+TYPE
+  ChanId  = IOLink.ChanId;
+  FlagSet = ChanConsts.FlagSet;
+  OpenResults = ChanConsts.OpenResults;
+
+
+(* Accept singleton values of FlagSet *)
+CONST
+  read        = FlagSet{readFlag};
+        (* input operations are requested/available *)
+  write       = FlagSet{writeFlag};
+        (* output operations are requested/available *)
+  text        = FlagSet{textFlag};
+        (* text operations are requested/available *)
+  raw      = FlagSet{rawFlag};
+        (* raw operations are requested/available *)
+  echo        = FlagSet{echoFlag};
+        (* echoing by interactive device on reading of characters from
+           input stream requested/applies *)
+
+(* In line mode, items are echoed before being added to the input stream
+   and are added a line at a time.
+   In single character mode, items are added to the input stream one at a
+   time and are echoed as they are removed from the input stream by a
+   read operation *)
+
+PROCEDURE Open (VAR cid   : ChanId;
+                    flags : FlagSet;
+                VAR res   : OpenResults);
+(* Without the binary flag, text is implied.
+   Without the echo flag, line mode is requested, otherwise single character
+   mode is requested.
+   If successful, assigns to the parameter cid the identity of a channel
+   open to the terminal and assigns the value, opened to the parameter res.
+   Otherwise, the value of the parameter res indicates the reason for failure
+   and cid identifies the bad channel. *)
+
+PROCEDURE IsTermFile (cid : ChanId) : BOOLEAN;
+(* Tests if the channel is open to the terminal *)
+
+PROCEDURE Close (VAR cid : ChanId);
+(* If the channel is not open to the terminal, the exception
+   wrongDevice is raised. Otherwise, the channel is closed and the value
+   identifying the bad channel is assigned to the parameter cid. *)
+
+END TermFile.
+                
+

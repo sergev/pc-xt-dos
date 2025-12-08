@@ -1,0 +1,274 @@
+FOREIGN DEFINITION MODULE Mouse;
+
+(*
+  Mouse Driver Interface for GPM Modula-2
+  Michael McCarthy : Semester2, 1991
+  The functions implemented in this module provide a
+  GPM Modula-2 interface for Microsoft compatible Mouse Drivers.
+
+  13-Jun-92  jrh  Dot cursor restored
+*)
+
+IMPORT IMPLEMENTATION FROM "Mouse.obj";
+
+FROM SYSTEM IMPORT BYTE,ADDRESS;
+
+FROM Types IMPORT SHORTCARD;
+
+  TYPE
+   Button = (LeftButton,
+             RightButton, (* not available on some mice *)
+             MiddleButton (* not available on some mice *)
+            );
+
+   ButtonSet = SET OF Button;
+
+   GraphicCursor = RECORD
+                      screenMask,
+                      cursorMask: ARRAY [0..15] OF SHORTCARD;
+                      hotX, hotY: [-16..16];
+                   END;
+
+      (* The screenMask is first ANDed into the display,
+         then the cursorMask is XORed into the display.
+         The hot spot coordinates are relative to the
+         upper-left corner of the cursor image, and define
+         where the cursor actually 'points to'.
+      *)
+
+  VAR
+     (* Some common mouse cursors for graphics modes. Read only !
+        Pass as parameter in SetGraphicCursor. *)
+
+    dot,stdArrow,upArrow,checkMark,hand,
+    crossX,crossHair,hourGlass: GraphicCursor;
+
+  PROCEDURE InitMouse() : INTEGER;
+   (*
+      Initializes mouse and resets all driver variables.
+
+      MUST BE CALLED BEFORE USING ANY OF THE PROCEDURES, OR ACCESSING
+      ANY OF THE OBJECTS IN THIS MODULE !!!
+
+      Returns the number of mouse buttons if the mouse driver is loaded
+      (some drivers also check for the existence of a mouse), or 0
+      otherwise.
+
+      The driver variables are reset as follows :
+          Cursor position   : screen centre
+          Cursor visibility : hidden
+          graphics cursor   : arrow
+          text cursor       : reverse video
+          event handler disabled
+          light pen emulation mode enabled
+          horizontal mickey/pixel ratio : 8 to 8
+          vertical mickey/pixel ratio   : 16 to 8
+          horiz range : 0 .. maxcols-1
+          vert  range : 0 .. maxrows-1
+          CRT page no. 0
+   *)
+
+  PROCEDURE ResetMouse();
+   (* Should be called prior to exiting any program that has
+      used SetMEventHandler or SwapMEventHandler *)
+
+  PROCEDURE ShowCursor();
+    (* Increment the current cursor visibility level. Cursor only actually
+       becomes visible when visibility level is non-negative *)
+
+  PROCEDURE HideCursor();
+    (* Decrement visibility level *)
+
+  PROCEDURE GetPosBut(VAR buttonStatus: ButtonSet;
+                      VAR horizontal, vertical:INTEGER);
+    (* Return the state of the mouse buttons and the screen coordinates of
+       the mouse cursor *)
+
+
+  PROCEDURE SetCursorPos(horizontal, vertical: INTEGER);
+    (* Set the screen position of the mouse cursor *)
+
+  PROCEDURE GetButPres(button: Button;
+                       VAR buttonStatus: ButtonSet;
+                       VAR buttonPressCount: CARDINAL;
+                       VAR horizontal, vertical: INTEGER);
+
+    (* Get button press information for specified button. This includes
+          - current status of button
+          - number of times this button has been pressed since this function
+            was last called
+          - screen coordinates of mouse cursor last time this button was
+            pressed
+    *)
+
+  PROCEDURE GetButRel(button: Button;
+                      VAR buttonStatus: ButtonSet;
+                      VAR buttonReleaseCount: CARDINAL;
+                      VAR horizontal ,vertical: INTEGER);
+    (* Get button release information for specified button. This includes
+          - current status of button
+          - number of times this button has been released since this function
+            was last called
+          - screen coordinates of mouse cursor last time this button was
+            released
+    *)
+
+  PROCEDURE SetHorizontalLimits(minPos, maxPos: INTEGER);
+    (* Set minimum and maximum horizontal screen coordinates for the mouse
+       cursor. All cursor movement will be restricted to the specified
+       horizontal interval.
+    *)
+
+  PROCEDURE SetVerticalLimits(minPos, maxPos: INTEGER);
+    (* Set minimum and maximum vertical screen coordinates for the mouse
+       cursor. All cursor movement will be restricted to the specified
+       vertical interval.
+    *)
+
+  PROCEDURE SetGraphicCursor(VAR cursor: GraphicCursor);
+    (* Define the shape, colour and "centre" of the graphics cursor *)
+
+  PROCEDURE SetTextCursor(selectedCursor,
+                          screenMaskORscanStart,
+                          cursorMaskORscanStop: CARDINAL);
+    (* Inputs :
+                  selectedCursor <-- cursor select
+                         0: Software text cursor
+                         1: Hardware text cursor
+                  screenMaskORscanStart <-- screen mask value or
+                                            scan line start
+                  cursorMaskORscanStop  <-- cursor mask value or
+                                            scan line stop
+
+       For the software text cursor, the second two
+       parameters specify the screen and cursor masks.
+       The screen mask is first ANDed into the display,
+       then the cursor mask is XORed into the display.
+
+       For the hardware text cursor, the second two
+       parameters contain the line numbers of the first
+       and last scan line in the cursor to be shown on
+       the screen.
+    *)
+
+
+  PROCEDURE ReadMotionCounters(VAR horizontal,
+                                   vertical:INTEGER);
+    (* Return the horizontal and vertical mickey count since the last call
+       to this function. *)
+
+
+
+  TYPE
+    MEvent = (Motion,
+              LeftDown,
+              LeftUp,
+              RightDown,  (* not available on some mice *)
+              RightUp,    (*  "      "      "   "    "  *)
+              MiddleDown, (*  "      "      "   "    "  *)
+              MiddleUp    (*  "      "      "   "    "  *)
+             );
+
+    MEventSet = SET OF MEvent;
+
+    MEventHandler =
+       PROCEDURE (SHORTCARD,   (* MEventSet  condition mask *)
+                  SHORTCARD,   (* button state              *)
+                  SHORTCARD,   (* horizontal cursor pos     *)
+                  SHORTCARD    (* vertical cursor pos       *)
+                 );
+
+  PROCEDURE SetMEventHandler(mask: SHORTCARD (* MEventSet *);
+                             handler: MEventHandler);
+    (* Emulates mouse system call 12.
+       Establish conditions and handler for mouse events.
+       After this, when an event occurs that is in the
+       mask, the handler is called, passing the current event set,
+       the current button status, and the cursor x and y coordinates
+       as parameters.
+
+       N.B. Use with caution !!
+
+       (i)   Do NOT use calls to Inout or Terminal, or other procedures that
+             use DOS function calls, inside a mouse event handler. This is
+             on account of the "non reentrant" nature of DOS.
+
+       (ii)  When it comes to file I/O, program defensively! I strongly
+             recommend disabling any event handler prior to accessing disk
+             files. This is because it is not always possible to know whether
+             or not you are observing (i), especially during program
+             development and debugging.
+             If you need to perform file I/O, and you have a mouse event
+             handler installed, play it safe and disable it first. This will
+             cost at most two lines of code (one if you don't need to
+             reenable it afterwards).
+
+       (iii) The quickest way to disable a mouse event handler is to call
+             InitMouse or ResetMouse. Another way is to set the event mask
+             to 0, as in SetMEVentHandler(0, handler). Alternatively you
+             can employ a "null handler and mask" and use SwapMEventHandler.
+    *)
+
+
+  PROCEDURE LightPenOn;
+    (* Allow mouse to emulate a light pen. *)
+
+  PROCEDURE LightPenOff;
+    (* Turn light pen emulation off *)
+
+  PROCEDURE SetMickeysPerPixel(horPix, verPix: CARDINAL);
+    (* Set the ratio of mickeys per 8 screen pixels. The default ratios are
+       8 and 16 for horizontal and vertical movement respectively. This
+       roughly translates to having to move the mouse 6.4 inches to traverse
+       the screen horizontally, and 4 inches for a vertical traversal.
+       Thus the (horizontal/vertical) sensitivity of the mouse is in
+       inverse proportion to the mickey/pixel ratios.
+    *)
+
+
+  PROCEDURE ConditionalOff(left, top,
+                           right, bottom: INTEGER);
+    (* Define a region of the screen for updating. If mouse cursor is in
+       defined region it will be hidden. After calling this procedure,
+       ShowCursor must be called to make cursor visible again.
+       Used when saving and restoring regions of the screen.
+    *)
+
+  PROCEDURE SetSpeedThreshold(threshold: CARDINAL);
+    (* Sets the threshold speed for doubling the cursor's motion on the
+       screen. If the mouse moves faster than the threshold, the cursor
+       speed goes into overdrive.
+    *)
+
+  PROCEDURE SwapMEventHandler(newmask: SHORTCARD (* MEventSet *);
+                              newhandler: MEventHandler;
+                              VAR oldmask : SHORTCARD;
+                              VAR oldhandler : MEventHandler);
+
+    (* Emulates Microsoft Mouse Driver System Call 20.
+       Establish new conditions and new handler for mouse events.
+       After this, when an event occurs that is in the mask, the handler
+       is called, passing the current event set, the current button status,
+       and the cursor x and y coordinates as parameters.
+       The address of the previous handler that was set VIA THIS MODULE will
+       be returned along with the mask. This procedure WILL NOT WORK if a
+       handler has been installed externally.
+       For other restrictions, see the above comments on the use of
+       SetMEventHandler.
+    *)
+
+   PROCEDURE GetStateSize() : INTEGER;
+   (* Returns size in bytes of storage required to save the current Mouse
+      driver state using SaveMouseState *)
+
+
+   PROCEDURE SaveMouseState( buffer : ADDRESS) ;
+   (* Assumes that buffer has been allocated enough space to store the
+      current mouse driver state. The amount of space required is returned
+      by GetStateSize *)
+
+   PROCEDURE RestoreMouseState( buffer : ADDRESS) ;
+   (* Restores the mouse driver to a previous state that has been saved via
+      SaveMouseState. The buffer holds the required data. *)
+
+END Mouse.

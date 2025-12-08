@@ -1,0 +1,93 @@
+DEFINITION MODULE SeqFile;
+(* Rewindable sequential files *)
+
+IMPORT IOLink;
+IMPORT ChanConsts;
+FROM   ChanConsts IMPORT ChanFlags;
+
+TYPE
+  ChanId  = IOLink.ChanId;
+  FlagSet = ChanConsts.FlagSet;
+  OpenResults = ChanConsts.OpenResults;
+
+
+(* Accept singleton values of FlagSet *)
+CONST
+  read        = FlagSet{readFlag};
+        (* input operations are requested/available *)
+  write       = FlagSet{writeFlag};
+        (* output operations are requested/available *)
+  old         = FlagSet{oldFlag};
+        (* a file may/must/did exist before the channel
+           was opened *)
+  text        = FlagSet{textFlag};
+        (* text operations are requested/available *)
+  raw      = FlagSet{rawFlag};
+        (* raw operations are requested/available *)
+
+PROCEDURE OpenWrite (VAR cid   : ChanId;
+                         name  : ARRAY OF CHAR;
+                         flags : FlagSet;
+                     VAR res   : OpenResults);
+(* The write flag is implied;
+   without the binary flag, text is implied.
+   If successful, assigns to the parameter cid the identity of a channel
+   open to a stored file of the given name and assigns the value
+   opened to the parameter res.
+   The file is of zero length.
+   Output mode is selected.
+   If a channel cannot be opened as required, the value of the parameter
+   res indicates the reason and cid identifies the bad channel. *)
+
+PROCEDURE OpenAppend (VAR cid   : ChanId;
+                          name  : ARRAY OF CHAR;
+                          flags : FlagSet;
+                      VAR res   : OpenResults);
+(* The write and old flags are implied;
+   without the binary flag, text is implied.
+   If successful, assigns to the parameter cid the identity of a channel
+   open to a stored file of the given name and assigns the value
+   opened to the parameter res.
+   Output mode is selected and the write position corresponds to the
+   length of the file.
+   If a channel cannot be opened as required, the value of the parameter
+   res indicates the reason and cid identifies the bad channel. *)
+
+PROCEDURE OpenRead (VAR cid   : ChanId;
+                        name  : ARRAY OF CHAR;
+                        flags : FlagSet;
+                    VAR res   : OpenResults);
+(* The read and old flags are implied;
+   without the binary flag, text is implied.
+   If successful, assigns to the parameter cid the identity of a channel
+   open to a stored file of the given name and assigns the value
+   opened to the parameter res.
+   Input mode is selected.
+   If a channel cannot be opened as required, the value of the parameter
+   res indicates the reason and cid identifies the bad channel. *)
+
+PROCEDURE IsSeqFile (cid : ChanId) : BOOLEAN;
+(* Tests if the channel is open to a rewindable sequential file *)
+
+PROCEDURE Reread (cid : ChanId);
+(* If the channel is not open to a rewindable file, the exception
+   wrongDevice is raised. Otherwise, if successful, sets the read
+   position to the start of the file and selects input mode.
+   If the operation cannot be performed, perhaps because of
+   insufficient permissions, neither input nor output mode is selected. *)
+
+PROCEDURE Rewrite (cid : ChanId);
+(* If the channel is not open to a rewindable file, the exception
+   wrongDevice is raised. Otherwise, if successful, truncates the
+   file to zero length and selects output mode.
+   If the operation cannot be performed, perhaps because of
+   insufficient permissions, neither input nor output mode is selected. *)
+
+PROCEDURE Close (VAR cid : ChanId);
+(* If the channel is not open to a rewindable file, the exception
+   wrongDevice is raised. Otherwise, the channel is closed and the value
+   identifying the bad channel is assigned to the parameter cid. *)
+
+END SeqFile.
+                
+

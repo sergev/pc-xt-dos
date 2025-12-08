@@ -1,0 +1,102 @@
+Gardens Point Modula - IBM PC & compatibles version of 15 Jul 94
+----------------------------------------------------------------
+
+Further notes:
+
+(1) Other editors, and the interactive (-I) interface from gpm:
+
+    PC-Write 2.55 offers reasonable program editing and word processing
+    facilities; it has few options to control startup. Thus, in interactive
+    mode, you must respond to the "make backup?" request, and then position
+    to the line in error (Alt-F9).
+
+    Later versions of PC-Write will give enhanced editing and word-processing 
+    capabilities, and better startup control for interactive mode, at the 
+    cost of greater disk usage; they will need to be compressed by LZEXE
+    (see notes on LZEXE below). For PC-Write (vers. 3.0 and later) use
+        set GPMEDITOR=ed % /#e    or    set GPMEDITOR=lite % /#e
+    to omit the backup request and automatically position to the line where 
+    the error was detected (as in Unix versions of gpm). Note that in batch 
+    files, the '%' must be escaped, e.g. set GPMEDITOR=lite %% /#e 
+
+    QEdit 3.00 (also shareware) offers enhanced editing (particularly 
+    multiple files in split screens), limited startup control, and reduced 
+    disk usage, especially when compressed. QEdit 3.00 also allows you to go 
+    direct to a line number on entry. Use 
+              set GPMEDITOR=q % -n#
+
+(2) Other documentation:
+
+    The definition files of all standard libraries are in the $M2SYM
+    directory. Detailed documentation on gpm, the draft standard language 
+    definition, detailed error message interpretation, and the standard 
+    library definition files are in the gpm Users Guide & Reference Manual.
+    Separate Release Notes give details of changes incorporated in the latest
+    version.
+    Printed copies of the documentation will be available from the University
+    Bookshop, at cost-recovery prices.
+
+(3) Recommended options:
+
+    You are STRONGLY recommended to use either the -I (interactive), -v 
+    (verbose), -V (super verbose), or X (explain) option, so that error
+    message text is displayed. These options have the following enhancements:
+
+    The X option displays the full diagnosis of the error (as in the Gpm User 
+    Manual). The I option allows the response "m" for "more" - this displays
+    first the full diagnosis as for X, and then the types involved if the
+    error was a type conflict.
+    The full diagnosis facility is an experimental implementation, and
+    currently the X option should not be used in conjunction with either I or 
+    V. That is, if you want a listing file, use just X; if you want
+    interactive debugging, use I and/or V and respond "more" for more
+    details.
+    
+(4) LZEXE.EXE:
+
+    This public domain program achieves impressive compression of .EXE files;
+    without it, gpm would not fit on two floppy disks. You can use it to
+    compress your executable files and conserve disk space. It will also give
+    you practice in French ...
+
+(5) Installing the new release:
+
+    While it is possible to identify only changed files and copy them
+    selectively, it is STRONGLY recommended that you install the whole
+    new release over the top of any previous release.   THe installation
+    program with version 2/95 of GPM will do this automatically.
+    The changes in the new release do not affect symbol file contents, so
+    DEFINITION modules need not be recompiled. However, all IMPLEMENTATION
+    & program modules should be recompiled, and all executables re-built.
+
+    When reporting problems, use the bug report form available from the labs
+    and be sure to verify that you are using the latest version (by gpm -V).
+
+(7) Stack unwind on runtime error
+
+    The stack unwind (or backtrace) facility now outputs procedure names and  
+    (IF the -g option has been used in compilation) line numbers.             
+
+(8) gpmake
+          
+    gpmake is an intelligent make utility. If you have a program module Thing 
+    in file THING.MOD,
+                     
+        gpmake thing
+                   
+    will recompile only those compilation units of Thing which have been 
+    changed since last compilation (or need to be recompiled due to
+    definition module changes), and build a new executable THING.EXE. See the
+    manuals for further details.
+
+(9) Libraries
+    
+    The gpm-pc libraries are near copies of the gpm-Unix libraries.
+    Differences are:
+    - ShellPipes is Unix-specific and is not offered on gpm-pc
+    - PCProcesses replaces UxProcesses
+    - Wildcards is pc-specific since the Unix shell provides this facility
+    - GR_xxxx and Mouse are pc-specific graphics interfaces. These are        |
+      the result of two excellent 3rd year projects. See the further notes    |
+      below.                                                                  |
+

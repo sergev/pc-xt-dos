@@ -1,0 +1,486 @@
+Introduction - Hello ISO World
+==============================
+
+First the traditional "Hello world" program. This requires only two
+procedures from the Simple Text I/O module STextIO: WriteString to output
+the greeting string, and WriteLn to output an end-of-line mark.
+
+MODULE HelloISO;
+(*
+ * The traditional minimal program - using the ISO Standard I/O library.
+ *)
+
+IMPORT STextIO;	(* 'Simple' - ie stdin & stdout - text I/O *)
+
+BEGIN
+  STextIO.WriteString ("Hello ISO World");
+  STextIO.WriteLn;
+END HelloISO.
+
+Note that output from STextIO goes to the standard output device (or channel,
+to use the ISO Standard term) stdout, which is by default the terminal screen
+but can be redirected by operating system command line redirection (">" or
+">>") to a file. (The I/O library also offers redirection from the program -
+see StdChans later.)
+
+
+
+Copying files - 1 - stdin to stdout
+===================================
+
+Now let us move on to a program which also uses input - a simple copy file
+utility. We will develop several alternative versions in order to try out
+various I/O procedures. The copy program will also serve as a useful partial
+solution to any problem which reads a file, processes the data, and writes an
+output file.
+
+First, the obvious strategy: repetitively read a character, write that
+character, until end of file. This translates into a Modula LOOP loop
+(this form of loop is appropriate since the read must precede the termination
+test, which depends on the result of the read attempt, and the write follows
+a successful read - thus this is the classic "n&1/2-times" loop, with the
+termination test in the middle). The loop uses STextIO.ReadChar to read the
+characters, SIOResult.ReadResult to check the result of the read, and
+STextIO.WriteChar to write the characters. The complication is that the
+Standard treats an end-of-line mark as a special entity, not a normal
+character; thus when ReadChar attempts to read an end-of-line mark, the read
+fails - ReadResult returns a special status, and STextIO.SkipLine must be
+used to consume the end-of-line mark. If this is not done, the read process
+will never get past the end-of-line mark - ReadChar will continue to return
+the endOfLine result. [Note 1]
+
+MODULE Copy1;
+(*
+ * Copy a file - version 1 - STextIO.ReadChar/WriteChar
+ *)
+
+IMPORT STextIO, SIOResult;
+IMPORT ProgArgs;
+
+VAR
+  ch : CHAR;
+
+BEGIN
+  LOOP
+    STextIO.ReadChar (ch);
+    CASE SIOResult.ReadResult() OF
+    | SIOResult.endOfInput : EXIT;
+    | SIOResult.endOfLine  : STextIO.SkipLine;
+                             STextIO.WriteLn;
+    | SIOResult.allRight   : STextIO.WriteChar (ch);
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange read result");
+    END;
+  END (* LOOP *) ;
+END Copy1.
+
+As explained by its definition, SkipLine in fact skips any number of
+characters up to and including the next end-of-line mark. Thus it can be
+called at any time to discard the rest of the current line of input. As it is
+used by Copy1, there is always only the end-of-line mark to be skipped.
+Note too that every line is terminated by an end-of-line mark, including the
+last. Copy1 terminates by reading all the normal characters of the last line,
+then attempting to read the end-of-line mark and failing with the endOfLine
+result, consuming the end-of-line mark with SkipLine, then attempting to read
+the first character of a further line and failing with the endOfInput result.
+
+As noted above, Copy1 can be used to copy a source file to a destination file
+(instead of just copying keyboard input (stdin) to display output (stdout))
+by operating system command line redirection:
+
+	Copy1 < inputFile > outputFile
+
+
+
+Copying files - 2 - named files
+===============================
+
+Alternatively, the program can explicitly read from and write to specified
+files. In this case, the TextIO module is used instead of STextIO. All the
+facilities of STextIO are duplicated in TextIO, with an extra first
+parameter, which specifies the file from or to which the I/O occurs (the
+Standard refers to them as "channels", emphasising that the source or
+destination of I/O may not be a disk file - it could be a communications
+line, or some other specialised device, or even the keyboard and display).
+Thus the body of Copy1 is simply modified to produce Copy2:
+
+MODULE Copy2;
+(*
+ * Copy a file - version 2 - TextIO.ReadChar/WriteChar
+ *)
+
+IMPORT StreamFile, TextIO, IOResult;
+IMPORT ProgArgs;
+
+VAR
+  in, out : StreamFile.ChanId;
+  ch : CHAR;
+
+BEGIN
+  ... more needed here ...
+  LOOP
+    TextIO.ReadChar (in, ch);
+    CASE IOResult.ReadResult(in) OF
+    | IOResult.endOfInput : EXIT;
+    | IOResult.endOfLine  : TextIO.SkipLine (in);
+                            TextIO.WriteLn (out);
+    | IOResult.allRight   : TextIO.WriteChar (out, ch);
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange read result");
+    END;
+  END (* LOOP *) ;
+  ... more needed here ...
+END Copy2.
+
+Note that to declare the input and output channels, we must import the
+channel identifier type from module StreamFile, and that SIOResult is also
+replaced by IOResult, which specifies which channel's results are needed.
+
+Now, how to initialise and finalise the in and out channels? (not needed for
+STextIO, since stdin and stdout are always available and cleaned up at end of
+program). We use the StreamFile module's Open procedure, specifying the
+channel to be connected to the file, the name of the file, and a set of flags
+indicating whether the file is to be opened for reading or writing, etc. At
+the end of the program, we use StreamFile.Close to ensure that the final
+output is actually written to the file and the access to the files is closed.
+
+MODULE Copy2;
+(*
+ * Copy a file - version 2 - TextIO.ReadChar/WriteChar
+ *)
+
+IMPORT StreamFile, StdDevice, TextIO, IOResult;
+IMPORT ProgArgs;
+
+VAR
+  in, out : StreamFile.ChanId;
+  result : StreamFile.OpenResults;
+  success : BOOLEAN;
+  ch : CHAR;
+
+BEGIN
+  (* Open the input and output files *)
+  StreamFile.Open (in, "copy2.in", StreamFile.read, result);
+  ProgArgs.Assert (result = StreamFile.opened, "Unable to open source file");
+  StdDevice.Delete ("copy2.out", success);
+  StreamFile.Open (out, "copy2.out", StreamFile.write, result);
+  ProgArgs.Assert (result = StreamFile.opened, "Unable to open output file");
+
+  (* Copy the data *)
+  LOOP
+    TextIO.ReadChar (in, ch);
+    CASE IOResult.ReadResult(in) OF
+    | IOResult.endOfInput : EXIT;
+    | IOResult.endOfLine  : TextIO.SkipLine (in);
+                            TextIO.WriteLn (out);
+    | IOResult.allRight   : TextIO.WriteChar (out, ch);
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange read result");
+    END;
+  END (* LOOP *) ;
+
+  (* Tidy up *)
+  StreamFile.Close (in);
+  StreamFile.Close (out);
+END Copy2.
+
+Note that Open (..., read, ...) requires that the file already exist (ie, the
+"old" flag is implied). Also, the result of the Open attempt is returned in a
+parameter of type OpenResults.
+An Open (..., Write, ...) will succeed whether or not the file already
+exists. If it does not exist, it is created empty. If it does exist, the
+program output will simply overwrite whatever is previously in the file,
+leaving trailing old contents if the number of characters written is less
+than the old size of the file. Since we do not want this "update" behaviour,
+we first call the Delete procedure of module StdDevice to ensure any old file
+is gone; we ignore the result BOOLEAN from Delete since the failure may have
+been due to the fact that the file did not exist.
+
+But Copy2 is rather inflexible - it always reads from "copy2.in" and writes
+to "copy2.out"; contrast this with Copy1, which could copy any files by
+simply changing the command line redirection. To make Copy2 more useful, the
+file names must be string variables (ARRAYs OF CHAR):
+  
+  inFileName, outFileName : ARRAY [1..fileNameLength] OF CHAR;
+  ...
+  StreamFile.Open (in, inFileName, StreamFile.read, result);
+  ...
+  StreamFile.Open (out, outFileName, StreamFile.write, result);
+
+Now, how to obtain values for these string variables? To approximate command
+line redirection, we would need to supply the file names as command line
+arguments, and use the ProgArgs facilities for parsing command lines:
+
+  (* Argument processing - get required arguments or give usage message *)
+  IF ProgArgs.ArgNumber() = 3 THEN
+    (* Program name plus two file name arguments *)
+    ProgArgs.GetArg (1, inFileName);
+    ProgArgs.GetArg (2, outFileName);
+  ELSE
+    TextIO.WriteString (StdChans.StdErrChan(), "Usage: copy2 inputFile outputFile");
+    TextIO.WriteLn (StdChans.StdErrChan());
+    HALT;
+  END;
+
+Copy2 would now be invoked by
+
+	Copy2 inputFile outputFile
+
+Alternatively, the file names might be returned by a call to some graphical
+user interface procedure, which allowed the user to select them from a pick
+list; a further possibility is for the program to issue text prompts and
+read the file names from stdin:
+
+PROCEDURE AskFileName (prompt : ARRAY OF CHAR; VAR fileName : ARRAY OF CHAR);
+(*
+ * Prompt on standard output and read a filename from standard input.
+ * The prompt is "File name for <prompt>: "
+ *)
+BEGIN
+  STextIO.WriteString ("File Name for ");
+  STextIO.WriteString (prompt);
+  STextIO.WriteString (": ");
+  STextIO.ReadToken (fileName);
+  STextIO.SkipLine;
+END AskFileName;
+
+Why ReadToken, not the expected (and available) ReadString? As detailed
+later, ReadToken skips any leading white space and returns the next non-blank
+group of characters; ReadString just reads as many characters as it can,
+including leading, embedded and trailing white space, and possibly causing
+problems with the Open processing.
+Note too that this style of obtaining file names should be used with care: by
+requiring user interaction at run time, it prevents the program being used in
+redirected or pipelined environments, as is often done by command scripts
+which automate processing or assemble tools to perform more complex tasks
+(Unix 'filters').
+
+
+
+Copying files - variations on the copy loop
+===========================================
+
+Now we turn to some variations on the basic copy loop. The variations will
+use STextIO procedures, so that the copy source is stdin and the destination
+stdout. This style is recommended as the simplest and most flexible when only
+one input and one output file is required. However, TextIO equivalents exist
+in all cases, simply dropping the "S" module prefix and adding file
+parameters and Open and Close calls.
+
+First variation - ReadRestLine
+------------------------------
+
+The STextIO procedure ReadRestLine will read an entire line into a string
+variable, which can then be output in its entirety by WriteString. The only
+problem is if a line is longer than the string array - ReadRestLine always
+reads an entire line (or from wherever previous reads had left the input
+stream), discarding anything which will not fit in the array, and setting the
+ReadResult to outOfRange if some was discarded. The following program uses a
+large array to make the problem unlikely, and reports any truncations. Since
+ReadRestLine always leaves the input stream positioned before an end-of-line
+mark, we can move the SkipLine/WriteLn to the end of the loop - but note that
+the ReadResult = endOfLine CASE branch must be retained with no action: when
+an empty line is encountered, ReadRestLine will return the empty string in
+the array, and ReadResult endOfLine - the CASE statement must avoid an
+invalid CASE selector error, and allow the end-of-line to be processed by the
+code after the CASE statement.
+
+  LOOP
+    STextIO.ReadRestLine (line);
+    CASE SIOResult.ReadResult() OF
+    | SIOResult.endOfInput : EXIT;
+    | SIOResult.endOfLine  : (* handled below *)
+    | SIOResult.outOfRange : TextIO.WriteString (StdChans.StdErrChan(),
+                                                 "Line truncated");
+                             STextIO.WriteString (line);
+    | SIOResult.allRight   : STextIO.WriteString (line);
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange SIOResult");
+    END;
+    STextIO.SkipLine;
+    STextIO.WriteLn;
+  END (* LOOP *) ;
+
+This version also uses output to the standard error channel stderr. The
+module StdChans exports function procedures which return the channel ids of
+stdin, stdout, and stderr, for use with TextIO procedures. Recall that output
+to stderr is distinct from that to stdout: while both default to the display,
+if stdout is redirected to a file, stderr will still appear on the screen
+(unless separately redirected to the same or a different file - impossible on
+DOS); thus stderr should be used for error messages which it is important
+that the user see.
+
+Second variation - ReadString
+-----------------------------
+
+The next version uses ReadString. This procedure reads up to the capacity of
+the string passed as a parameter, or to end-of-line, whichever comes first.
+Thus, compared with ReadRestLine, it does not discard any part of the current
+line left when the string is filled. A subsequent ReadString will simply pick
+up from where the last left off, so that the file is copied in chunks of
+whatever size string variable is used. The end-of-line processing moves back
+to the appropriate branch of the read result test:
+
+  LOOP
+    STextIO.ReadString (string);
+    CASE SIOResult.ReadResult() OF
+    | SIOResult.endOfInput : EXIT;
+    | SIOResult.endOfLine  : STextIO.SkipLine;
+                             STextIO.WriteLn;
+    | SIOResult.allRight   : STextIO.WriteString (string);
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange SIOResult");
+    END;
+  END (* LOOP *) ;
+
+Third variation - ReadToken
+---------------------------
+
+Finally, the ReadToken procedure will skip leading spaces and tabs, and then
+read as many non-space characters before the next end-of-line as will fit in
+the string parameter; any remaining characters on the line are left for the
+next read, as for ReadString. Thus ReadToken can be used to copy the file in
+token chunks, discarding any spaces or tabs which separate them. If we add a
+single space between tokens on a line, the output file has been reduced to
+the minimum number of spaces (provided the string variable used is large
+enough to avoid splitting any tokens).
+
+  LOOP
+    STextIO.ReadToken (string);
+    CASE SIOResult.ReadResult() OF
+    | SIOResult.endOfInput : EXIT;
+    | SIOResult.endOfLine  : STextIO.SkipLine;
+                             STextIO.WriteLn (out);
+		             first := TRUE;
+    | SIOResult.allRight   : IF NOT first THEN STextIO.WriteChar (' '); END;
+                             STextIO.WriteString (string);
+			     first := FALSE;
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange SIOResult");
+    END;
+  END (* LOOP *) ;
+
+Fourth variation - Raw I/O
+--------------------------
+
+Of course, if the aim is only to copy a file, we need not use text I/O
+facilities at all. Module SRawIO may be used to read and write single bytes
+or groups of bytes without any interpretation as special values like
+end-of-line; this style of copy will also handle binary files like
+executable images, etc. Unfortunately, the RawIO.Read and .Write procedures
+read and write fixed amounts (the size of the buffer variable passed as a
+parameter); RawIO.Read returns the wrongFormat ReadResult on the incomplete
+buffer at end of file, but with no way of knowing how many bytes were read,
+and RawIO.Write has no length parameter to allow an incomplete buffer to be
+written. Thus they seem to be restricted to single-byte copies:
+
+  LOOP
+    (*
+     * Raw IO copy - use a single-byte CHAR buffer if the length is not known
+     *)
+    SRawIO.Read (char);
+    CASE SIOResult.ReadResult(in) OF
+    | SIOResult.endOfInput : EXIT;
+    | SIOResult.wrongFormat: ProgArgs.Assert (FALSE, "wrongFormat");
+    | SIOResult.allRight : SRawIO.Write (char); END;
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange SIOResult");
+    END;
+  END (* LOOP *) ;
+
+or to copying files known to comprise fixed-length records:
+
+  LOOP
+    (*
+     * Raw IO copy - file comprises fixed length records
+     *)
+    SRawIO.Read (record);
+    CASE SIOResult.ReadResult(in) OF
+    | SIOResult.endOfInput  : EXIT;
+    | SIOResult.wrongFormat : ProgArgs.Assert (FALSE, "wrongFormat");
+    | SIOResult.allRight    : SRawIO.Write (record); END;
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange SIOResult");
+    END;
+  END (* LOOP *) ;
+
+It is possible to combine the efficiency of reading and writing many bytes at
+a time with detection of variable lengths - by using the lower-level IOChan
+module's RawRead and RawWrite procedures. The ugly aspect of this is that the
+buffer address must be passed; for a dynamically-allocated buffer, the
+pointer to the buffer holds the address, but for static or automatic buffers
+('normal' program variables) we must use SYSTEM.ADR to determine the address:
+
+  LOOP
+    (*
+     * Raw IO at IOChan level.
+     *)
+    IOChan.RawRead (StdChans.StdInChan(), SYSTEM.ADR(buffer), bufferLength,
+                    locsRead);
+    CASE SIOResult.ReadResult() OF
+    | SIOResult.endOfInput : EXIT;
+    | SIOResult.allRight   : IOChan.RawWrite (StdChans.StdOutChan(),
+                                              SYSTEM.ADR(buffer), locsRead);
+    ELSE
+      ProgArgs.Assert (FALSE, "Strange IOResult");
+    END;
+  END;
+
+
+Other modules
+=============
+
+The following is a list of all modules; those already mentioned above are
+marked * , and should cover most simple usage; others include a brief summary.
+
+ARGDEVIC
+	Low-level module providing device-dependant argument access for
+	ProgramArgs - not implemented yet
+CHANCONS
+	Defines Open flags and results - imported and renamed by StreamFile,
+	RndFile, SeqFile, TermFile.
+IOCHAN	
+	Low-level module providing device-independent Look, Skip,
+	TextRead/Write, RawRead/Write and miscellaneous facilities for
+	TextIO, WholeIO, RealIO, RawIO, IOResult
+IOCONSTS
+	Defines ReadResults - imported and renamed by IOResult.
+IOLINK
+	Low-level module providing channel <-> device facilities.
+IORESULT *
+LONGIO
+	I/O for LONGREAL type - in gpm LONGREAL = REAL
+PROGRAMA
+	Argument handling - replacement for ProgArgs - not implemented yet
+	Use ProgArgs
+RAWIO	*
+REALIO
+	ReadReal and WriteFloat/Eng/Fixed/Real (latter Fixed if it will fit,
+	else Float) - ie formatting flexibility as RealStr
+RNDFILE
+	Access to files for random access - Open, Close, positioning
+SEQFILE
+	Access to files for rewindable sequential access - Open, Close,
+	ReRead, ReWrite
+SIORESUL *
+SLONGIO
+	As for RealIO, but LONGREAL type. On gpm implementations, LONGREAL =
+	REAL.
+SRAWIO	*
+SREALIO	*
+STDCHANS *
+STDDEVIC
+	Low-level module providing device-dependent access to Unix/DOS
+	streams (files, and devices such as buffered keyboard, display)
+STEXTIO	*
+STREAMFI *
+SWHOLEIO *
+TERMDEVI
+	Low-level module providing device-dependent access to Unix/DOS
+	terminal devices, giving control over buffering & echoing
+TERMFILE
+	Access to terminal devices - Open, Close, buffering & echoing mode.
+TEXTIO	*
+WHOLEIO	*
+
+

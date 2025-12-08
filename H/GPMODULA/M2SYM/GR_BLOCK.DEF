@@ -1,0 +1,62 @@
+DEFINITION MODULE GR_Block;
+
+    (*
+    **  Author : Peter Jardine
+    **
+    **  Version:
+    **  1.0      9 Mar 92   New file - based on the work of 
+    **                      Michael McCarthy & John Pfitzner,
+    **                      CSP-960 Project, Semester 2, 1991
+    **      jrh 16-Jun-92   File save/restore from Malcolm Corney.
+    **
+    **
+    **  A GPM Modula-2 graphics library module.
+    **
+    *)
+
+FROM UxFiles IMPORT File;
+
+TYPE
+    BitMap; (* Opaque type used in Block Save and Restore routines *)
+
+PROCEDURE FreeBlock(VAR b : BitMap);
+    (*
+    **  Deallocates the memory used to store an image via BlockSave.
+    *)
+
+PROCEDURE BlockRestore(bitmap : BitMap ; col, row : INTEGER);
+PROCEDURE BlockNDCRestore(bitmap : BitMap ; x, y : REAL);
+    (*
+    **  Restores a previously saved region to the screen. Does not destroy
+    **  or alter bitmap in any way, which means that we need some way of
+    **  releasing memory when the image is no longer needed (FreeBlock).
+    **  Note that of course the current video mode must be the same as that
+    **  when the image was saved.
+    *)
+
+PROCEDURE BlockSave(col1, row1, col2, row2 : INTEGER; VAR bits : BitMap);
+PROCEDURE BlockNDCSave(x1, y1, x2, y2 : REAL; VAR bits : BitMap);
+    (*
+    **  Save a rectangular region of the screen, returning a pointer to a
+    **  structure that store the image data and some header details.
+    *)
+
+PROCEDURE BlockSaveToFile(file : File; col1, row1, col2, row2 : INTEGER;
+                          VAR done : BOOLEAN);
+PROCEDURE BlockNDCSaveToFile(file : File; x1, y1, x2, y2 : REAL;
+                             VAR done : BOOLEAN);
+    (*
+    **  Save a rectangular region of the screen to the file.
+    *)
+
+PROCEDURE BlockRestoreFromFile(file : File; col1, row1 : INTEGER; 
+                               VAR ok : BOOLEAN);
+PROCEDURE BlockNDCRestoreFromFile(file : File; x1, y1 : REAL; 
+                                  VAR done : BOOLEAN);
+    (*
+    **  Restore a previously saved region from file to the screen.
+    **  The current video mode must be the same as that when the image was
+    **  saved.
+    *)
+
+END GR_Block.

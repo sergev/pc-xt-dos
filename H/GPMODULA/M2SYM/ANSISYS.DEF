@@ -1,0 +1,87 @@
+DEFINITION MODULE ANSISYS;
+(*
+Facilities of the ANSI.SYS device driver
+*)
+
+(* ---------------------------------------------------------------------- *)
+(* Cursor positioning *)
+
+PROCEDURE GotoRowCol (row, column : CARDINAL);
+(* Position to row, column.
+   For CGA in 80x25 mode, if row or column is out of range, action is:
+      row =  0: position to 1,column
+      row > 25: ignore request!
+   column =  0: position to row,1
+   column > 80: position to row,80 *)
+
+PROCEDURE GetRowCol (VAR row, column : CARDINAL);
+(* Return current cursor position *)
+
+PROCEDURE Up (n : CARDINAL);    (* Cursor up n rows *)
+PROCEDURE Down (n : CARDINAL);  (* Cursor down n rows *)
+PROCEDURE Right (n : CARDINAL); (* Cursor right n columns *)
+PROCEDURE Left (n : CARDINAL);  (* Cursor left n columns *)
+(* Preceding four requests are ignored if already at limit coordinate *)
+
+PROCEDURE Save;                 (* Save the cursor position for Restore *)
+PROCEDURE Restore;              (* Restore cursor to last Save'd position *)
+
+(* ---------------------------------------------------------------------- *)
+(* Mode control *)
+
+TYPE
+  Mode = (textMono40x25, textColour40x25, textMono80x25, textColour80x25,
+          graphicsColour320x200x4, graphicsMono300x200, graphicsMono640x200,
+          cursorWrap,
+          um8, um9, um10, um11, um12, (* unused modes *)
+          graphicsColour320x200, graphicsColour640x200x16,
+          graphicsMono640x350, graphicsColour640x350x16,
+          graphicsMono640x480, graphicsColour640x480x16,
+          graphicsColour320x200x256);
+
+PROCEDURE SetMode (mode : Mode);
+(* Set video adapter to specified mode.
+   ? Assume no effect if not a valid mode? *)
+
+PROCEDURE ResetMode (mode : Mode);
+(* Reset video adapter mode.
+   Equivalent to SetMode except for cursorWrap (?).
+   ? Assume no effect if not a valid mode? *)
+
+(* ---------------------------------------------------------------------- *)
+(* Attribute control *)
+
+(* Attribute values - defined as an enumeration for convenient import.
+   - italic and rapidBlink have no effect on CGA(?);
+   - underscore is "available only on the Monochrome Graphics Adapter", but
+     produces dark blue on black on CGA;
+   - allOff is grey on black; reverse is black on grey;
+   - concealed is black on black;
+   - colours are dark unless bold (high intensity) is also selected - as well
+     as brightness, bold also produces changes in apparent colour: red-brown
+     to red, brown to yellow, grey to white *)
+TYPE Attribute =
+        (allOff, bold, faint, italic, underscore,
+         blink, rapidBlink, reverse, concealed,
+         ua9, (* unused attributes *)
+         ua10, ua11, ua12, ua13, ua14, ua15, ua16, ua17, ua18, ua19,
+         ua20, ua21, ua22, ua23, ua24, ua25, ua26, ua27, ua28, ua29,
+         blackFG, redFG, greenFG, yellowFG, blueFG, magentaFG, cyanFG, whiteFG,
+         u38, u39,
+         blackBG, redBG, greenBG, yellowBG, blueBG, magentaBG, cyanBG, whiteBG);
+
+PROCEDURE SetAttribute (attribute : Attribute);
+(* Set given attribute.
+   To come? Set AttibuteSet?
+*)
+
+(* ---------------------------------------------------------------------- *)
+(* Erasing *)
+
+PROCEDURE ClearScreen;
+(* Clear the screen (to current background colour) and home the cursor *)
+
+PROCEDURE EraseToEOL;
+(* Erase to end of line *)
+
+END ANSISYS.

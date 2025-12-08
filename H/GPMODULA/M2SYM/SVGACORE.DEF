@@ -1,0 +1,280 @@
+FOREIGN DEFINITION MODULE SvgaCore;
+
+ (*
+ **
+ **  !! LOW LEVEL MODULE           !!
+ **  !! NOT FOR DIRECT USER IMPORT !!
+ **
+ **
+ **
+ **  Kevin Baker,
+ **  CSP-960 Project, Semester 2, 1992
+ **
+ **
+ **  Implementation:
+ **
+ **      Currently only SVGA 256 colour operations are supported. It is
+ **      possible to switch to a Super EGA mode but there are no graphics
+ **      primitives implemented.
+ *)
+
+IMPORT IMPLEMENTATION FROM "svgacore.obj" ;
+
+FROM GrafCore  IMPORT WriteMode;
+FROM SYSTEM    IMPORT BYTE,ADDRESS;
+FROM Types     IMPORT SHORTCARD, BYTECARD;
+
+CONST
+
+    (* ======================== Video modes ========================= *)
+
+    SEGA_Mode_0 = 60;     (* 800  x 600  16  colours !! UNSUPPORTED   *)
+    SEGA_Mode_1 = 61;     (* 1024 x 768  16  colours !! UNSUPPORTED   *)
+    SEGA_Mode_2 = 62;     (* 1280 x 1024 16  colours !! UNSUPPORTED   *)
+
+    SVGA_Mode_0 = 80;     (* 640  x 400  256 colours                  *)
+    SVGA_Mode_1 = 81;     (* 640  x 480  256 colours                  *)
+    SVGA_Mode_2 = 82;     (* 800  x 600  256 colours                  *)
+    SVGA_Mode_3 = 83;     (* 1024 x 768  256 colours                  *)
+    SVGA_Mode_4 = 84;     (* 1280 x 1024 256 colours                  *)
+
+
+TYPE
+   Colour = RECORD 
+               red : BYTECARD;
+               green : BYTECARD;
+               blue : BYTECARD;
+            END;
+
+
+   Palette256 = ARRAY[0..255] OF Colour;
+
+   CardType = SET OF (Vesa, Ativga, Everex, Compaq, Ncr, Trident8800,
+                      Trident8900, Video7, Genoa, Cirrus, Paradise, 
+                      Chipstech, Tseng, Tseng4000, Aheada, Aheadb, Oaktech);
+
+
+VAR  
+   vga512,
+   vga1024,
+
+   cirrus,        
+   everex,
+   paradise,
+   tseng,
+   trident,
+   t8900,
+   ativga,
+   aheada,
+   aheadb,
+   oaktech,
+   video7,
+   chipstech,
+   tseng4,
+   genoa,
+   ncr,
+   compaq,
+   vesa       : BOOLEAN;  
+
+
+   curbk,
+   maxx,
+   maxy,
+   xwidth     : SHORTCARD;
+
+
+
+
+
+PROCEDURE TextMode;
+
+ (*
+ ** Place card in text mode 3. Present for testing purposes
+ *)
+
+PROCEDURE DetectSVGA() : BOOLEAN;
+
+ (*
+ **  Returns TRUE  if svga card detected
+ **          FALSE if svga not detected
+ *)
+
+PROCEDURE GetVideoModeSVGA(VAR textcols : CARDINAL) : CARDINAL;
+ (*
+ **  Returns the current video mode, and sets the variable textcols to
+ **  the number of text columns for that mode.
+ *)
+
+PROCEDURE SetSvgaMode(mode : CARDINAL);
+
+ (*
+ **  Switches video mode. Assumes that video mode is one of the supported
+ **  SVGA/SEGA graphics modes - [60..62,80..84] 
+ **  If video mode is not one of these values, does nothing.
+ *)
+
+PROCEDURE SetWriteModeSVGA(wmode : WriteMode);
+
+ (*
+ **  Sets the default method for interaction with background pixels in
+ **  line drawing, block restoration, and char/string output.
+ **  If default method is replaceMode, object overwrites the current screen
+ **  contents; if the default method is xorMode, the object is XORed with
+ **  the current screen contents, and so on.
+ *)
+
+PROCEDURE ConfigureSvgaCore(card : CARDINAL);         
+
+ (*
+ **  Configure SvgaCore driver to the card type specified. This is usually
+ **  called internally by DetectSVGA when the card is identified but in some
+ **  cases the Detect procedure may fail. In this case ConfigureSvgaCore can
+ **  be called to configure the driver to a particular card. 
+ **
+ **  ConfigureSvgaCore expects the following global variables to be 
+ **  intialized prior to its call
+ **
+ **       vga512  -> TRUE if 512K ram present FALSE if not
+ **       vga1024 -> TRUE if 1Meg ram present FALSE if not
+ **
+ **
+ **  Example:
+ **     DetectSVGA wrongly detected the Adapter, but the user is sure that
+ **     his adapter is one of the supported types, e.g. Trident
+ **
+ **     He knows the card has 1 Meg of ram so he sets up the library like so
+ **
+ **     vga512 := TRUE;
+ **     vga1024 := TRUE;
+ **     ConfigureSvgaCore(trident);
+ **
+ *)
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==    Return the colour value of a specified pixel    ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE RdPxlSVGA(x1, y1  : INTEGER) : CARDINAL; 
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==          Set a pixel in specified colour           ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE WrPxlSVGA(x1, y1  : INTEGER;Colour  : CARDINAL);
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==   Draw a line from (x1,y1) to (x2,y2) in           ==*)
+(*==       specified colour                             ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE LineSVGA(x1, y1, 
+                   x2, y2    : INTEGER; 
+                   colour    : CARDINAL);
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*== Write a character at specified screen position     ==*)
+(*== (x,y) refers to coordinates of top-left hand       ==*)
+(*== corner of the rectangular cell in which the char   ==*)
+(*== is drawn. The character itself is drawn in the     ==*)
+(*== colour "fg", while the rest of the cell is in      ==*)
+(*== colour "bg".                                       ==*)
+(*== fg. The character cell is 8 pixels wide            ==*)
+(*========================================================*)
+
+PROCEDURE WrCharSVGA(ch : CHAR; col, row : INTEGER; fg, bg : CARDINAL);
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==    Write a string at a specified screen position   ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE WrStrSVGA(str    : ARRAY OF CHAR; 
+                    x, y   : INTEGER; 
+                    fg, bg : CARDINAL);
+
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==       Clear the screen with specified colour       ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE ClsSVGA(colour  : CARDINAL);
+
+(*========================================================*)
+(*==                                                    ==*)
+(*== Block save/restore images to and from screen and   ==*)
+(*== memory                                             ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE BlockSaveSVGA(block       : ADDRESS;
+                        x1, y1,  
+                        x2, y2      : INTEGER) : SHORTCARD;
+
+  (*
+  ** Stores graphics data in colour plane bitmap format at the
+  ** specified address. Used for SVGA modes 80,81,82,83,84.
+  **
+  ** IT IS THE RESPONSIBILITY OF THE CALLER TO ENSURE THAT ENOUGH
+  ** CONTIGUOUS ALLOCATED MEMORY IS AVAILABLE AT THE SPECIFIED ADDRESS !
+  **
+  ** The space required can be calculated via the formula
+  **
+  **    (x2 - x1 + 1)*(y2 - y1 + 1) + 5
+  **
+  **    e.g. for BlockSaveSVGA(blk,100,100,200,200)
+  **        (200 - 100 + 1) * (200 - 100 + 1) + 5 
+  **    =>  101 * 101 + 5 
+  **    =>  10206 bytes
+  **
+  ** IMPLEMENTATION RESTRICTION : THE LARGEST MEMORY BLOCK THAT CAN BE
+  ** WRITTEN IN A SINGLE CALL IS 64k bytes.
+  **
+  ** Returns the number of bytes storage actually written.
+  *)
+
+PROCEDURE BlockRestoreSVGA(block   : ADDRESS;
+                           x1, y1  : INTEGER);
+  (*
+  ** Restores a block in a 256 colour SVGA mode 
+  *)
+
+(*========================================================*)
+(*==                                                    ==*)
+(*==  Set/Get the VGA 256 colour palette registers      ==*)
+(*==                                                    ==*)
+(*========================================================*)
+
+PROCEDURE SetPal256( PaletteBuffer  : ADDRESS;
+                     StartIndex,       
+                     NumberOfCol    : SHORTCARD);
+              
+  (*
+  ** Set the VGA colour palette. 
+  ** PaletteBuffer -> points to buffer with 3 bytes for each colour to be set. 
+  ** StartIndex    -> colour register to start from
+  ** NumberOfCol   -> number of colour registers to set
+  *)
+
+PROCEDURE GetPal256( PaletteBuffer  : ADDRESS;
+                     StartIndex,       
+                     NumberOfCol    : SHORTCARD);
+              
+  (*
+  ** PaletteBuffer -> points to buffer with 3 bytes for each colour read. 
+  ** StartIndex    -> colour register to start from
+  ** NumberOfCol   -> number of colour registers to read
+  *)
+
+END SvgaCore.
+

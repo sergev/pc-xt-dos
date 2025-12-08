@@ -1,0 +1,63 @@
+DEFINITION MODULE GR_Conversions;
+
+    (*
+    **  Author : Peter Jardine
+    **
+    **  Version:
+    **  1.0      17 Apr 92   New file - based on the work of 
+    **                       Michael McCarthy & John Pfitzner,
+    **                       CSP-960 Project, Semester 2, 1991.
+    *)
+
+PROCEDURE ConvertRGB2CMY(     red,  green,   blue   : REAL;
+                          VAR cyan, magenta, yellow : REAL
+                        );
+
+PROCEDURE ConvertCMY2RGB(     cyan, magenta, yellow : REAL;
+                          VAR red,  green,   blue   : REAL
+                        );
+
+PROCEDURE ConvertRGB2YIQ(     red, green, blue : REAL;
+                          VAR Y,   I,     Q    : REAL
+                        );
+
+PROCEDURE ConvertYIQ2RGB(     Y,   I,     Q    : REAL;
+                          VAR red, green, blue : REAL
+                        );
+
+PROCEDURE ConvertRGB2HSV(     red, green,      blue  : REAL;
+                          VAR hue, saturation, value : REAL
+                        );
+
+PROCEDURE ConvertHSV2RGB(     hue, saturation, value : REAL;
+                          VAR red, green,      blue  : REAL
+                        );
+
+PROCEDURE ConvertRGB2HLS(     red, green,     blue       : REAL;
+                          VAR hue, lightness, saturation : REAL
+                        );
+
+PROCEDURE ConvertHLS2RGB(     hue, lightness, saturation : REAL;
+                          VAR red, green,     blue       : REAL
+                        );
+    (*
+    **  Colour coordinate conversion routines. Values of parameters
+    **  red, green, blue, cyan, magenta, yellow, saturation, value,
+    **  and lightness are define only in the range 0.0 to 1.0.  The
+    **  value of hue is defined in the range from 0.0 to 360.0.
+    *)
+
+PROCEDURE ConvertNDC2DC(x, y : REAL; VAR col, row : INTEGER);
+    (*
+    **  Convert the NDC coordinates to physical (pixel) coordinates. This
+    **  procedure takes account of the current aspect setting.
+    *)
+
+PROCEDURE ConvertDC2NDC(col, row : INTEGER; VAR x, y : REAL);
+    (*
+    **  Convert the physical (pixel) coordinates to NDC coordinates. This
+    **  procedure takes account of the current aspect setting.
+    *)
+
+END GR_Conversions.
+

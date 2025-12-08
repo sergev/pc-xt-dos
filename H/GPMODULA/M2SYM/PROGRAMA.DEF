@@ -1,0 +1,34 @@
+DEFINITION MODULE ProgramArgs;
+
+IMPORT IOLink;
+
+
+CONST
+  StdArg = "ArgChan";    (* the name associated with the standard
+                            argument channel *)
+
+
+TYPE
+  ChanId = IOLink.ChanId;
+
+(* Initially, and after a reset operation on the channel, if there are
+   no program arguments a call of IsArg returns FALSE, otherwise
+   input is taken from the first argument to the program, as defined for
+   the implementation. *)
+
+PROCEDURE ArgChan () : ChanId;
+(* The returned value identifies a channel for reading program arguments *)
+
+PROCEDURE IsArgPresent () : BOOLEAN;
+(* Tests if there is a current argument to read from.
+   If not, read < IOChan.CurrentFlags() will be FALSE and attempting to read from
+   the argument channel will cause the exception notAvailable to be raised. *)
+
+PROCEDURE NextArg;
+(* If there is another argument, causes subsequent input from the
+   argument device to come from the start of the next argument.
+   Otherwise there is no argument to read from - a call of IsArgPresent will
+   return FALSE *)
+
+END ProgramArgs.
+

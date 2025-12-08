@@ -1,0 +1,73 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+
+DEFINITION MODULE Types;
+
+  (* this module supplies some traditional identifiers  *)
+  (* subranges occupy as much storage space as needed   *)
+  (* ************************************************** *)
+  (* NOTE:  This is a definition icluding 64 bit        *)
+  (*        representations on the DEC Alpha            *)
+  (*        On 32 bit platforms (non Alpha) MIDINT and  *)
+  (*        INTEGER map to 32 bits.                     *)
+  (* ************************************************** *)
+  
+
+  (* Type Mapping Table
+   * ==================
+   *                                    Size
+   *     Data Type         Alpha        Unix       PC
+   *     ---------------+-----------+-----------+-----------+
+   *     short int      |    16     |     16    |      8    |
+   *     short unsigned |    16     |     16    |      8    |
+   *                    |           |           |           |
+   *     int            |    32     |     32    |     16    |
+   *     unsigned int   |    32     |     32    |     16    |
+   *                    |           |           |           |
+   *     long int       |    64     |     32    |     32    |  
+   *     unsigned long  |    64     |     32    |     32    |
+   *     ---------------+-----------+-----------+-----------+
+   *)
+
+CONST
+     maxInt32 = 2147483647;
+     minInt32 = (-maxInt32 - 1); 
+                (* avoids asymmetric nature of integers, and that an
+                   explicit -2147483648 is out of range in 32 bits *)
+     maxCrd32 = 4294967295;
+
+TYPE 
+    
+(* INTEGER and CARDINAL Types *)
+
+    (* Signed Types - Integers    *)    (* "c" type mapping      *)
+    (* --------------------------------------------------------- *) 
+
+    BYTEINT   = [-128 .. 127];		(* => signed char        *)
+    SHORTINT  = [-32768 .. 32767];	(* => short int          *)
+    MIDINT    = [minInt32 .. maxInt32]; (* => int                *)  
+    LONGINT   = INTEGER;                (* => long int           *)
+
+ 
+    (* Unsigned Types - Cardinals *)    (* "c" type mapping      *)
+    (* --------------------------------------------------------- *)
+ 
+    BYTECARD  = [0 .. 255];		(* => unsigned char      *)
+    SHORTCARD = [0 .. 65535];		(* => short unsigned int *)
+    MIDCARD   = [0 .. maxCrd32];        (* => unsigned int       *)
+    LONGCARD  = CARDINAL;               (* => unsigned long int  *)
+
+    (* Alternative Type Names    *)
+    (* ----------------------    *)
+
+    Int8   = BYTEINT;
+    Card8  = BYTECARD;
+
+    Int16  = SHORTINT;
+    Card16 = SHORTCARD;
+
+    Int32  = MIDINT;
+    Card32 = MIDCARD;
+
+END Types.

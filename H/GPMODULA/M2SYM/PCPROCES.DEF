@@ -1,0 +1,36 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE PcProcesses;
+
+  IMPORT IMPLEMENTATION FROM "pcprocesses.obj";
+
+  FROM Types IMPORT SHORTINT;
+  FROM SYSTEM IMPORT ADDRESS;
+  IMPORT BuildArgs;
+
+  PROCEDURE Spawns(comPath : ARRAY OF CHAR;
+		   argStrn : ARRAY OF CHAR) : SHORTINT; 
+  (* Spawns another process, and waits for return result *)
+  (* comPath is an absolute pathname, with extension.    *)
+  (* argStrn is the additional arguments of the command  *)
+  (* Arg-0 of command is comPath, others from argStrn.   *)
+  (* Result is exit code of the spawned process		 *)
+
+  PROCEDURE Spawnv(comPath : ARRAY OF CHAR;
+		   argvBlk : BuildArgs.ArgPtr) : SHORTINT; 
+  (* Spawns another process, and waits for return result *)
+  (* Discards zero-th argument and concatenates the rest *)
+  (* to form a standard command string for Spawns.	 *)
+  (* Arg-0 of command is comPath, others from argbBlk.   *)
+  (* Result is exit code of the spawned process		 *)
+
+  PROCEDURE System(command : ARRAY OF CHAR) : SHORTINT; 
+  (* Spawns another copy of the command processor as     *)
+  (* specified by the environment variable COMSPEC, this *)
+  (* executes the command. Returns non-zero on failure   *)
+
+  PROCEDURE PSP() : ADDRESS;
+
+END PcProcesses.

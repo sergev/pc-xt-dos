@@ -1,0 +1,119 @@
+(* ========================================================= *)
+(* Preliminary library module for Gardens Point Modula       *)
+(* This module is part of the gpm-pc distribution. It is     *)
+(* required because the DOS shell does not expand wildcards. *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE Wildcards;
+
+  IMPORT IMPLEMENTATION FROM "wildcard.obj";
+  IMPORT Types, UxFiles;
+
+  TYPE  FileAttrib = UxFiles.FileAttrib;
+	    (* rdOnly,hidden,system,volId,subDir,archive *)
+        FileAttSet = UxFiles.FileAttSet;
+	    (* SET OF FilePermissionBits *)
+
+  TYPE FfBlk = RECORD
+		 reserved : ARRAY [0 .. 21] OF CHAR;
+		 fftime   : Types.Int16;
+		 ffdate   : Types.Int16;
+		 ffsize   : CARDINAL;
+                 ffname   : ARRAY [0 .. 12] OF CHAR;
+               END;
+
+  PROCEDURE FileAttOf(ffBlk  : FfBlk) : FileAttSet;
+  (* extracts attribute set from the given FfBlk *)
+   
+  PROCEDURE FindFirst(pathNm : ARRAY OF CHAR;
+		      attrib : FileAttSet;
+                  VAR ffBlk  : FfBlk;
+		  VAR found  : BOOLEAN);
+
+  PROCEDURE FindNext (VAR ffBlk : FfBlk;
+		      VAR found : BOOLEAN);
+
+END Wildcards.
+
+
+(* Examples of use:
+
+Here is a simple program which demonstrates usage of the WildCards library. It 
+accepts arguments from the command line, and then finds any files that match 
+these patterns in the current directory. A more complex example on the 
+distribution is the source code for the compiler driver program gpd.mod}. This 
+file demonstrates the use of both the WildCards and PcProcesses libraries. 
+
+MODULE WildTest; (* demonstrates the Wildcards library *)
+
+  FROM ProgArgs IMPORT ArgNumber, GetArg;
+  FROM InOut IMPORT WriteString, WriteLn;
+  FROM Wildcards IMPORT 
+         FileAttOf, FindFirst, FindNext, FileAttrib, FileAttSet, FfBlk;
+
+  VAR ffblk : FfBlk;
+      found : BOOLEAN;
+      count : CARDINAL;
+
+  VAR cArg  : ARRAY [0 .. 79] OF CHAR;
+
+BEGIN
+  FOR count := 1 TO ArgNumber() - 1 DO
+    GetArg(count,cArg);
+    WriteLn; 
+    WriteString("Command line arg -- ");
+    WriteString(cArg); 
+    WriteLn;
+    FindFirst(cArg, FileAttSet{direc}, ffblk, found);
+    WHILE found DO
+      WriteString(ffblk.ffname); 
+      IF subDir IN FileAttOf(ffblk) THEN WriteString(" <dir>") END;
+      WriteLn;
+      FindNext(ffblk,found);
+    END; (* while *)
+  END;
+END WildTest.
+
+The second example program uses the FileMode type of the DOS version of 
+UxFiles to print information regarding the mode of named files. The program 
+interactively accepts filenames from the user, looks up the files, displaying 
+their attributes if found. 
+
+The program displays the characters "r a s h" to indicate if the file has the 
+read-only, archive, system, and hidden attributes. It is a simple exercise to 
+combine the ideas of the two demonstration programs to print the attributes of 
+files found as a result of wildcard lookups. 
+
+MODULE ModeTest;
+  IMPORT InOut, UxFiles;
+  FROM InOut IMPORT Write;
+
+  VAR  str : ARRAY [0 .. 127] OF CHAR;
+       ok  : BOOLEAN;
+       mod : UxFiles.FileMode;
+       index : CARDINAL;
+
+BEGIN
+  InOut.WriteString("File mode-test : type a filename, ^C to exit");
+  InOut.WriteLn;
+  LOOP
+    InOut.WriteString(">> ");
+    InOut.ReadString(str);
+    UxFiles.GetMode(str,mod,ok);
+    IF ok THEN 
+      IF UxFiles.subDir IN mod THEN 
+	InOut.WriteString("directory");
+      ELSIF UxFiles.volId IN mod THEN 
+	InOut.WriteString("volume-ID");
+      ELSE
+        IF UxFiles.rdOnly IN mod THEN Write("r") ELSE Write(".") END;
+        IF UxFiles.archive IN mod THEN Write("a") ELSE Write(".") END;
+        IF UxFiles.system IN mod THEN Write("s") ELSE Write(".") END;
+        IF UxFiles.hidden IN mod THEN Write("h") ELSE Write(".") END;
+      END;
+    ELSE InOut.WriteString("ModeTest: file not found");
+    END;
+    InOut.WriteLn;
+  END;
+END ModeTest.
+*)

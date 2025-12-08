@@ -1,0 +1,58 @@
+DEFINITION MODULE TextIO;
+(* Character and string text operations *)
+
+FROM IOLink   IMPORT ChanId;
+
+(* The following procedures do not read past line marks: *)
+
+PROCEDURE ReadChar (    cid : ChanId;
+                    VAR ch  :  CHAR);
+(* If possible, removes a character from the input stream and assigns
+   the corresponding value to the parameter ch.
+   The read result is set to allRight, endOfLine or endOfInput. *)
+
+PROCEDURE ReadRestLine (    cid : ChanId;
+                    VAR s   : ARRAY OF CHAR);
+(* Removes any remaining characters before the next line mark copying
+   as many as can be accommodated to the parameter s as a string value.
+   The read result is set to the value allRight, outOfRange, endOfline,
+   or endOfInput. *)
+
+PROCEDURE ReadString (    cid : ChanId;
+                      VAR s   : ARRAY OF CHAR);
+(* Removes and copies only those characters before the next line mark
+   that can be accommodated to the parameter s as a string value.
+   The read result is set to the value allRight, endOfLine, or endOfInput. *)
+
+PROCEDURE ReadToken (    cid : ChanId;
+                     VAR s   : ARRAY OF CHAR);
+(* Skips leading spaces and then removes characters before the next
+   space or line mark copying as many as can be accommodated to the
+   parameter s as a string value.
+   The read result is set to the value allRight, outOfRange, endOfLine,
+   or endOfInput. *)
+
+(* The following procedure reads past the next line mark *)
+
+PROCEDURE SkipLine (cid : ChanId);
+(* Removes successive items from the input stream up to and including
+   the next line mark or until the end of input is reached.
+   The read result is set to the value allRight or endOfInput. *)
+
+(* Output procedures *)
+
+PROCEDURE WriteChar (cid : ChanId;
+                     ch  : CHAR);
+(* Writes the parameter ch to the output stream *)
+
+PROCEDURE WriteLn (cid : ChanId);
+(* Writes a line mark to the output stream *)
+
+PROCEDURE WriteString (cid : ChanId;
+                       s   : ARRAY OF CHAR);
+(* Writes the string value of the parameter s to the output stream *)
+
+END TextIO.
+                                            
+
+

@@ -1,0 +1,225 @@
+DEFINITION MODULE IOLink;
+(* Types and procedures giving the standard implementation of channels: *)
+
+FROM IOConsts  IMPORT ReadResults;
+FROM ChanConsts IMPORT FlagSet;
+FROM SYSTEM    IMPORT ADDRESS;
+
+
+TYPE
+  ChanId;      (* values of this type are used to identify channels *)
+
+
+(* Devices need to identify themselves in order to allow a check to be made
+   that device-dependent operations are applied only for channels opened to
+   that device: *)
+
+TYPE
+  DeviceId;     (* values of this type are used to identify new device
+                   modules and are normally obtained by them during their
+                   intialization *)
+
+PROCEDURE AllocateDeviceId (VAR did : DeviceId);
+(* Allocates a unique value of type DeviceId and assigns this value to
+   the parameter did *)
+
+(* a new device module open procedure obtains a channel by calling MakeChan *)
+
+PROCEDURE MakeChan (    did : DeviceId;
+                    VAR cid : ChanId);
+(* Attempts to make a new channel for the device module identified by did.
+   If no more channels can be made, the identity of the bad channel is
+   assigned to cid. Otherwise, the identity ofa new channel is assigned to
+   cid. *)
+
+(* If a channel is allocated but the call of the device module open
+   procedure is not successful, and on a successful call of a device module
+   close procedure, the device module unmakes the channel and returns the
+   value identifying the bad channel to its client: *)
+
+PROCEDURE UnMakeChan (    did : DeviceId;
+                      VAR cid : ChanId);
+(* If the device module identified by the parameter did is not the module that
+   made the channel identified by the parameter cid, the exception wrongDevice
+   is raised.
+   Otherwise, the channel is deallocated and the value identifying the bad
+   channel is assigned to cid. *)
+
+PROCEDURE GetStdChanId ( stdCode : INTEGER) : ChanId;
+(* If stdCode corresponds to one of the standard channels, then
+   returns the ChanId of that channel.
+   Otherwise, the ChanId of the Bad Channel is returned. *)
+
+
+(* If the call of the device module open procedure is successful, the
+   device module obtains a pointer to a device table for the channel, which
+   will have been initialized by MakeChan. It then changes the fields of the
+   device table to install its own values for the device data, supported
+   operations, and flags, and returns to its client the identity of the
+   channel. *)
+
+
+
+TYPE
+  DeviceTablePtr = POINTER TO DeviceTable;
+    (* Values of this type are used to refer to device tables *)
+
+(* Device modules supply procedures of the following types: *)
+
+TYPE
+  LookProc = PROCEDURE (DeviceTablePtr, VAR CHAR, VAR ReadResults);
+  SkipProc = PROCEDURE (DeviceTablePtr);
+  SkipLookProc = PROCEDURE (DeviceTablePtr, VAR CHAR, VAR ReadResults);
+  TextReadProc = PROCEDURE (DeviceTablePtr, ADDRESS, CARDINAL, VAR CARDINAL);
+  TextWriteProc = PROCEDURE (DeviceTablePtr, ADDRESS, CARDINAL);
+  WriteLnProc = PROCEDURE (DeviceTablePtr);
+  RawReadProc = PROCEDURE (DeviceTablePtr, ADDRESS, CARDINAL, VAR CARDINAL);
+  RawWriteProc = PROCEDURE (DeviceTablePtr, ADDRESS, CARDINAL);
+  GetNameProc = PROCEDURE (DeviceTablePtr, VAR ARRAY OF CHAR);
+  ResetProc = PROCEDURE (DeviceTablePtr);
+  FlushProc = PROCEDURE (DeviceTablePtr);
+  FreeProc = PROCEDURE (DeviceTablePtr);
+    (* Carry out the operations involved in closing the corresponding
+       channel, including flushing buffers, but do not unmake the channel.
+       This procedure is called for each open channel at program
+       termination. *)
+
+
+(* When a device procedure detects a device error, it raises the exception
+   softDeviceError or hardDeviceError. If these exceptions are handled, the
+   following procedure may be used to discover an implementation-defined error
+   number for the channel. *)
+
+TYPE
+  DeviceErrNum = INTEGER;
+
+
+PROCEDURE DeviceError (cid : ChanId) : DeviceErrNum;
+(* If a device error exception has been raised, returns the error
+   number stored by the device module. *)
+
+
+
+TYPE
+  DeviceData = ADDRESS;
+
+  DeviceTable = RECORD
+                  cd : DeviceData;
+                    (* the value NIL *)
+                  did : DeviceId;
+                    (* the value given in the call MakeChan *)
+                  cid : ChanId;
+                    (* the identity of the channel *)
+                  result : ReadResults;
+                    (* the value notKnown *)
+                  errNum : DeviceErrNum;
+                    (* undefined *)
+                  flags : FlagSet;
+                    (* FlagSet{} *)
+                  doLook : LookProc;
+                    (* raise exception notAvailable *)
+                  doSkip : SkipProc;
+                    (* raise exception notAvailable *)
+                  doSkipLook : SkipLookProc;
+                    (* raise exception notAvailable *)
+                  doTextRead : TextReadProc;
+                    (* raise exception notAvailable *)
+                  doTextWrite : TextWriteProc;
+                    (* raise exception notAvailable *)
+                  doLnWrite : WriteLnProc;
+                    (* raise exception notAvailable *)
+                  doRawRead : RawReadProc;
+                    (* raise exception notAvailable *)
+                  doRawWrite : RawWriteProc;
+                    (* raise exception notAvailable *)
+                  doGetName : GetNameProc;
+                    (* return the empty string *)
+                  doReset : ResetProc;
+                    (* do nothing *)
+                  doFlush : FlushProc;
+                    (* do nothing *)
+                  doFree : FreeProc;
+                    (* do nothing *)
+                END;
+
+(* The pointer to the device table for a channel is obtained using the
+   following procedure: *)
+
+PROCEDURE DeviceTablePtrValue (cid : ChanId) : DeviceTablePtr;
+(* If the device module identified by the parameter did is not the module
+   that made the channel identified by the parameter cid, the exception
+   wrongDevice is raised.
+   Otherwise, a pointer to the device table for the channel is returned. *)
+
+PROCEDURE AddDeviceTable (dtp : DeviceTablePtr);
+(* Includes dtp in record of open channels *)
+
+
+(* A device module can ask if it opened a given channel. It does this
+   to implement a corresponding enquiry function that is exported from the
+   device module: *)
+
+PROCEDURE IsDevice (cid : ChanId;
+                    did : DeviceId) : BOOLEAN;
+(* Tests if the device module identified by the parameter did is the
+   module that made the channel identified by the parameter cid. *)
+
+
+(* The following exceptions are defined for this module and its clients *)
+
+TYPE
+  ChanExceptions = (
+    ChanNoException,
+        (* there is no exception in this context *)
+    notChanException,
+        (* there is an exception in this context, but from another source *)
+    wrongDevice,
+        (* device specific operations on wrong device *)
+    notAvailable,
+        (* operations attempted that is not available on that channel *)
+    skipAtEnd,
+        (* attempt to skip data from a stream that has ended *)
+    softDeviceError,
+        (* device specific recoverable error *)
+    hardDeviceError,
+        (* device specific non-recoverable error *)
+    textParseError,
+        (* input data does not correspond to a character or line mark
+           - optional detection *)
+    notAChannel
+        (* given value does not identify a channel - optional detection *)
+  );
+
+
+
+(* Client modules may raise exceptions: *)
+
+TYPE
+  DevExceptionRange = [wrongDevice .. notAChannel];
+
+PROCEDURE RAISEdevException (cid : ChanId;
+                             did : DeviceId;
+                             x   : DevExceptionRange;
+                             s   : ARRAY OF CHAR);
+(* If the device module identified by the parameter did is not the module
+   that made the channel identified by the parameter cid, the exception
+   wrongDevice is raised. Otherwise the given exception is raised and the
+   string value of the parameter s is included in the exception message. *)
+
+
+PROCEDURE IOException () : ChanExceptions;
+(* If the current coroutine is in the exceptional execution state because of
+   the raising of an exception from ChanExceptions, returns the corresponding
+   enumeration value, and otherwise raises an exception.
+*)
+
+END IOLink.
+                             
+
+
+
+
+
+
+
+                    

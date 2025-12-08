@@ -1,0 +1,137 @@
+DEFINITION MODULE IOChan;
+(* Types and procedures forming the interface to channels for
+   device-independent data transfer modules *)
+
+FROM   IOConsts  IMPORT ReadResults;
+IMPORT IOLink;
+FROM   ChanConsts IMPORT FlagSet;
+FROM   SYSTEM    IMPORT ADDRESS;
+
+
+TYPE
+  ChanId            = IOLink.ChanId;
+  ChanExceptions = IOLink.ChanExceptions;
+  DeviceErrNum      = IOLink.DeviceErrNum;
+
+
+(* There is one pre-defined value identifying a bad channel on which no
+   data transfer operations are available. It is used to initialize
+   variables of type ChanId: *)
+
+PROCEDURE InvalidChan () : ChanId;
+(* Returns the value identifying the bad channel *)
+
+(* For each of the following operations, if the device supports the
+   operation on the channel, the behaviour of the procedure conforms with the
+   description below. The full behaviour is defined for each device module.
+   If the device does not support the operation on the channel, the behaviour
+   of the procedure is to raise the exception notAvailable. *)
+
+(* Text operations - these perform any required translation between
+   the internal and external representation of text. *)
+
+PROCEDURE Look (    cid : ChanId;
+                VAR ch  : CHAR;
+                VAR res : ReadResults);
+(* If there is a character as the next item in the given input stream,
+   assigns its value to the parameter ch without removing it from the stream.
+   Otherwise, the value of the parameter ch is not defined.
+   The parameter res, and the stored read result, is set to the value
+   allRight, endOfLine, or endOfInput. *)
+
+PROCEDURE Skip (cid : ChanId);
+(* If the input has ended, the exception skipAtEnd is raised,
+   otherwise, the next character or line mark in the input is removed
+   and the stored read result is set to the value allRight. *)
+
+PROCEDURE SkipLook (    cid : ChanId;
+                    VAR ch  : CHAR;
+                    VAR res : ReadResults);
+(* If the stream has ended, the exception skipAtEnd is raised,
+   otherwise, the next character or line mark is removed.
+   If there is a character as the next item in the given input stream,
+   assignsd its value to the parameter ch without removing it from the stream.
+   Otherwise, the value of the parameter ch is not defined.
+   The parameter res, and the stored read result, is set to the value
+   allRight, endOfLine or endOfInput. *)
+
+PROCEDURE TextRead (    cid      : ChanId;
+                        to       : ADDRESS;
+                        maxChars : CARDINAL;
+                    VAR charsRead : CARDINAL);
+(* Reads at most maxChars characters from the current line and assigns
+   corresponding values to successive locations, starting at the address
+   given by the parameter to, and continuing at increments corresponding
+   to the address difference between successive components of an ARRAY OF
+   CHAR. The number of characters read is assigned to the parameter charsRead.
+   The read result is set to the value allRight, endOfLine, or endOfInput. *)
+
+PROCEDURE TextWrite (cid   : ChanId;
+                     from  : ADDRESS;
+                     charsToWrite : CARDINAL);
+(* Writes a number of characters given by the value of the parameter
+   charsToWrite,
+   starting as the address given by the parameter from and continuing at
+   increments corresponding to the address difference between successive
+   components of an ARRAY OF CHAR. *)
+
+PROCEDURE WriteLn (cid : ChanId);
+(* Writes a line mark over the channel *)
+
+
+(* Raw operations *)
+
+PROCEDURE RawRead (    cid      : ChanId;
+                       to       : ADDRESS;
+                       maxLocs  : CARDINAL;
+                   VAR locsRead : CARDINAL);
+(* Reads at most maxLocs items and assigns corresponding values to
+   successive locations, starting at the address given by the parameter
+   to.
+   The number of items read is assigned to the parameter locsRead.
+   The read result is set to the value allRight or endOfInput. *)
+
+PROCEDURE RawWrite (cid  : ChanId;
+                    from : ADDRESS;
+                    locsToWrite : CARDINAL);
+(* Writes a number of items given by the value of the parameter locsToWrite from
+   successive locations starting as the address given by the parameter
+   from. *)
+
+
+(* Common operations *)
+
+PROCEDURE GetName (    cid : ChanId;
+                   VAR s   : ARRAY OF CHAR);
+(* Copies to the parameter s a name associated with the channel,
+   possibly truncated depending on the capacity of s. *)
+
+PROCEDURE Reset (cid : ChanId);
+(* Reset to a state defined by the device module *)
+
+PROCEDURE Flush (cid : ChanId);
+(* Flush any data buffered by the device module out to the destination *)
+
+
+(* Access to read results *)
+
+PROCEDURE SetReadResult (cid : ChanId;
+                         res : ReadResults);
+(* Sets the read result value for the channel to the value res *)
+
+PROCEDURE ReadResult (cid : ChanId) : ReadResults;
+(* Returns the stored read result value for the channel *)
+(*  (This is initially the value notKnown)  *)
+
+
+(* Users can discover which flags actually apply to a channel *)
+
+PROCEDURE CurrentFlags (cid : ChanId) : FlagSet;
+(* Returns the set of flags that apply to the given channel *)
+
+PROCEDURE ChanException () : ChanExceptions;
+(* returns the ChanException value for the current context *)
+
+END IOChan.
+
+                    

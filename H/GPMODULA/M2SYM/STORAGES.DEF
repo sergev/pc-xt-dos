@@ -1,0 +1,75 @@
+(* ========================================================= *)
+(* Library module for Gardens Point Modula                   *)
+(* ========================================================= *)
+(* 09-Jul-92  jrh  Original version                          *)
+(* 20-Jul-92  jrh  Remove WriteSummary                       *)
+(* ========================================================= *)
+
+FOREIGN DEFINITION MODULE StorageStats;
+
+
+  PROCEDURE GetSummary (VAR current, maximum,
+  			    heapTop, largest : CARDINAL);
+  (* precondition  : TRUE				     *)
+  (* postcondition : storage summary data returned:	     *)
+  (*							     *)
+  (* current is the current total allocated (use this to     *)
+  (*	check for gradual exhaustion of memory due to	     *)
+  (*	failure to DEALLOCATE)				     *)
+  (* maximum is the maximum total allocated since the	     *)
+  (*	program started (use this to see how close you are   *)
+  (*	to running out)					     *)
+  (* heapTop is the top of the part of the space between the *)
+  (*	top of your program and the '640K limit' actually    *)
+  (*	used by your program (compare this with maximum	     *)
+  (*	to see the degree of fragmentation)		     *)
+  (* largest is the largest block on the free list - ie a    *)
+  (*	block you have used and DEALLOCATEd but which has    *)
+  (*	not been re-used or only partly re-used (thus	     *)
+  (*	available memory comprises this block, an	     *)
+  (*	unspecified number of smaller ones also on the free  *)
+  (*	list, with the total size of the free list equal to  *)
+  (*	maximum-current, plus the contiguous block from	     *)
+  (*	heapTop to 640K)				     *)
+
+
+(* ----------------------------------------------------------------------
+   Typical usage of GetSummary is as follows. This procedure is not
+   included in StorageStats because in the current implementation
+   StorageStats code is in STORAGE.OBJ, so that any program using
+   dynamic Storage would also have to link INOUT.OBJ.
+
+FROM InOut IMPORT WriteString, WriteCard, WriteHex, WriteLn;
+
+PROCEDURE WriteSummary;
+  (* precondition  : TRUE                                    *)
+  (* postcondition : storage use summary as described in     *)
+  (*                 GetSummary has been written to standard *)
+  (*		     output; format is one line per item,    *)
+  (*		     in both decimal and hexadecimal         *)
+
+VAR
+  current, maximum, heapTop, largest : CARDINAL;
+
+BEGIN
+  GetSummary (current, maximum, heapTop, largest);
+  WriteString ("Currently allocated:   ");
+  WriteCard (current,12); WriteString ("(dec)");
+  WriteHex (current,10); WriteString ("(hex)");
+  WriteLn;
+  WriteString ("Maximum allocated was: ");
+  WriteCard (maximum,12); WriteString ("(dec)");
+  WriteHex (maximum,10); WriteString ("(hex)");
+  WriteLn;
+  WriteString ("Heap top is:           ");
+  WriteCard (heapTop,12); WriteString ("(dec)");
+  WriteHex (heapTop,10); WriteString ("(hex)");
+  WriteLn;
+  WriteString ("Size of largest free:  ");
+  WriteCard (largest,12); WriteString ("(dec)");
+  WriteHex (largest,10); WriteString ("(hex)");
+  WriteLn;
+END WriteSummary;
+---------------------------------------------------------------------- *)
+
+END StorageStats.
