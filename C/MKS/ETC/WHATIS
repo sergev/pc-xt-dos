@@ -1,0 +1,235 @@
+. (dot)(1) -- execute shell file in current environment
+: (colon)(1) -- do nothing, successfully
+alias(1) -- display or create command aliases
+ar(1) -- create and maintain library archives
+asa(1) -- interpret ASA/FORTRAN carriage control
+ascii(5) -- table of ASCII collating sequence
+awk, awkl(1) -- data transformation, report generation language
+awkc(1) -- compile awk(1) code into an executable
+banner(1) -- display text in large font
+basename(1) -- display file name component of pathname
+bc(1) -- arbitrary-precision arithmetic calculation language
+break(1) -- exit from loop in shell script
+c(1) -- produce multi-column output
+cal(1) -- display a calendar for a month or year
+calendar(1) -- appointment reminder system
+cat(1) -- concatenate and display text files
+cc(1) -- generic C compiler interface
+cc(5) -- cc configuration files.
+cd(1) -- change working directory
+chmod(1) -- change access permissions of a file
+ci(1) -- check in a file under RCS
+cksum(1) -- calculate and display checksums and byte counts
+clear(1) -- clear screen
+cmp(1) -- compare two binary files
+co(1) -- check out a file under RCS
+comm(1) -- compare sorted files and show differences
+command(1) -- execute a simple command
+compress(1) -- Lempel-Ziv compression of a file
+continue(1) -- skip to next iteration of loop in shell script
+cp(1) -- copy files
+cpio(1) -- archiver to copy and back up files
+cpio(4) -- format of cpio archives
+crypt(1) -- encryption/decryption filter
+csplit(1) -- split a text file, according to criteria
+ctags(1) -- produce tags file for ex, more, and vi
+cut(1) -- selectively display fields or characters from input lines
+date(1) -- set and display date and time
+dc(1) -- arbitrary precision desk calculator 
+dd(1) -- copy and convert input records
+deroff(1) -- remove nroff/troff formatter commands, prepare word list
+dev(1) -- display DOS device driver information
+df(1) -- display amount of free space remaining on disk
+diff, diffh, bdiff(1) -- compare two text files and show differences
+diff3(1) -- compare three text files
+diffb(1) -- compare binary files and show differences
+dirname(1) -- display directory components of pathname
+dosexec(5) -- command line calling sequence for DOS
+dosstat(5) -- getting file system information from DOS and OS/2
+du(1) -- summarize file space usage
+echo(1) -- display arguments
+ed(1) -- line-oriented text editor
+env(1) -- display environment, set environment for process
+environ(5) -- standard environment variables
+eval(1) -- evaluate arguments in shell
+ex(1) -- text editor
+exec(1) -- execute a command in place of the current shell
+exit(1) -- exit from the shell
+expand(1) -- expand tabs to spaces
+export(1) -- mark names for export
+expr(1) -- evaluate expression
+false(1) -- fail, quietly
+fc, history(1) -- display, fix, edit and re-enter previous commands
+fg(1) -- bring process back into the foreground
+file(1) -- determine file type
+find(1) -- find files within file tree
+fmt(1) -- simple text formatter
+fold(1) --  break lines into shorter lines
+functions(1) -- display or modify shell functions
+getconf(1) -- display POSIX configuration information
+getopt(1) -- external command to parse shell file options
+getopts(1) -- parsing options from shell script command line
+glob(1) -- file name generation (wild cards) with command.com
+grep, egrep, fgrep(1) -- match patterns in a file
+gres(1) -- substitute for a pattern in a file
+hash(1) -- create a tracked alias
+head(1) -- display first part of file
+help(1) -- display brief command explanations
+history(1) -- display command history
+id(1) -- display user and group names
+ident(1) -- look for keywords in a file
+init(1) -- initial process for DOS
+inittab(4) -- format of /etc/inittab file
+integer(1) -- declare an integer variable
+intro(1) -- introduction to section 1 (commands)
+intro(2) -- introduction to system calls
+intro(3) -- introduction to the C runtime library
+intro(4) -- introduction to file formats
+intro(5) -- introduction to miscellaneous information
+introrcs(1) -- introduction to MKS RCS commands reference
+issue(4) -- format of /etc/issue file
+jobs(1) -- display status of jobs in current session
+join(1) -- join two sorted, textual relational databases
+kill(1) -- terminate process
+lc(1) -- list file system elements in categories
+let(1) -- evaluate arithmetic expressions
+lex(1) -- lexical analyzer generator
+lex(5) -- functions used with lex 1 in C
+lexp(5) -- Pascal functions used with lex 1
+lexplus(5) -- C++ functions used with lex 1
+line(1) -- copy one line of standard input
+localization(5) -- internationalization and localization overview
+logfile.dat(4) -- format of uucp log file
+login(1) -- authenticate computer user
+login.inf(4) -- format of login.inf file
+logname(1) -- display user name
+look(1) -- find lines of sorted file which begin with string
+ls(1) -- list file and directory names and attributes
+m4(1) -- macro processing language
+magic(4) -- format of the /etc/magic file
+mail(1) -- send or receive electronic mail messages
+mailx(1) -- read electronic mail
+make, makeq(1) -- maintain program generated and interdependent files
+man(1) -- print sections of the online reference manual
+merge(1) -- three-way file merge
+mkdir(1) -- create a new directory
+mksos(1) -- background interface to the operating system
+mksuucp(1) -- UUCP file transfer program
+mkswind(1) -- MKS Windows TSR
+modems.inf(4) -- format of modems.inf file
+more(1) -- display files on a page-by-page basis 
+mv(1) -- rename and move files and directories
+nl(1) -- number lines
+nm(1) -- display symbol table of object, library, or executable file
+od(1) -- formatted file dump
+pack(1) -- compress files by Huffman encoding
+passwd(1) -- change user login password
+passwd(4) -- format of /etc/passwd file
+paste(1) -- horizontally concatenate lines
+patch(1) -- change file using diff output
+pathchk(1) -- check pathnames
+pax(1) -- archiver for data interchange and file backup
+pax(4) -- format of pax archives
+pcat(1) -- display Huffman packed files on standard output
+pg(1) -- interactively display files 
+pmrun(1) -- launch a program as a new Presentation Manager session
+pr(1) -- display and format files
+print(1) -- displays arguments from the shell
+printf(1) -- display a formatted string
+prof(1) -- profile execution times
+ps(1) -- display process and memory block status
+pvcs2rcs(1) -- PVCS to RCS conversion utility
+pwd(1) -- display working directory
+r(1) -- edit and re-execute previous command
+rcs(1) -- change RCS file attributes
+rcsclean(1) -- clean up working files
+rcsdiff(1) -- compare RCS revisions
+rcsedit(5) -- RCS editing facilities for descriptions and log messages
+rcsfile(5) -- format of RCS file
+rcsmenu(1) -- MKS RCS menu interface
+rcsmerge(1) -- merge RCS revisions
+read(1) -- input a line to the shell
+readonly(1) -- mark variable as readonly
+references(5) -- related books and articles
+regexp(5) -- syntax of regular expression patterns
+return(1) -- return from shell function or . (dot) script
+rev(1) -- reverse character order of input lines
+rlog(1) -- display info about RCS files
+rm(1) -- remove files
+rmail(1) -- handle mail routing
+rmdir(1) -- remove directory
+sccs2rcs(1) -- SCCS to RCS conversion utility
+sed(1) -- stream editor (non-interactive)
+set(1) -- set shell flags and positional parameters
+sh(1) -- UNIX-style (Korn) shell and command interpreter
+shedit(5) -- interactive command and history editing in the shell
+shift(1) -- shift positional parameters
+shpc(5) -- DOS- and OS/2-specific features of the Korn Shell
+site.sts(4) -- format of uucp status file
+size(1) -- display object file sizes
+sleep(1) -- suspend execution for a specified time
+sort(1) -- sort/merge utility
+spell(1) -- detect spelling errors
+split(1) -- split a file into manageable pieces
+strings(1) -- display printable strings in binary files
+strip(1) -- remove debug information from executable files
+sum(1) -- compute checksum for file
+switch(1) -- print or change DOS option flag character
+symbol(5) -- C functions for symbol table management
+sync(1) -- update the disk
+tags(4) -- format of tags file
+tail(1) -- display last lines of file
+tar(1) -- USTAR-compatible tape archiver to copy and back up files 
+tar(4) -- format of tar archives
+tee(1) -- clone output stream
+test(1) -- test for condition
+time(1) -- display CPU and elapsed times for command
+times(1) -- display user and system times used by the shell and its children
+timezone(5) -- setting local time zone
+touch(1) -- change file modification date
+tr(1) -- translation filter
+trap(1) -- intercept abnormal conditions and interrupts
+true(1) -- do nothing, successfully
+tsort(1) -- topological sort
+tty(1) -- display terminal name
+type(1) -- tell how shell interprets name
+typeset(1) -- assign attributes and values to variables
+ulimit(1) -- set process limits
+umask(1) -- get or set the file mode creation mask
+unalias(1) -- remove alias definitions
+uname(1) -- display system name information
+uncompress(1) -- Undo Lempel-Ziv compression of a file
+unexpand(1) -- compress spaces into tabs
+uniq(1) -- display unique lines of sorted file
+unpack(1) -- decode Huffman packed files
+unset(1) -- remove shell variable or function
+unstrip(1) -- add symbol table to an executable file
+utmp(4) -- login accounting file format
+uucheck(1) -- check UUCP directory structure
+uucheck.dat(4) -- format of uucheck.dat file
+uucico(1) -- initiate or debug UUCP file transfer
+uuclean(1) -- remove old UUCP working files 
+uuconfig(1) -- UUCP configuration program
+uucp(1) -- copy files between remote UUCP sites
+uucp(4) -- format of UUCP working files
+uucpcfg.dat(4) -- format of uucpcfg.dat file
+uudecode(1) -- decode transmitted binary file
+uuencode(1) -- encode a file for safe transmission
+uulog(1) -- display log information on UUCP events
+uuname(1) -- display names of known UUCP sites
+uustat(1) -- display the status of pending UUCP transfers
+uux(1) -- request command execution on remote site
+uuxqt(1) -- carry out command requests from other sites
+vi(1) -- display-oriented interactive text editor
+vipc(5) -- PC specific set options to vi
+wc(1) -- count of lines, words, and bytes
+whence(1) -- tell how shell interprets command name
+which(1) -- display full pathname for executable command
+who(1) -- display login accounting information
+xargs(1) -- construct and execute command lines
+yacc(1) -- parser generator language
+yacc(5) -- C interface to the parser produced by yacc 1
+yaccp(5) -- Pascal functions used with yacc 1
+yaccplus(5) -- C++ functions used with yacc 1
+yycurses(5) -- C and C++ CURSES library
+zcat(1) -- uncompress and display data

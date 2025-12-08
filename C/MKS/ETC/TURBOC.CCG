@@ -1,0 +1,160 @@
+# Generalized C interface for TURBO C 1.5 and 2.0.
+# Assumes LIB points to TURBO C libraries.
+# Assumes INCLUDE points to TURBO C headers.
+# You can search a different library directory with -L dirname
+
+#ECHO = 1;			# see compiler/linker commands
+
+# TCC option prefixes: these are passed through to compiler
+
+Copts = { "-1","-a","-A","-B","-C","-d","-D","-g","-G","-i","-I","-j","-k","-K",
+	   "-N","-O","-p","-r","-u","-U","-v","-w","-y","-Y","-z","-Z" };
+
+LibDir = getenv("LIB");
+
+Model = "s";
+coptions = " ";
+val = 0;
+alib = "";
+
+Libs = {};
+Srcs = {};
+Objs = {};
+Output = "";
+
+for (i in ARGV)
+do
+	if (substr(i,1,2) == "-m")
+		coptions |= i | " ";
+		Model = substr(i,3,1);
+	elif (i == "-c")
+		compile_only = 1;
+	elif (substr(i,-2) == ".c" || substr(i,-4) == ".asm")
+		Srcs |= i;
+		opath = filepath(i);	# get file name
+		name = opath[length(opath)-1];
+		Objs |= substr(name, 1, rindex(name,".")) | "obj";
+	elif (substr(i,-4) == ".obj")
+		Objs |= i | " ";
+	elif (i == "-o")
+		advance i;
+		Output = i;
+	elif (substr(i,1,2) == "-e")	# -e<output-file>
+		Output = substr(i,3);
+	elif (index(Copts, substr(i,1,2)) != 0)
+		coptions |= i | " ";
+	elif (i == "-M")		# linker map in output.map
+		map = 1;
+	elif (substr(i,1,2) == "-L")
+		LibDir = replace(substr(i,3), "/", "\\");
+	elif (i == "-l")
+		advance i;
+		alib = i;
+	elif (substr(i,1,2) == "-l")
+		alib = substr(i,3);
+	elif (substr(i,-4) == ".lib")
+		Libs |= i;
+	elif (i == "-f")
+		FloatLib = "emu";
+	elif (i == "-f87" || i == "-fp")
+		FloatLib = "fp87";
+	elif (i == "-f-")
+		FloatLib = "";
+	elif (substr(i,1,1) == "-")
+		println gettext("Unknown option:"), i,
+			gettext("(ignored)");
+	else
+		println gettext("Unknown"), i,
+			gettext("(ignored)");
+	fi
+	if (alib)
+		if (substr(alib,-4) != ".lib")
+			alib |= ".lib";
+		fi
+		if (length(filepath(alib)) < 2)		# has path?
+			Libs |= alib;
+		else
+			Libs |= LibDir | alib;
+		fi
+		alib = "";
+	fi
+done
+
+if (! Objs)
+	print gettext("No source or object files!\n");
+	exit 1;
+fi
+
+if (Output == "")
+	Output = Objs[0];
+	Mapfile = substr(Output, 1, rindex(Output,"."));
+	Output = Mapfile | "exe";
+	Mapfile |=  "map";
+fi
+
+# compile all .c files
+if (Srcs)
+	line = "tcc -c"| coptions | Srcs;
+	if (length(line) < 110)
+		if (compile_only)
+			ovl_exec line;
+		else
+			val = exec(line);
+		fi
+	else
+		for (i in Srcs)
+		do
+			val = exec("tcc -c", coptions,  i);
+			if (val)
+				exit val;
+			fi
+		done
+	fi
+fi
+if (compile_only || val)
+	exit val;
+fi
+
+# run the linker
+
+# Build linker line
+if (FloatLib != "")
+	FloatLib = LibDir | "\\" | FloatLib | " " | LibDir | "\\math" | Model | " ";
+fi
+
+temp = tempfile("lnk");
+delete temp;
+
+Output = replace(Output, "/", "\\");
+Mapfile = replace(Mapfile, "/", "\\");
+
+if (map)
+	print "/m" -> temp;
+fi
+print "/c/x " | map -> temp;				# tlink options
+print LibDir | "\\c0" | Model | ".obj" -> temp;		# C startup
+
+for (i in Objs)						# object list
+do
+	print "+\n" | replace(i,"/","\\") -> temp;
+done
+
+print "\n" | Output | "\n" | Mapfile | "\n" -> temp;	# executable
+
+for (i in Libs)						# user libraries
+do
+	print replace(i, "/", "\\") | "+\n" -> temp;
+done
+
+if (FloatLib)
+	print FloatLib | "+\n" -> temp;			# math library
+fi
+print LibDir | "\\c" | Model | ".lib\n" -> temp;	# C library
+close temp;
+
+val = exec("tlink @" | replace(temp,"/","\\"));
+delete temp;
+if (val == 127)
+	println gettext("Could not find tlink!");
+fi
+exit val;

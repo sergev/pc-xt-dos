@@ -1,0 +1,154 @@
+# Generalized C interface for WATCOM C 9.0
+#
+# This file assumes that the Watcom compiler package has been correctly
+# configured.  In particular, the following assumptions are made:
+# - WATCOM points to the directory into which the compiler is installed.
+# - INCLUDE points to Watcom C headers.
+# - PATH includes the directory containing the Watcom C binaries.
+#
+# By default, this will call the real mode compiler.  To call the
+# protected mode compiler, change the variable have386 to "true" farther
+# down in this file, or use the '-p' option on the CC command line.
+#
+# You can search a different library directory with -L dirname
+# Use -emu to get emulated floating point library
+# Use -f or -7 to get 8087 floating point
+# The -f<filename> inclusion is still passed to the compiler, if
+# specified.
+
+#ECHO = 1;			# see compiler/linker commands
+
+# WCC option prefixes: these are passed through to compiler
+
+Copts = { "-d","-D", "-e", "-f", "-g", "-i","-I","-j",
+	   "-m","-n","-o","-s","-w","-v","-y",
+	   "-z","-0","-1","-2" } ;
+
+Model = "s";
+coptions = " ";
+
+# change to "true" if you have a 386!
+have386 = "false";
+
+if (have386 == "true")
+	compiler = "wccp";	# protected mode compiler
+else
+	compiler = "wcc";	# real mode compiler
+fi
+
+LibDir = getenv("LIB");
+#if (! LibDir)
+#	LibDir = "\\watcomc\\lib";
+#fi
+
+map = 0;
+val = 0;
+float = "";
+Libs = {};
+Srcs = {};
+Objs = {};
+Output = "";
+
+for (i in ARGV)
+do
+	if (substr(i,1,2) == "-m")
+		coptions |= " " | i;
+		Model = substr(i,3,1);
+	elif (i == "-c")
+		compile_only = 1;
+	elif (i == "-p")
+		compiler = "wccp";
+	elif (i == "-S")
+		println gettext("WCC does not support -S");
+		exit 1;
+	elif (substr(i,-2) == ".c" || substr(i,-4) == ".asm")
+		Srcs |= i;
+		opath = filepath(i);
+		name = opath[length(opath)-1];
+		Objs |= substr(name, 1, rindex(name,".")) | "obj";
+	elif (substr(i,-4) == ".obj")
+		Objs |= i | " ";
+	elif (i == "-o")
+		advance i;
+		Output = i;
+	elif (i == "-emu")		# before Copts check
+		float = "math";
+	elif (i == "-f" || i == "-7")
+		float = "math87";
+	elif (index(Copts, substr(i,1,2)) != 0)
+		coptions |= " " | i;
+	elif (i == "-M")
+		map = 1;
+	elif (substr(i,1,2) == "-L")
+		LibDir = replace(substr(i,3), "/", "\\");
+	elif (substr(i,-4) == ".lib")
+		Libs |= i;
+	elif (substr(i,1,1) == "-")
+		println gettext("Unknown option:"), i,
+			gettext("(ignored)");
+	else
+		println gettext("Unknown"), i,
+			gettext("(ignored)");
+	fi
+done
+
+if (! Objs)
+	print gettext("No source or object files!\n");
+	exit 1;
+fi
+
+if (Output == "")
+	Output = Objs[0];
+	Mapfile = substr(Output, 1, index(Output,"."));
+	Output = Mapfile | "exe";
+	Mapfile |=  "map";
+fi
+
+# compile all .c files
+for (i in Srcs)
+do
+	val = exec(compiler, i, coptions) ;
+done
+
+if (compile_only)
+	exit val;
+fi
+
+# Build linker directives in temporary file
+
+temp = tempfile("lnk");
+delete temp;
+
+Output = replace(Output, "/", "\\");
+Mapfile = replace(Mapfile, "/", "\\");
+
+# wlink options
+#	If you want to change the stack size, add that here
+
+println "option caseexact" -> temp;
+if (map)
+	println "option map=" | Mapfile -> temp;
+fi
+println "name", Output -> temp;				# output name
+
+for (i in Objs)						# object list
+do
+	println "file", replace(i,"/","\\") -> temp;
+done
+
+for (i in Libs)						# user libraries
+do
+	println "library", replace(i, "/", "\\"), "" -> temp;
+done
+
+#if (float)
+#	println "library", LibDir | "\\" | float | Model -> temp;
+#fi
+
+# Watcom embeds info about the required runtime C lib into .obj's
+println "library", "clib" | Model -> temp;
+close temp;
+
+val = exec("wlink @" | replace(temp,"/","\\"));
+delete temp;
+exit val;

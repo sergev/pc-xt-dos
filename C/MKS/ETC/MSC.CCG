@@ -1,0 +1,152 @@
+# Generalized C/C++ interface for Microsoft C 6.0 and C/C++ 7.0.
+#
+# Assumes MSC C libraries pointed to by LIB; otherwise, uses /c700/lib
+# In other words, this file assumes C/C++ 7.0, if the compiler is
+# incompletely configured.
+#
+# You can search a different library directory with -L dirname
+# Use -emu to get emulated floating point library (FPa)
+# Use -f to get 8087 floating point (FPi87)
+
+#ECHO = 1;			# see compiler/linker commands
+
+# CL option prefixes: these are passed through to compiler
+
+Copts = { "-C", "-d","-D", "-E", "-F", "-G", "-H", "-I", "-J",
+	  "-O", "-P", "-U", "-u", "-V", "-W", "-Z" };
+FloatOptions = { "-FPa", "-FPc", "-FPi", "-FPc87", "-FPi87" };
+
+Model = "s";
+coptions = "";
+LibDir = getenv("LIB");
+if (! LibDir)
+	LibDir = "\\c700\\lib";
+fi
+map = 0;
+val = 0;
+float = "";
+Libs = {};
+Srcs = {};
+Objs = {};
+Output = "";
+
+for (i in ARGV)
+do
+	flag = substr(i,1,2);
+	if (flag == "-m")
+		Model = substr(i,3,1);
+		coptions |= " " | "-A" | toupper(Model);
+	elif (i == "-c")
+		compile_only = 1;
+	elif (i == "-S")		# assembler listing
+		coptions |= " /Fa";
+	elif (substr(i,-2) == ".c")
+		Srcs |= i;
+		opath = filepath(substr(i,1,length(i)-1));
+		Objs |= opath[length(opath)-1] | "obj";
+	elif (substr(i,-4) == ".asm")
+		Srcs |= i;
+		opath = filepath(substr(i,1,length(i)-3));
+		Objs |= opath[length(opath)-1] | "obj";
+	elif (substr(i,-4) == ".cpp")
+		Srcs |= i;
+		opath = filepath(substr(i,1,length(i)-3));
+		Objs |= opath[length(opath)-1] | "obj";
+	elif (substr(i,-4) == ".obj")
+		Objs |= i | " ";
+	elif (i == "-o")
+		advance i;
+		Output = i;
+	elif (substr(i,1,3) == "-Fe")		# support -Fe<outputfile>
+		Output = substr(i,4);
+	elif (i == "-emu")			# like -FPa
+		float = "a";
+	elif (i == "-f")			# emulated with calls, -FPc
+		float = "c";
+	elif (i == "-f-")			# default anyway
+		float = "";
+	elif (i == "-fp")			# like -FPi87
+		float = "i87";
+	elif (index(FloatOptions, substr(i,1,3)) != 0)	# -FPxxx
+		float = substr(i,4);
+	elif (index(Copts, flag) != 0)
+		coptions |= " " | i;
+	elif (i == "-M")
+		map = 1;
+	elif (flag == "-L")
+		LibDir = replace(substr(i,3), "/", "\\");
+	elif (substr(i,1,5) == "-link")
+		LinkOptions |= " " | i;
+	elif (substr(i,-4) == ".lib")
+		Libs |= i;
+	elif (substr(i,1,1) == "-")
+		println gettext("Unknown option:"), i,
+			gettext("(ignored)");
+	else
+		println gettext("Unknown"), i,
+			gettext("(ignored)");
+	fi
+done
+
+if (! Objs)
+	print gettext("No source or object files!\n");
+	exit 1;
+fi
+
+if (Output == "")
+	Output = Objs[0];
+	Output = substr(Output, 1, index(Output,".")) | "exe";
+fi
+
+# compile all .c files
+for (i in Srcs)
+do
+	val = exec("cl -c", coptions, i);
+	if (val)
+		exit val;
+	fi
+done
+
+if (compile_only)
+	exit val;
+fi
+
+# Build linker directives in temporary file
+
+temp = tempfile("lnk");
+delete temp;
+
+Output = replace(Output, "/", "\\");
+
+# link options
+#	If you want to change the stack size, add that here
+
+ldoptions = "/noignorecase/batch";
+if (map)
+	ldoptions |= "/map";
+fi
+
+for (i in Objs)				# object list
+do
+	println replace(i,"/","\\"), "+" -> temp;
+done
+
+println "\n" | Output, ldoptions, "\n," -> temp; # output name+options
+for (i in Libs)				# user libraries
+do
+	println replace(i, "/", "\\"), "+" -> temp;
+done
+
+if (float)
+	println LibDir | "\\" | float | Model -> temp;
+else
+	println "" -> temp;
+fi
+
+println "" -> temp;			# empty placeholder for .def file
+
+close temp;
+
+val = exec("link " | ldoptions | " @"| replace(temp,"/","\\"));
+delete temp;
+exit val;
