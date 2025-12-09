@@ -1,0 +1,1 @@
+link init+EXAMPL64+EXAMPL65+EXAMPL64.sym,prognew,,prolog.lib

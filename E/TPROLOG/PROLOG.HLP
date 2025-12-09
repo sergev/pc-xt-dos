@@ -1,0 +1,383 @@
+
+  F U N C T I O N   K E Y S       SPECIAL COMBINATIONS
+ÉÍÍÍÍÍÍÍÍÍÍÍÍ»ÉÍÍÍÍÍÍÍÍÍÍÍÍÍ»        ÉÍÍÍÍ»ÉÍÍÍÍ»
+º     F1     ºº     F2      º        ºCtrlºº <- º Move 8 to left
+º Pop-Up     ºº Go to Line  º        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º Help       ºº Ret. line # º        ºCtrlºº -> º Move 8 to right
+ÌÍÍÍÍÍÍÍÍÍÍÍÍ¹ÌÍÍÍÍÍÍÍÍÍÍÍÍÍ¹        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º     F3     ºº     F4      º        ºCtrlººPgUpº Go to start of text
+º Search     ºº Replace     º        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º Srch Again ºº R. Again    º        ºCtrlººPgDnº Go to end of text
+ÌÍÍÍÍÍÍÍÍÍÍÍÍ¹ÌÍÍÍÍÍÍÍÍÍÍÍÍÍ¹        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º     F5     ºº     F6      º        ºCtrlººHomeº Go to start of page
+º Copy       ºº Move Text   º        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º Copy Again ºº             º        ºCtrlººEnd º Go to end of page
+ÌÍÍÍÍÍÍÍÍÍÍÍÍ¹ÌÍÍÍÍÍÍÍÍÍÍÍÍÍ¹        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º     F7     ºº     F8      º        ºCtrlºº bs º Delete line
+º Delete Textºº Aux Edit    º        ÌÍÍÍÍ¹ÌÍÍÍÍ¹
+º            ºº             º        ºCtrlºº V  º Insert/Overwrite
+ÌÍÍÍÍÍÍÍÍÍÍÍÍ¹ÌÍÍÍÍÍÍÍÍÍÍÍÍÍ¹        ÌÍÍÍÍ¹ÈÍÍÍÍ¼
+º     F9     ºº     F10     º        ºDel º       Delete
+º Extern copyºº End editor  º        ÌÍÍÍÍ¹
+º View wind  ºº Resize wind º        ºIns º       Insert/Overwrite
+ÈÍÍÍÍÍÍÍÍÍÍÍÍ¼ÈÍÍÍÍÍÍÍÍÍÍÍÍÍ¼        ÈÍÍÍÍ¼
+
+The second function of each function key is activated when the SHIFT key
+is pressed at the same time as the function key.
+
+
+
+ÛßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßÛ
+Û				  				Û
+Û			C O L O R S  				Û
+Û				  				Û				  				 Û
+Û                HOW TO CALCULATE SCREEN ATTRIBUTES.		Û
+Û				  				Û
+Û 1. Choose ONE foreground color and ONE background color.	Û
+Û 2. Add the corresponding integer values below.		Û
+Û 3. Add 128 if you want whatever is displayed with that 	Û
+Û    attribute to blink.				  	Û
+Û                                                         	Û
+ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß
+
+BACKGROUND COLORS (Screen)       FOREGROUND COLORS (Characters)
+------------------------+---------+----------------+------------
+Black			 0		Black		0
+Blue			16		Blue		1
+Green			32		Green		2
+Cyan			48		Cyan		3
+Red			64		Red		4
+Magenta			80		Magenta		5
+Brown			96		Brown		6
+White  			112		White		7
+Grey	 		8
+Light Blue		24
+Light Green		40
+Light Red		72
+Light Magenta		88
+Yellow                 104
+White (High Intensity) 120
+
+
+
+
+ÛßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßÛ
+Û								 Û
+Û		STANDARD PREDICATES		                 Û
+Û								 Û
+ÛÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÛ
+
+
+INPUT
+=====
+readln(StringVariable)
+	(string) -- (outp)
+
+readint(IntgVariable)
+	(integer) -- (outp)
+
+readreal(RealVariable)
+	(real) -- (outp)
+
+readchar(CharVariable)
+	(char) -- (outp)
+
+file_str(DosFileName,StringVariable)	File <---> String
+	(string,string) -- (inp,outp) (inp,inp)
+
+
+FILESYSTEM
+==========
+openread(SymbolicFileName,DosFileName)
+	(file,string) -- (inp,inp)
+
+openwrite(SymbolicFileName,DosFileName)
+	(file,string) -- (inp,inp)
+
+openappend(SymbolicFileName,DosFileName)
+	(file,string) -- (inp,inp)
+
+openmodify(SymbolicFileName,DosFileName)
+	(file,string) -- (inp,inp)
+
+readdevice(SymbolicFileName)
+	(file) -- (inp) (outp)
+
+writedevice(SymbolicFileName)
+	(file) -- (inp) (outp)
+
+closefile(SymbolicFileName)
+	(file) -- (inp)
+
+filepos(SymbolicFileName,FilePosition,Mode)
+	(file,real,integer) -- (inp,inp,inp) (inp,outp,inp)
+
+        Mode specifies:  0:Start 1:Relative 1:End
+eof(SymbolicFileName)
+	(file) -- (inp)
+
+flush(SymbolicFileName)
+	(file) -- (inp)
+
+existfile(DosFileName)
+	(string) -- (inp)
+
+deletefile(DosFileName)
+	(string) -- (inp)
+
+renamefile(OldDosFileName,NewDosFileName)
+	(string,string) -- (inp,inp)
+
+disk(DosPath)
+	(string) -- (inp) (outp)
+
+
+SCREEN HANDLING
+===============
+scr_char(Row,Column,Char)
+	(integer,integer,char) -- (inp,inp,inp) (inp,inp,outp)
+
+scr_attr(Row,Column,Attr)
+	(integer,integer,integer) -- (inp,inp,inp) (inp,inp,outp)
+
+field_str(Row,Column,Length,String)
+	(integer,integer,integer,string) -- (inp,inp,inp,inp) (inp,inp,inp,outp)
+
+field_attr(Row,Column,Length,Attr)
+	(integer,integer,integer,integer) -- (inp,inp,inp,inp)
+
+cursor(Row,Column)
+	(integer,integer) -- (inp,inp) (outp,outp)
+
+cursorform(Startline,Endline)	0<Startline<15, 0<Endline<15
+	(integer,integer) -- (inp,inp)
+
+attribute(Attr)
+	(integer) -- (inp) (outp)
+
+
+WINDOW SYSTEM
+=============
+makewindow(WindowNo,ScrAtt,FrameAtt,Framestr,Row,Column,Height,Width)
+	(integer,integer,integer,string,integer,integer,integer,integer) -- (inp,inp,inp,inp,inp,inp,inp,inp)
+
+shiftwindow(WindowNo)
+	(integer) -- (inp) (outp)
+
+removewindow()
+
+clearwindow()
+
+window_str(ScreenString)
+	(string) -- (inp) (outp)
+
+window_attr(Attr)
+	(integer) -- (inp)
+
+
+STRING HANDLING
+===============
+frontchar(String,FrontChar,RestString)
+	(string,char,string) -- (inp,outp,outp) (inp,inp,outp)
+	(inp,outp,inp) (inp,inp,inp) (outp,inp,inp)
+
+fronttoken(String,Token,RestString)
+	(string,string,string) -- (inp,outp,outp) (inp,inp,outp)
+	(inp,outp,inp) (inp,inp,inp) (outp,inp,inp)
+
+frontstr(Length,Inpstring,StartString,RestString)
+	(integer,string,string,string) -- (inp,inp,outp,outp)
+
+concat(String1,String2,String3)  String3 = String1 + String2
+	(string,string,string) -- (inp,inp,outp) (inp,outp,inp)
+	(outp,inp,inp) (inp,inp,inp)
+
+str_len(String,Length)
+	(string,integer) -- (inp,inp) (inp,outp)
+
+isname(StringParam)
+	(string) -- (inp)
+
+
+CONVERSIONS
+===========
+char_int(CharParam,IntgParam)
+	(char,integer) -- (inp,outp) (outp,inp) (inp,inp)
+
+str_int(StringParam,IntgParam)
+	(string,integer) -- (inp,outp) (outp,inp) (inp,inp)
+
+str_char(StringParam,CharParam)
+	(string,char) -- (inp,outp) (outp,inp) (inp,inp)
+
+str_real(StringParam,RealParam)
+	(string,real) -- (inp,outp) (outp,inp) (inp,inp)
+
+upper_lower(StringInUpperCase,StringInLowerCase)
+	(string,string) -- (inp,inp) (inp,outp) (outp,inp)
+
+
+
+GRAPHICS
+========
+graphics(ModeParam,Palette,Background)
+	(integer,integer,integer) -- (inp,inp,inp)
+
+dot(Row,Column,Color)
+	(integer,integer,integer) -- (inp,inp,inp) (inp,inp,outp)
+
+line(Row1,Col1,Row2,Col2,Color)
+	(integer,integer,integer,integer,integer)
+	-- (inp,inp,inp,inp,inp)
+
+pendown
+penup
+pencolour(Color)
+	(integer) -- (inp)
+
+forward(Step)
+	(integer) -- (inp)
+
+back(Step)
+	(integer) -- (inp)
+
+right(Angle)
+	(integer) -- (inp)
+
+left(Angle)
+	(integer) -- (inp)
+
+
+MISCELLANEOUS
+=============
+edit(InputString,OutputString)
+	(string,string) -- (inp,outp)
+
+editmsg(InputString,OutputString,Headstr,Headstr2,Msg,Pos,Helpfileename,RetStatus)
+	(string,string,string,string,string,integer,string,integer)
+	-- (inp,outp,inp,inp,inp,inp,inp,outp)
+
+display(String)
+	(string) -- (inp)
+
+/* Show a picture of the directory and return a filename */
+dir(Path,Filespec,Filename)
+	(string,string,string) -- (inp,inp,outp)
+
+random(RealVariable)
+	(real) -- (outp)
+
+storage(StackSize,HeapSize,TrailSize)
+	(real,real,real) -- (outp,outp,outp)
+
+sound(Duration,Frequency)
+	(integer,integer) -- (inp,inp)
+
+date(Year,Month,Day)
+	(integer,integer,integer) -- (outp,outp,outp) (inp,inp,inp)
+
+time(Hours,Minutes,Seconds,Hundredths)
+	(integer,integer,integer,integer) -- (outp,outp,outp,outp)
+	                                     (inp,inp,inp,inp)
+
+port_byte(PortNo,Value)
+	(integer,integer) -- (inp,inp) (inp,outp)
+
+ptr_dword(8086Ptr,Segment,Offset)
+	(string,integer,integer) -- (inp,otp,outp) (outp,inp,inp)
+
+memword(Segment,Offset,Word)
+	(integer,integer,integer) -- (inp,inp,inp)  (inp,inp,outp)
+
+membyte(Segment,Offset,Byte)
+	(integer,integer,integer) -- (inp,inp,inp)  (inp,inp,outp)
+
+bitand(X,Y,Z) : Z=X and Y
+	(integer,integer,integer) -- (inp,inp,outp)
+
+bitor(X,Y,Z) : Z=X or Y
+	(integer,integer,integer) -- (inp,inp,outp)
+
+bitexor(X,Y,Z) : Z=X exor Y
+	(integer,integer,integer) -- (inp,inp,outp)
+
+bitnot(X,Y) : Y= not X
+	(integer,integer) -- (inp,outp)
+
+bitleft(X,Y,Z) : Z=X shiftet Y places to the left
+	(integer,integer,integer) -- (inp,inp,outp)
+
+bitright(X,Y,Z) : Z=X shiftet Y places to the left
+	(integer,integer,integer) -- (inp,inp,outp)
+
+system(DosCommandString)	Call the dos system
+	(string) -- (inp)
+
+bios(Interruptno,reg(AXi,BXi,CXi,DXi,SIi,DIi,DSi,ESi),
+		 reg(AXo,BXo,CXo,DXo,SIo,DIo,DSo,ESo))
+	Activate a system interrupt
+	(integer,REG,REG) -- (inp,inp,outp) (inp,inp,reg(outp,outp ... )
+
+consult(DosFileName)  Load a database from file
+	(string) -- (inp)
+
+save(DosFileName)  Save the database on file
+	(string) -- (inp)
+
+exit	Return to menu system
+
+fail	is always false and provokes backtracking
+
+nl	New line
+
+beep	A short sound
+
+
+SPECIAL  PREDICATES
+====================
+write( Variable|Constant * )
+writef( FormatString, Variable|Constant * )
+findall( Variable, Atom, ListVariable )
+not( Atom )
+free( Variable )
+bound( Variable )
+readterm( Domain, Variable )
+assertz( Term )
+asserta( Term )
+retract( Term )
+
+
+ÛßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßÛ
+Û								 Û
+Û			OPTIONS					 Û
+Û								 Û
+ÛÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÛ
+
+
+trace		traces all predicates.
+
+trace p1,p2,..	trace predicates p1,p2,... only.
+
+shorttrace	tracing without disturbing system optimizing. (Ref. p11.4.9)
+
+nowarnings	Suppress warnings
+
+nobreak		Predicates should not scan the keyboard to see
+                if CTRL-BREAK has been pressed.
+
+check_determ	Warn about the presence of nondeterministic clauses.
+
+check_cmpio	Check for use of compound flow patterns.
+
+diagnostics	Print compiler diagnostics
+
+include "filename"
+		Include a Prolog file during compilation.
+
+
+Adjustment of compiler tables:
+******************************
+code=nnn	Size of the code array in bytes
+trail=nnn	Size of the trail in bytes.
+
+

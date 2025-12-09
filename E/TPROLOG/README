@@ -1,0 +1,223 @@
+                   Welcome to Turbo Prolog!
+
+This file contains last minute information since the manuals were
+printed.  It also contains corrections to the manual, and a description
+of all the files on the distribution disks.  Since this file contains
+information important to you, please read it in its entirety; hopefully
+it will answer any questions you may have.
+
+
+                           NEED HELP?
+                           ----------
+
+If you have problems, please read this help file and the  Owner's
+Handbook first.  If you still have a question and  need technical
+assistance, help is available from the following sources:
+
+1)  Type GO BOR100 on the CompuServe bulletin board system.
+2)  Check with your local software dealer or user group.
+3)  Write to: Borland International
+              Turbo Prolog Technical Support
+              4585 Scotts Valley Drive
+              Scotts Valley, CA  95066
+
+4)  If you have an urgent problem that cannot wait, and you have sent in
+the license agreement from the front of your manual, you may call the
+Borland Technical Support department.
+
+Please  have the following information ready before  calling  our
+Technical Support department:
+
+ 1) Computer name,  model, and the names and model numbers of any
+    additional hardware.
+ 2) Operating  system and version number (the version number  can
+    be determined by typing VER at any DOS prompt).
+ 3) Contents of your AUTOEXEC.BAT file.
+ 4) Contents of your CONFIG.SYS file.
+
+
+
+             IMPORTANT INFORMATION AND LAST MINUTE CHANGES
+             ---------------------------------------------
+
+
+HARD DISK USERS
+---------------
+Use the following procedure if you will be installing Turbo Prolog on
+a drive other than drive A:
+
+1. Copy all Turbo Prolog files onto your hard disk.
+2. Make sure that you are logged onto the directory where the Turbo
+   Prolog files are located.
+3. At the DOS prompt, type "INSTALL".
+4. You are now ready to run Turbo Prolog!
+
+
+NOTE TO TWO FLOPPY DISK USERS
+-----------------------------
+Once you have debugged your program and wish to make an .EXE, file it is
+suggested that you do so in the following manner.
+
+These files should be on the disk in drive A: PROLOG.EXE, PROLOG.SYS,
+PROLOG.ERR (optional), PROLOG.HLP (optional), PLINK.BAT, and of course
+the source to your program.
+
+The following programs should be on the disk in drive B: PROLOG.LIB,
+INIT.IBJ and the Linker.
+
+Run Prolog from drive A: and set both the OBJ and Turbo directories to
+B:\.  Now simply select .EXE in the Options pull-down menu and then
+Compile.
+
+If you still need more room on one of your disks, you can swap the
+disk in drive A: after running Prolog with one containing only your
+source code and PLINK.BAT (Once you run Prolog the entire development
+system is resident).  Place only the required files on each disk to
+allow enough room for larger programs.
+
+
+IBM-CGA
+-------
+Turbo Prolog is shipped with IBM-CGA ON.  To accommodate systems
+containing an IBM Color Graphics Adapter or any other adapter that
+blinks or snows when the screen scrolls or is updated quickly.  If you
+have a video adapter that does not blink or snow (such as a Hercules or
+IBM Enhanced Graphics Adapter) you will want to turn IBM-CGA "OFF". To
+do so, select Miscellaneous settings from the Setup pull-down on the
+main menu, then toggle IBM-CGA OFF.  This will also speed up screen I/O.
+
+
+<F10>:End
+---------
+When you are editing in the auxiliary editor or creating a module list,
+press <F10> (:End) to exit and save your work.  If you don't want to
+save your work, Press <ESC> to leave both of these windows quickly.
+
+
+TURTLE GRAPHICS
+---------------
+The predicates right and left are not supported with an o-flowpattern,
+(as pointed out in the manual). Instead, a new predicate
+
+     penpos(RowCoordinate,ColumnCoordinate,Direction)
+
+is introduced. This predicate can be used in two ways.  If all
+parameters are bound prior to calling penpos, the predicate sets the
+position and direction of the turtle (and its pen).  If all parameters
+are free, they will be bound to the values determined by the turtle's
+current position.
+
+
+HEX NOTATION
+------------
+Hex notation is supported.  A hex number is identified by a preceeding
+dollar sign, $.  For example, $21 has the integer value 33.
+Hexadecimals are not a new type; They are just another way to write
+integers.
+
+
+WARNINGS
+--------
+The warnings for unbound variables cannot be suppressed by <F10>, when
+you are compiling to an object module.  To fix this, the corresponding
+domain must be declared as a reference domain.
+
+
+LINKER
+------
+Microsoft linker version 2.1 (or later) is required to link Prolog
+object modules to the PROLOG library.
+
+
+PROLOG.SYS
+----------
+Saving and loading .SYS files is done to and from the PRO directory.
+This allows you to have a different .SYS file for every program you
+develop.
+
+
+
+                      CORRECTIONS/OMISSIONS
+                      ---------------------
+
+
+Page 158 - AN ASSEMBLER ROUTINE CALLED FROM TURBO PROLOG
+
+   global predicates
+        double(integer,integer) - (i,o) language assembler
+
+should be:
+
+   global predicates
+        double(integer,integer) - (i,o) language asm
+
+
+Page 163 - FILES ON THE DISTRIBUTION DISK
+
+  PLINK.BAT contains linking information (see Appendix D).
+
+should be:
+
+  PLINK.BAT contains linking information (see Appendix C).
+
+
+
+Page 164 - FILES NEEDED WHEN USING TURBO PROLOG
+
+  When generating EXE files.   PLINK.BAT must be present in the same
+  directory as PROLOG.EXE (the Turbo directory), the files INIT.OBJ
+  and PROLOG.LIB must be present in the OBJ directory, and the LINKER
+  must be present in the OBJ directory or accessible via a DOS path.
+
+should be:
+
+  When generating .EXE files, PLINK.BAT must be in the .OBJ directory,
+  the LINKER must be present in the OBJ directory or accessible via a
+  DOS path, and INIT.OBJ and PROLOG.LIB must be in the TURBO directory.
+
+
+
+                 FILES ON THE DISTRIBUTION DISKS
+                 -------------------------------
+
+     SYSTEM DISK
+     -----------
+          File                     Description
+     ---------------------------------------------------------------
+     README   COM  -  Program you are running
+     PROLOG   EXE  -  Contains the editor, compiler, file handler and
+                      runtime package
+     PROLOG   SYS  -  File containing color, window and directory
+                      information used by PROLOG.EXE
+     PROLOG   ERR  -  File containing error messages for Prolog
+     PROLOG   HLP  -  File containing help text for Prolog
+     PLINK    BAT  -  Batch file containing linking procedures
+     HANOI    PRO  -  Sample program demonstrating the Towers of Hanoi
+     INSTALL  COM  -  Prepares Turbo Prolog for use on a Hard Disk system
+     README        -  Text file read by README.COM (this file)
+
+
+     LIBRARY AND EXAMPLE PROGRAMS DISK
+     ---------------------------------
+          File                  Description
+     ---------------------------------------------------------------
+     PROLOG   LIB  -  Library file needed when linking .OBJ files to
+                      create .EXE files
+     INIT     OBJ  -  Contains code required when linking
+     GEOBASE  PRO  -  GeoBase source code
+     GEOBASE  INC  -  More GeoBase source code
+     GEOBASE  DBA  -  Geography database used by GeoBase
+     GEOBASE  HLP  -  File containing help text for GeoBase
+     EXAMPLnn PRO  -  Sample programs corresponding to samples in the
+                      manual.  For instance, on page 17 of the manual
+                      is Program 1 which corresponds to EXAMPL1.PRO on
+                      the disk.
+     MYPROJ   PRJ  -  Sample Module list file
+     READ64   ME   -  Text file containing information specific to
+                      EXAMPL64.PRO regarding linking modules from
+                      another language to Prolog modules.  To view this
+                      file using the README.COM program on the Program
+                      disk, type: readme read64.me at the DOS prompt.
+     EXAMPL65 C    -  Sample C source for use with EXAMPL64.PRO
+     LNKP64   BAT  -  Batch file to link EXAMPL64.OBJ and EXAMPL65.OBJ
+

@@ -1,0 +1,6 @@
+/* To creat a libarian, use Module list entry in Files list. */
+/* Enter project name at prompt( myproj ). Enter obj files to*/
+/* be linked in editor( main+sub1+ ). BE SURE TO USE F10 TO  */
+/* END and SAVE.                                             */
+
+ main+sub1+
