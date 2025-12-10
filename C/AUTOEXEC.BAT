@@ -19,5 +19,5 @@ set TMP=c:\
 rem For Microsoft Fortran compiler.
 
 turboon
-get_rtc
+rtclock get 2025
 vc
