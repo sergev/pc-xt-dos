@@ -1,0 +1,608 @@
+----------------------------------------------------------------
+               Norton Utilities 6.01 READ.ME file
+----------------------------------------------------------------
+
+Please read this file for important information on:
+
+* Compatibility with Windows 3.1.
+* Changes from prior versions of Norton Utilities.
+* New features added since the manuals were printed.
+* Questions and Answers.
+* Using Norton Utilities with multitasking environments.
+* Using Norton Utilities on networks.
+
+If you would like to print this file, change to the directory
+where Norton Utilities is installed (e.g. \NU), and at the DOS
+prompt type:
+
+      LP READ.ME /H60
+
+You can also use the NDOS command "LIST READ.ME" to display the
+file on your screen.
+
+The "Getting Started" chapter of the User Guide states that
+this READ.ME file will be available as part of the on-line help
+system.  Instead, READ.ME will remain a separate file on disk,
+to ensure that the information is the most current available.
+
+
+Windows 3.1 compatibility
+================================================================
+
+Norton Utilities 6.01 is fully compatible with Windows 3.1 in
+both Standard and Enhanced mode.
+
+The Windows SETUP program may warn that certain Norton Utilities
+TSR's and device drivers are incompatible with Windows 3.1.
+This warning is related to prior versions of the Utilities.
+All the TSR's and device drivers in this release are compatible
+with Windows 3.1.
+
+If you are using the SmartDrive 4.0 disk cache that comes with
+Windows 3.1, please refer to the SmartDrive compatibility notes
+in the "Questions and Answers" section later in this file.
+
+    
+Changes from prior versions of Norton Utilities
+================================================================
+
+Information on Norton Cache has been moved from READ.ME to a
+separate file called NCACHE.DOC.  Please view or print this file
+for the latest information on Norton Cache.
+
+The FILESAVE.EXE program from Norton Utilities 5.0 has been
+renamed Erase Protect (EP.EXE).
+
+Some programs from Norton Utilities version 4.5 have been
+combined into other programs in version 6.01.  These changes
+are noted in the following list:
+     
+  Version 4.5 Program        Version 6.01 Program
+  -----------------------    ---------------------------
+  DI - Disk Information      Sysinfo
+  DT - Disk Test             NDD
+  LD - List Directory        NCD
+  NU - Norton Utilities      DiskEdit, UnErase, DiskTool
+  QU - Quick UnErase         UnErase
+  TM - Time Mark             NCC
+  UD - UnRemove Directory    UnErase
+  VL - Volume Label          NCD
+  WIPEFILE                   WipeInfo
+  WIPEDISK                   WipeInfo
+
+The Norton Integrator (NI) program from version 4.5 has been
+greatly enhanced and is now called "NORTON."
+
+The File Info (FI) program is no longer available, but a more
+powerful version is available through the DESCRIBE command
+found in NDOS.
+
+
+New Features
+================================================================
+
+Erase Protect
+-------------
+EP defaults to saving a maximum of Two Megabytes, and protecting
+all files except those with TMP or SWP extensions.  This will
+improve system performance when using EP and Microsoft Windows.
+If you are upgrading from a prior version of Norton Utilities,
+you must delete any existing FILESAVE.INI or EP.INI files before
+these new defaults will take effect. 
+
+Disk Monitor
+------------
+DISKMON's protection features are now automatically disabled
+when Windows is started, and re-enabled on return to DOS.
+This eliminates the need to create a batch file to run Windows,
+as was described on page 6-7 of the User's Guide.  Note that
+only disk protection is disabled; the disk light will still
+be displayed when DOS programs are run under Windows.
+    
+Disk Tools
+----------
+Rescue Diskette information may now be saved to and restored
+from any drive, not just floppy diskettes.  This allows you to
+save the rescue information to a network.  We recommand that
+you DO NOT save the information on a local hard disk.  At the
+times when you would need to restore the rescue information,
+you probably won't be able to access the hard disk!  When saving
+or restoring information on a floppy drive, the rescue files
+are always located in the root directory.  On any other drive,
+Disk Tools will prompt you to enter the directory.
+
+FileFind
+--------
+The "Drives to Search" dialog box has changed (this dialog is
+activated by the Alt-D hotkey, or by pulling down the "Search"
+menu and selecting "Search drives").  The drive check boxes
+now reflect the "custom" drive selections at all times.  The
+check boxes will not be changed when the "Default drive" or
+"All drives" radio buttons are selected.
+
+Norton Change Directory
+-----------------------
+A new command has been added to the "Disk" menu in NCD.  The
+"Free Space" command will display the total size, space used,
+and available space of the current drive.
+
+Compatibility with Norton PC Anywhere
+-------------------------------------
+When the Norton Utilities are used remotely via PC Anywhere,
+all font redefinitions (including the graphic mouse cursor)
+are automatically disabled.  
+
+Compatibility with QEMM 6.0
+---------------------------
+The Norton Utilities have been tested with QEMM 6.0 and
+generally work well.  Please see the QEMM section later in this
+READ.ME file for complete information.
+
+
+Questions and Answers
+================================================================
+
+Installation Errors
+-------------------
+If, for some reason, your are unable to install the Norton
+Utilities on your system using the Install program, they
+can be installed manually.  The following steps will install
+the Norton Utilities:
+
+1) Create a directory on your disk to receive the Norton
+Utilities programs, if you don't have one already.  For
+example, to install the Norton Utilities in a directory
+called NORTON on your hard disk, use the command
+
+MD C:\NORTON
+
+2) Copy the contents of the distribution diskettes to your
+Norton Utilities directory.  For example, assuming you
+are installing from drive A:, use the command
+
+COPY A:*.* C:\NORTON
+
+for each of the distribution diskettes.
+
+3) There are various files stored in compressed form on
+the distribution diskettes.  See the section "Archive
+File Extraction Errors" below to extract the compressed
+files.  Note that you have already copied the archive
+files to the destination directory, and can run the
+extractions from there.
+
+4) Now your system must be configured to run the Norton
+Utilities whenever you want them.  To have the Norton
+Utilities Configuration program do this for you, make
+sure you are in the directory with the Norton Utilities,
+for example use the commands
+
+C:
+CD \NORTON
+
+Then enter the command
+
+NUCONFIG /$INSTALL
+
+and follow the instructions on the screen.  You can
+look in the Installation Guide for more details on the
+Configuration stage of installation.
+
+5) Finally, if you have made any changes to your system
+configuration in step 4, you will need to reboot your
+computer for these changes to take effect.
+
+6) You are now ready to use the Norton Utilities!
+
+
+Archive File Extraction Errors
+------------------------------
+The Help files and the Windows icons supplied with the
+Norton Utilities are compressed into archive files.
+While running Install, if you encounter an error during
+the extraction of the programs from the archive file,
+first try uncompressing them manually.  This is done by
+launching the archive file with the destination drive
+and path name where you wish to install the Norton
+Utilities:
+
+<Source Disk:Archive File Name> <Target Disk:\Directory>.
+
+For example, to extract the help files manually, use the
+following command:
+
+     A:HELPARC.EXE C:\NORTON
+
+There are three archive files, whose contents are listed below:
+
+ICONARC.EXE       HELPARC.EXE      NDOSARC.EXE
+-----------       -----------      -----------
+DISKREET.ICO      NU.HLP           COMPAT.DOC
+FILEFIND.ICO      TROUBLE.HLP      ALIASES
+FILEFIX.ICO       NDOS.HLP         DESCRIPT.ION
+NCD.ICO
+NDOS.ICO
+NORTON.ICO
+PETER.ICO
+SFORMAT.ICO
+SYSINFO.ICO
+
+
+OS/2 2.0 and PCMOS
+------------------
+Symantec does not support the use of the Norton Utilities
+under OS/2 2.0 or PC-MOS.  Limited testing has shown that
+some of the programs will work, however those which perform
+direct disk access are not compatible.  These programs include
+Norton Disk Doctor, Calibrate, UnErase, Speed Disk, Disk
+Editor, Norton Cache, Directory Sort, WipeInfo (file wiping
+does work, but disk wiping doesn't), and NCD (Prune/Graft
+and Copy Tree don't work).
+
+It may be possible to use the Norton Utilities UNERASE program
+to recover files from OS/2 FAT partitions if OS/2 is shut down
+and the machine is booted with MSDOS (either from a floppy disk
+or a dual boot option).  None of the Norton Utilities can be
+used on OS/2 HPFS partitions.
+
+
+CMOS Error Messages
+-------------------
+If any of the Utilities reports an invalid CMOS on a computer
+that doesn't have a CMOS chip, use the /NOCMOS switch on the
+command-line when invoking that program.
+
+
+Lap Top Colors
+--------------
+To improve the viewing quality of an LCD laptop screen, at the
+DOS prompt you may type NORTON /LCD.  During the installation
+process, you can configure all the Norton  Utilities to use
+the LCD color set without having to include the /LCD switch.
+
+
+Video Display and Mouse Problems
+--------------------------------
+Some EGA and VGA adapters have a quirk which causes screen
+degradation problems when the graphical (arrow-shaped) mouse
+pointer is used.  If small dots appear and disappear as the
+mouse is moved, you should use the standard mouse pointer.
+Choose the Video and Mouse Options item from the Norton
+program's Configure menu, and set the Graphics Options to
+either "Standard" or "Graphical Controls."  If you have
+trouble reading the Norton program's screens in order to
+change this option, type "MODE CO80" at the DOS command
+line to fix the display, then type "NORTON /G0" to start
+the program in the standard mode.
+
+Some laptop computers have an option to select whether their
+LCD display is fully VGA compatible or "looks better."  Most
+of the laptops that have this option come from the factory
+set up to "look better."  The Norton Utilities can't display
+the graphical mouse cursor or other graphic font enhancements
+on a non-standard LCD display.  You must either configure the
+LCD to be VGA compatible or configure Norton Utilities for
+"Standard" video (as described in the prior paragraph).
+
+
+Use of the DOS "FASTOPEN" program
+---------------------------------
+Starting with version 3.3, DOS has included a program
+called FASTOPEN that is supposed to increase the speed
+of certain disk operations.  WE STRONGLY RECOMMEND THAT
+YOU DO NOT USE FASTOPEN.  FASTOPEN can cause data loss
+under some conditions.  Some versions of DOS, and some
+computer vendors, install FASTOPEN by default when they
+set up the machine.  You may have FASTOPEN installed on
+your computer even though you didn't put it there yourself.
+Many of the Norton Utilities cannot be used if FASTOPEN
+is installed.
+
+
+Microsoft SmartDrive 4.0
+------------------------
+The Norton Utilities have been tested with SmartDrive 4.0 and
+are fully compatible with the exception of DISKMON.  SmartDrive
+is incompatible with DISKMON when DISKMON is protecting system
+areas.  The way SmartDrive buffers data before writing it to
+disk can confuse DISKMON, and causes DISKMON to issue a series
+of pop-up error dialogs.  We recommend running NCACHE instead
+of SmartDrive if you want to protect system areas.  All other
+DISKMON features (file protection, disk light, and disk park)
+are compatible with SmartDrive.
+
+DISKREET automatically informs SmartDrive 4.0 that it should
+not cache NDISK drive letters.  Do not try to manually override
+this by using the SmartDrive "+" command line option.  Telling
+SmartDrive to cache an NDISK is likely to hang your system.
+
+
+UnErase
+-------
+When in the View File Window,
+    to Scroll Left, use CTRL+Left Arrow Key
+    to Scroll Right, use CTRL+Right Arrow Key
+
+
+WipeInfo
+--------
+A change was made to the "government wipe" switch after the
+manual was printed.  The manual says this switch is called /Gn.
+It has been renamed to /GOVn.  This avoids a conflict with the
+switches used to select video modes.
+
+
+Using Speedisk with compressed disks
+------------------------------------
+Speedisk can't defragment a disk that has been compressed with
+Stacker, SuperStor, or similar products.  You should use the
+defragmenting software that came with the compression product
+instead (e.g. SDEFRAG for Stacker).  Using Speedisk on a
+compressed drive may actually result in greater fragmentation.
+
+
+Diskreet
+--------
+DISKREET is incompatible with certain disk partitioning systems
+and with some OEM versions of DOS.  DISKREET can create NDISK's
+on any disk partition under 32MB.  If the partition is larger
+than 32MB, it must be accessed using DOS version 4.0 or later,
+or DOS version 3.31 from Compaq.  The maximum size of a single
+NDISK is 32MB, even on versions of DOS that support large disk
+partitions.  You can create multiple NDISK's if you need to
+secure more than 32MB of data.
+
+OEM versions of DOS such as Zenith DOS 3.3 Plus or Wyse DOS 3.21
+are not compatible with DISKREET.  Partitioning systems like
+Disk Manager and SpeedStor may have compatibility problems;
+it will depend on the size of the partition and the physical
+layout of the hard disk.  We recommend testing DISKREET with
+your partitioning software before storing valuable data on an
+NDISK.  If there are going to be problems, they should manifest
+themselves immediately.
+
+
+NDOS
+----
+NDOS is a complete replacement for COMMAND.COM, and
+is compatible with DOS versions 2.1 and above, as
+well as the OS/2 DOS compatibility box.
+
+Compatibility issues involving NDOS can be found in a
+file called COMPAT.DOC, located in the directory in
+which the Utilities were installed.
+
+The NDOS FREE command will return incorrect information
+for Novell Netware volumes greater than 512MB.  This is
+actually a bug in the network shell and not a problem with
+NDOS.  The Netware CHKVOL command can be used on network
+drives to obtain accurate free space information.
+
+The NDOS REN command is unable to rename directories on
+Novell Netware servers.  This is actually a bug in the
+network shell and not a problem with NDOS.  The Netware
+RENDIR command can be used instead.
+
+NDOS will use ANSI escape sequences to control screen
+colors if an ANSI console driver is loaded (ANSI.SYS).
+NDOS can't always determine when an ANSI driver is
+available, particularly if the Novell Netware shell is
+loaded.  If you know you have an ANSI driver, but NDOS
+doesn't recognize it, the command SETDOS /A1 will force
+NDOS to believe that the driver is available.  This is
+a good command to include in your NSTART.BAT file.
+
+The batch file example on page 20-9 of the User Guide
+is shown with a filename of TIMER.BAT.  This name will
+conflict with the internal TIMER command in NDOS.
+To try this example you must either select a different
+filename, or execute it using COMMAND.COM.
+
+
+Unzapping dBASE Files
+---------------------
+FileFix may have problems when unzapping a dBASE file when
+Erase Protect is on.  The original of the zapped file may be
+in the TRASHCAN (dBASE creates a new copy of the file, saving
+only the header, then deletes the  original file).  FileFix
+does not currently check the TRASHCAN for zapped files.
+However, UnErase can be used to recover the original file.
+
+
+Hard Disks with More Than 1024 Cylinders
+----------------------------------------
+The Norton Utilities Version 6.01 provides limited support
+for hard disks with more than 1024 cylinders.  This feature
+is available only on drives which are using Ontrack's Disk
+Manager or Storage Dimension's SpeedStor.  The following
+limitations apply:
+
+Calibrate will not perform a Low-Level Format on any DOS
+partition on a drive with more than 1024 cylinders.  It
+also will not test or optimize any DOS partition which
+lies BEYOND the 1024 cylinder boundary.
+
+NDD will state that DOS partitions which lie BEYOND the
+1024 cylinder boundary are device-driven.
+
+Safe Format can't format any DOS partitions which lie
+BEYOND the 1024 cylinder boundary.
+
+
+Use of ALT key tap to activate pulldown menus
+---------------------------------------------
+The Norton Utilities normally uses ALT key taps to activate
+its pulldown menus.  This is automatically disabled under
+DESQview, because the default DESQview configuration uses
+ALT to to bring up its own control panel.  If you have an
+ALT key conflict with a TSR other than DESQview, you can
+use the /NOALTKEY command line switch with any of the Norton
+Utilities programs.
+
+
+QEMM version 6.0
+================================================================
+
+The Norton Utilities generally work well the QEMM 6.0.
+However, the following should be noted:
+
+User Defined Hard Disk Drive Types
+----------------------------------
+There is a potential problem with the combination of QEMM
+Stealth Mode, hardware ROM BIOS shadowing, and a "user
+defined" hard disk drive type (often called type 47).
+The problem is that when Stealth Mode is used, information
+about your hard disk may be stored in a place that Norton 
+Utilities can't access.  We recommend that hardware BIOS
+shadowing be disabled if Stealth Mode is used.  The QEMM
+"ROM" parameter can be used instead to safely achieve the
+same effect in software.
+
+If BIOS shadowing is not disabled, a number of the Norton
+Utilities may experience difficulty.  In particular, Norton
+Disk Doctor (NDD) will report disk errors that do not really
+exist, and fixing those errors may result in data loss.
+Also, System Information (SYSINFO) will not be able to report
+certain disk information or perform hard disk benchmarks.
+
+Norton Cache
+------------
+NCACHE is completely compatible with QEMM Stealth Mode.
+However, because of a problem in the QEMM 6.00 WINSTLTH.VXD
+virtual device driver, NCACHE must disable its multitasking
+support when Windows is running in the Enhanced Mode and the
+QEMM Stealth Mode has been enabled (with the ST:M or ST:F
+parameters).  This will limit disk caching performance when
+running under Windows.  QEMM version 6.01 includes an updated
+WINSTLTH.VXD that resolves this problem.  If you use NCACHE
+with Windows Enhanced Mode and QEMM Stealth Mode, you should
+contact Quarterdeck for an upgrade to QEMM 6.01.  You can also
+download the new WINSTLTH.VXD from the Quarterdeck BBS.
+
+If you download the new WINSTLTH.VXD, you must use the switch
+/NEWSTEALTHVXD when installing NCACHE.  For example:
+
+    NCACHE /INSTALL /NEWSTEALTHVXD
+
+This switch lets NCACHE know you have obtained the new driver.
+If you have QEMM 6.01 or later, you DO NOT need to specify the
+/NEWSTEALTHVXD switch.
+
+
+Multitasking Environments
+================================================================
+
+In general, applications or commands that modify the File
+Allocation Table (FAT) can cause unpredictable results when
+run under multitasking environments.  
+
+The following multitasking environments are currently detected:
+
+    Windows 
+    Desqview
+    DOSSHELL version 5.0
+    PC-MOS
+
+Please be aware of the following conditions:
+
+DiskEdit
+--------
+Should be run in read-only mode.
+
+DiskMon
+-------
+Disk Monitor disables protection when run Windows is running.
+
+Diskreet
+--------
+The Auto Open and Quick Close features are disabled under
+Windows.  You must use the DISKREET.EXE program to manually
+open and close NDISKs.  Any NDISKs that were opened before
+starting Windows will remain open and available.
+
+FileFix
+-------
+May cause problems when unzapping a dBASE file.
+
+Erase Protect
+-------------
+As a general rule, EP should be turned on BEFORE loading
+Windows.  For Advanced Users: Drives can be manipulated
+independently from within separate instances of COMMAND.COM
+or NDOS.COM.
+
+Norton Control Center (NCC)
+---------------------------
+Under Windows, only affects the current instance of
+COMMAND.COM or NDOS.COM.
+
+Norton Change Directory (NCD)
+-----------------------------
+Only affects the current instance of COMMAND.COM or
+NDOS.COM
+
+System Information
+------------------
+The CPU Speed Benchmark will not reflect the true speed
+of the computer.  Also, Windows 3.0 will not allow the
+XMS reporting function of System Information to operate
+properly, and this function is automatically disabled
+as a result when running under Windows 3.0.
+
+Image
+-----
+Should be run before loading Windows or DESQview.
+
+
+Special Network Notes
+================================================================
+
+The Norton Utilities Version 6.01 can be installed on a
+network server.  In order to use them effectively in a
+networking environment, we recommend the following:
+
+NU Environment Settings
+-----------------------
+The Norton Utilities saves configuration information in
+initialization files (*.INI).  Since each user on a
+network will likely have a unique hardware configuration,
+the NU environment variable must point to a directory on
+the user's local hard disk.
+
+For example, typing:
+
+SET NU=C:\
+
+will instruct the Norton Utilities to find information
+about the user's computer in the root directory of his
+C: drive.  You should place this statement the
+AUTOEXEC.BAT file.
+
+Erase Protect
+-------------
+The first time EP is run on a network drive, it will create a
+hidden directory \TRASHCAN.  All users will need rights to this
+directory in order for EP to work correctly.  We recommend that
+the supervisor run EP first, then modify the directory so users
+have ALL RIGHTS except SEARCH.
+
+Note:  Under Novell Netware 386, user's without SEARCH rights to
+the TRASHCAN will not be able to recover files using UnErase.
+
+EP must be loaded AFTER the network driver (e.g. IPX) and shell
+(e.g. NETX).  Loading EP before the network software prevents
+it from protecting network drives.
+
+NCD
+---
+NCD saves a copy of the directory tree on the drive, so
+that it doesn't have to scan the drive every time it is run.
+On a network drive, it will try to save the directory tree
+in a directory called \NCDTREE.  On non-network drives,
+the directory tree is saved in the root directory, but most
+networks don't give users any rights to the root directory.
+For this reason, in order to use NCD on a network drive,
+the supervisor should create the \NCDTREE directory and
+give all users ALL RIGHTS to this directory.
+
+---------------------  END OF READ.ME FILE  --------------------

@@ -1,0 +1,1319 @@
+---------------------------------------------------------------------
+                        Norton Utilities 6.0
+
+		  NDOS Compatibility Documentation
+---------------------------------------------------------------------
+
+
+This file provides information on compatibility between NDOS and a
+variety of other software products. It is intended for use whenever
+you have a question about using another product with NDOS, or suspect
+a compatibility problem. Inclusion of a product in this file does not
+mean there are compatibility problems; rather, it only indicates that
+there is some information that may be useful to you when you use the
+product with NDOS.
+
+This file can be viewed with a file viewer such as the NDOS LIST
+command, or printed on most PC printers using the command:
+
+          LP COMPAT.DOC /H60
+
+
+
+Information in this file is presented in the following order:
+
+    INTRODUCTION
+
+    GENERAL INFORMATION
+      Causes of Compatibility Problems
+      Multi-Way Software Interactions
+      Running NDOS along with COMMAND.COM
+      Executing DOS Commands via Interrupt 2E
+      NDOS and Multitasking/Task Switching Programs
+      CAUTION: Multitaskers and Disk Swapping
+      Swapping to RAM Disks
+      Loading NDOS High with /U or /E:nnnnU
+      NDOS SWAPPING OFF Command and 286/386 Memory Managers
+      Running NDOS on a Laptop or Notebook Computer
+      NDOS and Command Line Editing Programs
+      NDOS and TSR (Memory-Resident) Programs
+
+    INFORMATION ON SPECIFIC PRODUCTS
+      MS-DOS APPEND Command
+      MS-DOS 4.0+ FORMAT Command
+      MS-DOS 4.0+ SELECT Command
+      1-2-3 (Lotus)
+      1DIR+ (Bourbaki)
+      3+Open Network (3COM)
+      ANSI.SYS (various manufacturers)
+      DESQView (Quarterdeck)
+      DESQView DOS Services (Quarterdeck)
+      DoubleDOS (SoftLogic Solutions)
+      DR-DOS (Digital Research)
+      Epsilon (Lugaru Software)
+      GeoWorks Ensemble (GEOS)
+      Headroom (Helix Software)
+      Hijaak (Inset Systems)
+      HIMEM.SYS (Microsoft)
+      LOGIMENU (Logitech)
+      MOVE-EM (Qualitas)
+      MTEZ Fax Software
+      Netware (Novell)
+      Novell MENU (Novell)
+      OmniMouse Software Drivers
+      QEMM and QRAM (Quarterdeck)
+      SideKick 2.0 (Borland)
+      SigmaPlot (Sigma Designs)
+      Software Carousel (SoftLogic Solutions)
+      Telix Communications Software
+      TSRCOM Utilities (TurboPower Software)
+      UltraVision (Personics)
+      Ventura Publisher (Xerox)
+      VTSR (Golden Bow Systems)
+      Windows 3.0 (Microsoft)
+      WordPerfect 5.1 (WordPerfect Corp.)
+
+
+INTRODUCTION
+------------
+
+Every effort has been made to insure that this file is as accurate
+and up to date as possible. The information is based on our own
+investigations, conversations with manufacturers of other products,
+and reports from our beta testers.
+
+Unfortunately, testing for software compatibility is not always
+reliable. Varying conditions between systems or between software
+releases can easily invalidate the results of previous tests.
+Therefore we cannot guarantee that every item in this file is
+accurate for all systems or will remain accurate over time; you may
+have to do your own testing to determine what works well on your
+system with the software you own.
+
+In some cases we have found that upgrading another manufacturer's
+software to a newer release helps with a particular problem.
+Unfortunately we cannot guarantee that it will always do so on your
+system, for the reasons described above.
+
+If you have a compatibility problem, the first thing you should do
+is read through Appendix C, "Tips and Troubleshooting," in the NDOS
+manual. This appendix gives general suggestions for solving
+compatibility problems, and should always be used along with this
+file when attempting to solve such a problem.
+
+If the information in Appendix C doesn't help, check below for both
+general suggestions which pertain to your problem, and information on
+the specific product with which you are having trouble. Please note
+that some products are listed by category rather than or in addition
+to specific listings by product name; check the list of topics
+carefully to see where any particular product may be covered.
+
+Most compatibility problems with NDOS can be diagnosed easily with
+one of three methods: checking this file for specific information;
+trying different NDOS swapping methods (XMS, EMS, disk, or none); and
+testing for interactions by removing all drivers and TSRs which are
+not absolutely necessary and then replacing them one at a time, as
+described in Appendix C. These techniques may not tell you how to
+solve the problem, but they will go a long way toward identifying the
+cause.
+
+Of course, if you cannot diagnose or resolve a compatibility problem,
+please contact the technical support department.
+
+
+
+GENERAL INFORMATION
+-------------------
+
+This section describes some techniques you can use to either diagnose
+or to solve compatibility problems. It also includes general
+information which may be used in solving problems with a whole group
+of products (for example, multitaskers).
+
+
+Causes of Compatibility Problems:
+
+In most cases software which does not to run properly under NDOS is
+experiencing one of the following problems:
+
+    * NDOS is not configured properly;
+    * The other software is not configured properly;
+    * Some condition in your system (for example, insufficient
+      memory) is preventing the other software from running at
+      all, but you are so used to NDOS that you haven't
+      noticed that the same problem occurs under COMMAND.COM
+      (that is, the problem is not related to NDOS);
+    * There is a multi-way interaction between NDOS, the other
+      software, and one or more of your TSRs or device drivers;
+    * The presence of NDOS in your system has uncovered a bug
+      or design problem in the other software that did not
+      appear when running it under COMMAND.COM, but that is
+      not due to a malfunction or error in NDOS;
+    * The other software was written based on specific
+      characteristics of COMMAND.COM, and cannot run under
+      NDOS unless COMMAND.COM is also loaded;
+    * The other software was written based on specific
+      characteristics of COMMAND.COM, and cannot run under
+      NDOS at all.
+
+
+Multi-Way Software Interactions:
+
+In many cases programs which appear to fail under NDOS, yet run
+properly under COMMAND.COM, are actually involved in a three-way
+interaction with one of your TSRs or device drivers. If you are
+having trouble with a program, try removing then replacing your TSRs
+and device drivers as described in Appendix C of the NDOS manual. See
+if you can determine whether there is such an interaction occurring.
+
+
+Running NDOS along with COMMAND.COM:
+
+You may find a rare program which will not work under NDOS, but runs
+properly under COMMAND.COM. If you have determined that the problem
+cannot be solved through configuration changes or by eliminating or
+reconfiguring a third program which is causing the problem, use this
+section to see how to run NDOS and COMMAND.COM together in order to
+diagnose such a problem.
+
+There are two methods of loading COMMAND.COM before another program.
+The first is to load it only when a specific program is running. This
+can be accomplished with the following command (assuming COMMAND.COM
+is in the root directory of drive C:):
+
+          c:\command /c progname options
+
+where "progname" is the program name (with path if necessary) and
+"options" are any parameters for the program. This command will run
+COMMAND.COM, load and run the program -- and upon exit from the
+program -- will exit from COMMAND.COM and return to NDOS. If this is
+necessary to run a specific program, it can be defined as an alias:
+
+          alias progname `c:\command /c progname %&`
+
+The "%&" passes all command line arguments on to the program.
+
+With this method, if the program is large, COMMAND.COM may need to
+reload itself when the program exits. It will not be able to do so
+unless the COMSPEC is set properly. If you experience problems such
+as "Invalid COMMAND.COM" errors when using this method, use a batch
+file like the following to run the program in question (the SETLOCAL
+and ENDLOCAL cause COMSPEC to be restored to its previous value after
+the program exits). You will need to modify this file if your copy of
+COMMAND.COM is not stored in the C:\ directory:
+
+          setlocal
+          set comspec=C:\COMMAND.COM
+          c:\command /c progname %&
+          endlocal
+
+The second method is more drastic: you can start your system under
+COMMAND.COM, then run NDOS. This approach is rarely necessary, and
+will use about 4 to 5K of additional RAM for the resident portion of
+COMMAND.COM.
+
+The following steps will set your system up to boot with COMMAND.COM,
+and run NDOS automatically as part of the boot process:
+
+    (1) Set up the SHELL= statement in CONFIG.SYS to run
+    COMMAND.COM, or leave it out entirely. In other words, set
+    it up just as you would if NDOS were not on your system.
+
+    (2) Be sure the statement:
+
+          DEVICE=KEYSTACK.SYS
+
+    is included in CONFIG.SYS if you wish to use the NDOS
+    KEYSTACK command.
+
+    (3) Separate your AUTOEXEC file into two parts: part 1,
+    which remains in AUTOEXEC.BAT, should contain any commands
+    you wish to have COMMAND.COM execute before NDOS is
+    started. This might include loading any TSRs which you
+    cannot get to load properly under NDOS. Part 2, which you
+    must place in a separate batch file (we suggest the name
+    NDAUTO.BAT, but you can use any name with a .BAT or .BTM
+    extension), should contain the commands you wish to have
+    NDOS execute when it is started.
+
+    (4) Place the following line as the last line in the
+    modified AUTOEXEC.BAT:
+
+          NDOS parameters filename
+
+    where "parameters" represents the appropriate NDOS
+    parameters for swapping, environment and history size,
+    etc. (see Chapter 6 of the NDOS manual), and "filename"
+    is the name of the new batch file you created for part 2
+    of your old AUTOEXEC file. Do NOT include a /P in the
+    "parameters" or NDOS will re-run AUTOEXEC and therefore
+    load itself again, ad infinitum!
+
+This will load COMMAND.COM, execute the commands in AUTOEXEC, load
+NDOS, execute the commands in your new batch file, and then give you
+the normal NDOS prompt.
+
+There is one drawback to this second approach: because NDOS is not
+loaded with a /P, the EXIT command will return you to COMMAND.COM if
+you inadvertently enter it at the primary shell prompt. You can get
+around this by including the /P parameter despite the caution above,
+and then placing the following line at the start of AUTOEXEC.BAT:
+
+           if not "%@eval[2+2]"=="4" quit
+
+This line tests the NDOS variable function %@EVAL, which will return
+"4" under NDOS and remain on the line unchanged under COMMAND.COM. If
+%@EVAL does not return a "4" the statement QUITs the batch file,
+preventing the infinite loop described above.
+
+
+Executing DOS Commands via Interrupt 2E:
+
+COMMAND.COM contains an undocumented (and unsupported) feature which
+allows programs to execute DOS commands by passing the command
+through software interrupt number 2E (hex). Very few programs use
+this feature, and the current release of NDOS does not support it
+internally. However the NDOS2E TSR included with NDOS will allow you
+to run most programs that use INT 2E.
+
+If you have a program which is supposed to execute DOS commands and
+it does not work under NDOS, first read the Tips and Troubleshooting
+appendix in the NDOS manual and check over your settings of COMSPEC
+and NDSHELL. If these appear correct, your program may be trying to
+use INT 2E to execute commands.
+
+If you believe this is the case, try loading the NDOS2E program which
+came with your copy of NDOS. Documentation on NDOS2E is in Appendix A
+of the NDOS manual. If you aren't sure whether your program is using
+INT 2E, NDOS2E's /W switch can help you find out.
+
+See below for specific information on Novell's MENU program, which
+requires NDOS2E.
+
+
+NDOS and Multitasking/Task Switching Programs:
+
+(For convenience below we will refer to all these programs as
+"multitasking," even though some are only task switching programs,
+and to all windows or partitions they use as "windows," even though
+some systems do not support windowing).
+
+NDOS can be used with most multitasking systems including Windows,
+DESQView, Back and Forth, OmniView, Software Carousel, and VM/386.
+See the sections on specific products below for information on the
+individual products.
+
+Unless otherwise noted below, NDOS should work properly both as the
+root shell loaded before the multitasking system, or when run inside
+a window.
+
+To start NDOS inside a window in any of these systems you can define
+it as a program to be run directly, or you can have the multitasker
+load it automatically as the command processor, by leaving COMSPEC
+set to NDOS. Most multitaskers will load NDOS automatically to run
+other programs, and you probably don't need to intervene in this
+process -- the multitasking system can generally do so implicitly
+with no trouble. However when you want a window that will give you
+access to the NDOS prompt, things usually work best if you set the
+window up to run NDOS.COM explicitly, rather than using the
+multitasker's generic "DOS" window setup.
+
+Regardless of the approach used, you can use the NDSHELL environment
+variable to set the NDOS command line parameters (such as swapping
+method and environment size) to be used when starting NDOS in a
+window. If NDOS is defined as a program to be run directly you can
+also set these parameters on the command line.
+
+Under most multitasking systems the COMSPEC setting will control
+whether NDOS or COMMAND.COM is used to run batch files and to open
+windows that are NOT closed on exit to DOS. In most cases you will
+find it works best to leave the COMSPEC set to NDOS.
+
+
+CAUTION: Multitaskers and Disk Swapping:
+
+When NDOS is swapping to disk in multiple windows of a multitasking
+system, it must be configured properly to avoid conflicts among the
+swap file names used in each window.
+
+When loaded normally, the primary copy of NDOS will act as a "traffic
+cop" for the copies of NDOS in the different windows, assigning each
+one a unique "shell number" which is used as the extension for the
+disk swap file (NDOSSWAP.001, NDOSSWAP.002, etc.). In this case no
+conflict will occur.
+
+However, if NDOS is NOT loaded before the multitasking program this
+capability will not be available. In this case the copy of NDOS in
+each window will use the swap file name NDOSSWAP.000. To avoid a
+filename conflict every copy of NDOS started in disk swapping mode
+MUST place its swap file in its own unique directory specified with
+the "/S:Dd:\path" switch. If this rule is not observed the system
+will hang when switching windows or upon exit from an application.
+
+In NDOS, disk swap files default to the root directory of the drive
+COMSPEC points to; hence to make NDOS disk swapping work properly you
+must EXPLICITLY use /S:D to place the swap files in separate
+directories.
+
+This problem will only occur if NDOS is NOT the primary shell, AND
+disk swapping is used in more than one window as described above.
+There is no such conflict with EMS or XMS swapping. Note that since
+the default /S:B swapping option uses disk swapping if no EMS or XMS
+memory is available, you can be invoking disk swapping your
+multitasker windows even if you haven't explicitly requested it.
+
+
+Swapping to RAM Disks:
+
+In order to swap the primary shell to a RAM disk the RAM disk must be
+completely defined in CONFIG.SYS via a DEVICE= statement (most RAM
+disks are set up this way). RAM disks completely or partially defined
+in AUTOEXEC.BAT (such as the RAM disk/cache combination in
+Multisoft's PC Kwik Power Pak) cannot be used for swapping the
+primary shell, because AUTOEXEC.BAT has not been executed at the time
+that the root shell is loaded, and, hence, the RAM disk does not
+exist at that point.
+
+
+Loading NDOS High with /U or /E:nnnnU:
+
+To load NDOS or the master environment into high memory with the /U
+or /E:nnnnU switches, you MUST be running a memory manager or a
+combination of a memory manager and XMS driver which provides BOTH
+the ability to remap memory into the area between 640K and 1MB, AND
+software support for the eXtended Memory Specification (XMS). Another
+way of saying this is that, in general, /U and /E:nnnnU will work on
+any system which can load TSRs high. The combinations of hardware and
+software which will support /U and /E:nnnnU include:
+
+386 systems:
+
+    Hardware: Sufficient memory space; no additional hardware
+    required.
+
+    Software: Qualitas's 386MAX or Blue Max, Quarterdeck's
+    QEMM version 5.0 or later, or another similar 386 memory
+    manager (HIMEM.SYS alone is NOT sufficient).
+
+286 systems:
+
+    Hardware: Chips and Technologies NEAT chip set, or EMS
+    board with LIM 4.0 or EEMS hardware; sufficient memory
+    space.
+
+    Software: Qualitas's MOVE-EM version 1.02 or later with
+    Microsoft's HIMEM.SYS, or Quarterdeck's QRAM and QEXT.
+
+Other memory-management software may also work; the listings above
+are examples only. Also, look for specific information on your memory
+management program below.
+
+The following software will NOT allow /U or /E:nnnnU to work:
+HIMEM.SYS by itself; QRAM without QEXT; or MOVE-EM without HIMEM.SYS.
+Also these switches will not work on systems with expanded memory
+boards with LIM 3. 2 hardware (regardless of the software used); if
+you are trying to load NDOS (or TSRs) high using an expanded memory
+board you need hardware which supports either LIM 4.0 EMS, or the
+similar EEMS. Check with your system or board manufacturer to
+determine whether your board supports LIM 4.0 or EEMS.
+
+
+NDOS SWAPPING OFF Command and 286/386 Memory Managers:
+
+When you use the NDOS SWAPPING OFF command to speed up your batch
+files, especially AUTOEXEC.BAT, you can generate occasional conflicts
+with some 386 memory management software when loading TSRs "high"
+(above 640K). The conflicts usually appear as "Memory allocation
+chain" errors (or another similar message) during the load high
+process. If these occur, try leaving SWAPPING ON when loading TSRs
+high and see if it solves the problem. If not, the problem lies
+elsewhere.
+
+
+Running NDOS on a Laptop or Notebook Computer:
+
+When you run NDOS on a laptop or notebook system, you may need to
+consider any unusual boot sequence used on your system when you
+install NDOS or modify CONFIG.SYS. Many laptop and notebook computers
+boot from a floppy drive or hard disk, and on these system NDOS
+generally can be installed normally. However, if your system boots
+from ROM (ROM = "Read Only Memory" chips inside your computer) as --
+for example -- many Tandy laptops do, then you need to consider a
+couple of issues.
+
+First, systems which boot from ROM often can be configured to use the
+ROM boot feature, or to disable it and boot from the floppy or hard
+disk. The comments below apply only when the ROM boot feature is
+enabled. With ROM boot enabled, your system will read DOS and
+CONFIG.SYS from ROM when the power is turned on. Since the
+manufacturer wrote that CONFIG.SYS file, and it can't be changed
+(it's in ROM), it's likely to work.
+
+Where things get interesting is when your system allows you to boot
+from ROM, but locate your CONFIG.SYS and AUTOEXEC.BAT files on the
+hard disk or floppy disk. Some laptops and notebook systems do have
+this capability. Then, when you make a mistake in CONFIG.SYS that
+keeps your system from booting, there's no way to tell the ROM boot
+program to ignore the bad CONFIG.SYS file. As a result, you may have
+to take drastic measures (for example, open the case and physically
+disconnect the hard disk) to get the system to ignore your mistaken
+CONFIG.SYS file and boot properly.
+
+For this reason, we recommend that if you have a system which boots
+from ROM, and you have the system configured to read CONFIG.SYS from
+the hard disk, that you reconfigure the system to boot directly from
+disk before modifying CONFIG.SYS for any reason (NDOS-related or
+not). This will allow you to boot from a floppy disk if you make a
+"fatal error" in the copy of CONFIG.SYS on your hard disk. Once you
+have things working properly, switch back to the ROM boot setup.
+
+The second -- and related -- issue is that systems which boot from
+ROM typically consider the ROM to be a sort of disk "drive". For
+example, on a system with drive C: as the hard disk, drive D: may be
+the ROM. When booting from ROM, the ROM drive is typically the
+"current drive" at boot time, and that's where NDOS will look for the
+NSTART and AUTOEXEC files. But of course they won't be on the ROM
+drive -- they'll be where you put them, on your hard disk or floppy
+disk. When this happens NDOS won't execute NSTART or AUTOEXEC at
+system boot. (This doesn't happen with COMMAND.COM because
+manufacturers of such systems modify COMMAND.COM specifically to get
+around this difficulty).
+
+If you run into this problem, first be sure you've got a /P on your
+SHELL= line -- if you don't that will also keep NDOS from running
+AUTOEXEC. If that's OK, you probably need to use an NDOS feature that
+allows you to put your own command at the end of the SHELL= line in
+CONFIG.SYS. Just create a batch file that runs NSTART (if you're
+using it) and AUTOEXEC with their full paths, for example:
+
+          NDINIT.BAT:
+
+          call c:\nstart.btm
+          call c:\autoexec.bat
+
+Then, on your SHELL= line in CONFIG.SYS, add the full name of this
+file at the end of the line, for example:
+
+          shell=c:\ndos.com /p c:\ndinit.bat
+
+This will tell NDOS to run your startup files "manually," since they
+won't be run automatically. (Use care that you don't exceed the line
+length limit for the SHELL= line; if you do, create an options file
+and place the NDOS options -- including the batch file name -- in
+that file. See Chapter 6 of the NDOS manual.)
+
+If you have a system like this NDOS will probably set the COMSPEC to
+the ROM drive, and you'll have to correct this in AUTOEXEC to point
+to the hard disk or floppy disk. For example:
+
+          set comspec=c:\ndos.com
+
+See also the section on COMSPEC in the Chapter 6 of the NDOS manual
+for more information.
+
+Finally, if you have a laptop with a color (CGA, EGA, or VGA) video
+board and a monochrome screen, you may need to use the NHELP /LCD
+option -- or run the NUCONFIG program and select LCD colors there.
+
+In setting up your laptop or notebook to meet our recommendations, of
+course you must read the instructions that came with it, and contact
+the manufacturer if you have trouble. These systems are relatively
+new and the approach taken by each manufacturer is unique; the proper
+way to modify your system configuration will depend on the particular
+system you have.
+
+
+NDOS and Command Line Editing Programs:
+
+Programs such as Anarkey (Moderne Software), PCED (Cove Software),
+and ReDOS (Multisoft) will work properly with NDOS. However these
+programs require the use of SETDOS /L1 to operate, which will disable
+NDOS's command recall and command line editing. In most cases you
+will be able to switch back and forth between NDOS editing and the
+other editor by toggling the SETDOS /L state.
+
+When another editor is used NDOS's command history will be
+maintained, and can be viewed with HISTORY, but will not be available
+for recall until a SETDOS /L0 is executed. NDOS aliases, executable
+extensions, and other features will be active regardless of the
+SETDOS /L state. Aliases will be processed after any processing done
+by the other editing program. You must use care with other programs
+that provide an aliasing capability to avoid confusion if a command
+is expanded by both the other program and NDOS!
+
+
+NDOS and TSR (Memory-Resident) Programs:
+
+In NDOS many memory-resident programs should be able to unload
+themselves. You may still experience unload problems if you have
+a complex system or many TSRs loaded; if you do, use a TSR manager.
+These products will allow you to unload virtually all TSRs without
+difficulty.
+
+
+
+INFORMATION ON SPECIFIC PRODUCTS
+--------------------------------
+
+The information below is listed alphabetically by product, with
+manufacturers' names included. MS-DOS commands are listed before
+other software products (the term "MS-DOS" includes PC-DOS as well).
+
+Items marked with two asterisks [**] after the product name were
+supplied by beta testers.
+
+
+MS-DOS APPEND Command:
+
+Unlike most other commands in MS-DOS, APPEND has both an external
+portion and an undocumented internal portion. The first time APPEND
+is run the external portion is executed, and loaded into memory as a
+TSR. Subsequent uses of APPEND to adjust the APPEND path use the
+internal portion built into COMMAND.COM.
+
+NDOS does not support the internal portion of APPEND command. This
+means that you cannot change the APPEND path directly from NDOS.
+However you can still use APPEND with NDOS.
+
+APPEND should be started in the usual way, from AUTOEXEC or any other
+batch file, or from the command line. However to change the APPEND
+path you must run APPEND from COMMAND.COM, not from NDOS. To do this,
+enter the following command (modify the command appropriately if
+COMMAND.COM is not in the directory C:\):
+
+          c:\command /c append [new append path list]
+
+You could also set up a NDOS alias to do the above command for you,
+for example:
+
+          alias app `c:\command /c append`
+
+which would be invoked with the command
+
+          app [new path list]
+
+The /X switch can be used, and it will affect NDOS directory searches
+for many NDOS commands (as it does for COMMAND.COM). Please note that
+this makes APPEND dangerous: if you APPEND a directory and then (say)
+delete all the .BAK files, the .BAK files in the APPENDed directory
+will be deleted too.
+
+The APPEND /E switch will not work with NDOS.
+
+CAUTION: APPEND is a dangerous command. It is capable of "fooling"
+programs into thinking they are accessing one file when they are
+really accessing another one with the same name in a different
+directory. This can either do just what you want, or cause all sorts
+of trouble, depending on the circumstances. In particular, this
+behavior can cause NDOS to place descriptions which go with files in
+one directory in the description file for another directory, because
+with APPEND running NDOS can't tell whether APPEND has opened a file
+different from the one it asked for.
+
+If you must use APPEND to make certain applications work, we STRONGLY
+suggest that you set up the aliases described above, and load APPEND
+in AUTOEXEC.BAT with an empty path. Then, for each application, set
+up an alias to run it that is similar to the following:
+
+     alias myprog `app c:\mydata^d:\util\myprog. exe^app ;`
+
+This alias sets the APPEND path, runs the application, and clears the
+APPEND path. When used in this way APPEND is less likely to cause
+trouble because it is disabled except when it is explicitly needed.
+
+In MS-DOS version 4.0 the new APPEND /PATH:OFF switch mitigates this
+problem somewhat; in particular it will keep NDOS file description
+files from getting mixed up between directories. For this reason NDOS
+will automatically set this switch if it detects that you are running
+APPEND and DOS 4.0 or above.
+
+
+MS-DOS 4.0+ FORMAT Command:
+
+When formatting a bootable disk with FORMAT /S, the FORMAT command in
+MS-DOS 4.0 and above will copy whatever file your COMSPEC environment
+variable points to to the target disk and renaming it COMMAND.COM.
+When NDOS is running COMSPEC normally points to NDOS.COM, so FORMAT
+will copy NDOS.COM to the floppy disk and rename it COMMAND.COM. This
+will render the floppy disk NOT bootable -- NDOS won't mind the file
+name change, but NDOS.COM alone is not enough for NDOS to get
+started; NDOS.OVL is also required.
+
+To solve this problem, after formatting a bootable floppy disk under
+MS-DOS 4.0, copy COMMAND.COM to the disk manually. You may want to
+set up a simple alias or batch file for this purpose, for example:
+
+          alias bootdisk `format a:/s^copy c:\command.com a:`
+
+Alternatively, you can copy the NDOS.OVL file to the root directory
+of the floppy disk, which will make the disk boot under NDOS instead
+of COMMAND.COM. However this method is NOT recommended unless you
+also rename the "COMMAND.COM" file back to NDOS.COM and place a
+proper CONFIG.SYS file on the floppy disk to load NDOS.COM. Leaving a
+copy of NDOS.COM on the disk with the name COMMAND.COM is bound to
+confuse the next person who examines it!
+
+
+MS-DOS 4.0+ SELECT Command:
+
+In MS-DOS 4.0 and above a SELECT command was introduced. This
+external command is totally unrelated to the NDOS internal SELECT
+command. If you need to use both, you can set up aliases to adjust
+how the command names are handled. For example, the following two
+aliases set up SELECT to access the DOS 4.0 external SELECT command
+(assumed to be stored in C:\DOS\SELECT.EXE), and SEL to access the
+internal NDOS SELECT command:
+
+          alias select c:\dos\select. exe
+          alias sel *select
+
+
+1-2-3 (Lotus)
+
+1-2-3 version 2.3 ignores the COMPSEC environment variable when it runs
+a DOS shell, and instead always runs COMMAND.COM.  This is a limitation
+in 1-2-3.  See the section "Running NDOS along with COMMAND.COM" for
+information on how you may be able work around this problem.
+
+
+1DIR+ (Bourbaki):
+
+The information below was obtained from tests with 1DIR+ version
+3.02, and verified with version 3.5 as well.
+
+1DIR+ will work properly under NDOS in its partially resident or EMS
+modes when set up as described below. It will work in its fully
+resident mode but cannot reliably exit back to NDOS once started.
+
+If your copy of 1DIR+ is set up for fully resident mode, you can load
+it into memory under NDOS to switch it to partially resident or EMS
+mode. To do so, from the directory where you normally run 1DIR+, type
+the commands:
+
+          setdos /l1
+          1dirplus
+
+When 1DIR+ starts go to the "Wonder"/"Setup" menu (F8 then F2) and
+switch the mode to partially resident or EMS. Hit Esc to exit, and
+take the "Exit/Save" option (not "Save/Reset"). Back at the main
+menu, exit with "Wonder"/"Exit" (F8 then F8). At this point the
+system will probably hang. Reboot your computer. You should then be
+able to run 1DIR+ as described below.
+
+The above steps only need to be done once, when you install or
+re-install 1DIR+.
+
+Once 1DIR+ is set to EMS or partially-resident mode, you can start it
+from NDOS using the following alias:
+
+          alias 1dir `setdos /L1 ^ 1dirplus`
+
+The SETDOS /L1 is necessary to allow 1DIR+ to send command lines to
+NDOS.
+
+You must do a SETDOS /L0 when you are done with 1DIR+ in order to get
+normal NDOS command-line editing back. You can NOT do this within the
+alias above, as 1DIR+ returns to NDOS in order to accomplish its
+work, and you don't want to switch back to /L0 mode until 1DIRPLUS
+has been removed from memory. If, after exiting from 1DIR+, you find
+that NDOS's command line editing and history are unavailable, it is
+because you forgot to do the SETDOS /L0. If you go in and out of
+1DIR+ regularly aliases like the following can be used to make the
+process quick:
+
+          alias 1d `setdos /L1 ^ 1dirplus`
+          alias 1e setdos /L0
+
+
+3+Open Network (3COM): [**]
+
+If your system hangs when loading 3+Open's NBP program, upgrading to
+the latest release of NBP should resolve the problem. Please note
+that 3COM issues multiple releases with the same version number; the
+fact that you have "version 1.1" does not necessarily mean you have
+the latest release. Check with your 3COM support representative to be
+sure you have the latest release.
+
+
+ANSI.SYS (various manufacturers):
+
+If you have trouble with screen scrolling in 43-line or 50-line mode,
+try a different version of ANSI; for more information see Appendix C
+of the NDOS manual.
+
+If the CLS command resets your screen to black even though you have
+ANSI.SYS loaded and have set up your own colors, try using the command
+SETDOS /A1.  This will force NDOS to use ANSI.SYS to clear the screen.
+
+
+DESQView (Quarterdeck):
+
+Please see the section on multitaskers under General Information
+above before reading this section.
+
+The information below was obtained from tests with DESQView
+versions 2.26 and 2.3.
+
+To use NDOS with DESQview, you must add it to your DESQview Open
+Window menu. To do this, select the Add a Program option, then press
+the "O" key (for Other Program). Press Enter and you will get a
+standard Change a Program window.
+
+You must set the program parameters and startup directory before
+opening an NDOS window. Set the Program Name to d:\path\NDOS.COM
+where "d:\path" is the drive and directory where NDOS.COM is stored.
+Set the Parameters to whatever NDOS startup options you want
+(swapping type, environment size, etc. -- do NOT use /C or /P). For
+other DESQView parameters, the defaults are workable except for the
+following changes:
+
+     Writes Text Directly to Screen     Y    (screen 1)
+     Close on Exit to DOS               Y    (screen 2)
+     Uses its Own Colors                Y    (screen 2)
+
+These parameters assume that you are running NDOS in a full-screen
+window; if so the window dimensions on screen 2 must be set
+accordingly.
+
+You may wish to run NDOS in a window smaller than the full screen. If
+so, set the window dimensions accordingly and change the "Writes Text
+Directly to Screen" field to "N". NDOS is written to be
+"Desqview-aware," and will not "bleed through" when running
+full-screen commands (DRAWBOX, DRAWHLINE, DRAWVLINE, LIST, SCRPUT,
+and SELECT) in such a window. We have found that the only ANSI driver
+which works properly in a window smaller than the full screen is
+Quarterdeck's DVANSI.COM. If you need to load DVANSI.COM, you can do
+so from a window startup batch file as described in the next
+paragraph.
+
+You can set up a startup batch file to be run when a DESQView window
+is opened -- just create it, and place its name (with drive and path
+if necessary) as the last thing on the Parameters line. This batch
+file will be run after and independently of any NSTART.BAT or
+NSTART.BTM file.
+
+When closing a DESQView window which has loaded a copy of NDOS, you
+should exit the application (if you're at the NDOS prompt, use the
+EXIT command) rather than just closing the window with DESQView's
+Close Window command. The Close Window command simply removes NDOS
+from memory, and gives no opportunity for NDOS to free up its
+resources such as the shell number, swap file, and any reserved EMS
+or XMS blocks. As a result, you can gradually use up some of these
+resources if you repeatedly open such windows and then close them
+with the Close Window command.
+
+DESQView will work properly with the NDOS /U and /E:nnnnU options in
+the primary shell, but may not work properly if these options are set
+in NDSHELL and/or used explicitly in a DESQView window. The NDOS
+/E:nnnnS (swapped environment) option is incompatible with DESQView.
+
+
+DESQView DOS Services (Quarterdeck):
+
+Under NDOS, the DESQView DOS Services option will not work in its
+default configuration. To make DOS Services work under NDOS, you must
+first create a batch file, DOSSERV.BAT, in your DESQView directory to
+run DOS Services under COMMAND.COM. (We are assuming that DESQView
+is in directory C:\DV and COMMAND.COM is in directory C:\; you will
+need to modify the settings below if your system is configured
+differently.) The batch file is:
+
+          set comspec=c:\command.com
+          c:\dv\dosserv
+          c:\command
+          exit
+
+Then, make the following changes on the DESQView change a program
+screen for DOS Services (items marked ** are on the second page of
+the screen):
+
+          *   Memory Allocation = 100K or greater
+          *   Program Name = C:\DV\DOSSERV.BAT (modify from
+              previous value of C:\DV\DOSSERV).
+          **  Close on Exit to DOS = N
+          **  System Memory = 10K or greater
+          **  Allow Close Window = N
+
+Once these steps are taken, you should be able to open the DOS
+Services window normally. However you will not be able to close it
+with a close window command. Instead, go to the window where DOS
+Services allows you to compose a DOS command, and type EXIT to close
+the window.
+
+
+DoubleDOS (SoftLogic Solutions): See Software Carousel.
+
+
+DR-DOS (Digital Research): [**]
+
+NDOS will work properly as a command processor (including as the
+primary shell) under DR-DOS 3.x or 5.0.
+
+DR-DOS's design makes the ASSIGN, JOIN, and SUBST commands internal
+(in MS-DOS/PC-DOS they are external). To access these commands when
+using NDOS as the command processor, you must set up aliases which
+run DR-DOS's COMMAND.COM to invoke the commands. The following NDOS
+aliases accomplish this (adjust these if COMMAND.COM is not in C:\):
+
+          alias assign `c:\command /c assign %&`
+          alias join `c:\command /c join %&`
+          alias subst `c:\command /c subst %&`
+
+
+Epsilon (Lugaru Software): [**]
+
+Epsilon can run NDOS as a concurrent process, and pass commands to
+NDOS for execution. In this mode it traps NDOS's input requests and
+feeds the keystrokes to NDOS. However it does not feed backspaces and
+such -- only actual characters. This means that editing of input
+isn't seen by NDOS. To fix the problem, either run NDOS as a shell,
+and not as a concurrent process, or use a SETDOS /L1 for the copy of
+NDOS that is run under Epsilon.
+
+To use the more flexible SETDOS /L1 approach you must use NSTART.BAT
+(or .BTM) to set up the SETDOS /L1 before running Epsilon. To do so,
+first set up an alias for Epsilon that sets an environment variable
+(change the name of the variable if you wish):
+
+          alias eps `set epsi=YES^epsilon %&^unset epsi`
+
+Then placing the following line in NSTART will issue the SETDOS /L1
+command in a secondary shell started by Epsilon, but ignore it
+otherwise:
+
+          if "%epsi"=="YES" setdos /l1
+
+
+GeoWorks Ensemble (GEOS):
+
+NDOS is generally entirely compatible with GeoWorks Ensemble. To run
+aliases or BTM files from the DOS Programs screen, you must set up a
+new program button with NDOS.COM as the "primary file name" and your
+alias or BTM as the "optional command line parameters." Commands can
+be entered the same as on the DOS command line.
+
+
+Headroom (Helix Software): [**]
+
+NDOS and Headroom should work properly together. Headroom will NOT
+work correctly if the COMSPEC is not set properly; if you do have
+trouble, check your COMSPEC (see Chapter 6 of the NDOS manual).
+
+
+Hijaak (Inset Systems):
+
+The Resident Program Manager (RPM) cannot be loaded from Hijaak's
+menu when NDOS is the command processor. If you try to load RPM from
+the menu you will receive "Out of memory" errors once it is loaded.
+This is due to the internal design of Hijaak and is not a NDOS bug;
+we are working with Inset Systems to address the problem. To work
+around this problem, use the LOADRPM command from the NDOS prompt, as
+described in the Hijaak manual. LOADRPM will load RPM with no trouble
+under NDOS, the problem occurs when loading from the Hijaak menu
+only.
+
+
+HIMEM.SYS (Microsoft):
+
+NDOS's XMS swapping will work properly with HIMEM.SYS, but HIMEM.SYS
+alone does NOT support the memory mapping required to use the NDOS /U
+and /E:nnnnU options. See the general section on /U and /E:nnnnU
+above for more information.
+
+
+LOGIMENU (Logitech): [**]
+
+If Logitech's LOGIMENU is loaded from a hard disk when running with
+NDOS, it leaves a file open each time a menu is unloaded. To work
+around this problem, load the menu from a floppy disk or RAM disk.
+
+
+MOVE-EM (Qualitas): [**]
+
+MOVE-EM version 1.00 contains a bug which causes the system to crash
+whenever any program attempts to access XMS memory. NDOS will
+attempt to access XMS memory if you specify the /U or /E:nnnnU
+option, or use the MEMORY command, so these NDOS features cannot be
+used if MOVE-EM 1.00 is installed.
+
+MOVE-EM version 1.02 corrects the above bug, but is only compatible
+with NDOS's /U and /E:nnnnU options if Microsoft's HIMEM.SYS is also
+loaded in your system. MOVE-EM itself does not fully support the XMS
+specification which permits NDOS to load itself and the master
+environment in high memory. See the general section on /U and
+/E:nnnnU above for more information.
+
+
+MTEZ Fax Software: [**]
+
+When this software is loaded it leaves a "hole" in memory which can
+cause "Out of memory" errors when NDOS's DIR command is used on
+directories with more than 128 files. The manufacturer is working on
+reducing or eliminating this "hole" in order to resolve the problem.
+
+
+Netware (Novell): [**]
+
+The information below was obtained from tests with Netware versions
+2.12 and 2.15 and Netware 386, and from discussions with Novell
+support personnel.
+
+On some Netware systems you may experience problems when redirecting
+output to network disk drives (for example, DIR > J:DIRLIST). The
+problems occur because Netware has a tendency to close files which
+are still in use by NDOS, despite the considerable extent to which
+NDOS has been modified to meet Novell's requirements to avoid this
+problem. The problem does not occur on most networks. If you do
+experience it, the only solution we are currently aware of is to
+place the following line in your Netware SHELL.CFG file:
+
+          TaskMode=4
+
+This will disable Netware's "task cleanup" facility, which is the
+part of Netware that is closing files and causing the problem.
+CAUTION: Be advised that if this option is used, some poorly behaved
+applications which do not properly close their files will no longer
+have Netware to clean up after them. This may lead to files being
+left open when such applications exit, and the next time the files
+are used sharing violations may then occur. A system reboot will
+clean up any such problem. Please contact technical support if you
+are unable to resolve problems with redirection on Netware drives.
+
+When Netware's LOGIN and/or MAP commands are used to map network
+drives into the path, the local path will be lost if it is not stored
+in uppercase. The NDOS PATH command always shifts its input to
+uppercase to get around this problem. However if you use SET to
+modify the path you can still manage to include lowercase
+characters, and thereby exercise this Netware bug. Novell has
+informed us that they intend to fix this problem in an upcoming
+release. In the meantime, keep your PATH environment variable
+entirely in uppercase to avoid the problem.
+
+Netware also has a bug which can cause it to lose one or more
+characters from the name of an environment variable (usually the
+second or third one in the environment) when setting other
+environment variables from inside a LOGIN script. If you are setting
+environment variables such as COMSPEC within your LOGIN script, you
+can get around this problem by using a batch file to set the
+variables after LOGIN is complete. Even if you cannot control the
+LOGIN script, you can still use a batch file to reset the "damaged"
+variables after LOGIN has finished. Another possible technique is to
+install several "dummy" variables at the very beginning of AUTOEXEC,
+for example:
+
+          set a=a
+          set aa=aa
+          set aaa=aaa
+
+When these are installed, it is the "dummy" variables which are
+damaged, rather than the meaningful variables (PATH, PROMPT, etc.)
+which are defined later.
+
+It is not currently possible to do disk swapping to a network drive
+under Netware. This is because Netware closes all files -- including
+the NDOS swap file -- each time an application exits. The next time
+NDOS uses the swap file, a swap file seek error will occur. We are
+considering possible internal workarounds for this problem; for now
+the available methods are to swap to EMS, XMS, or a local hard disk
+or RAM disk.
+
+Use caution with the NDOS UNSET command under Netware. When Netware
+is loaded it remembers the exact location of the COMSPEC variable in
+the master environment, and it may therefore have problems if
+variables such as COMSPEC and PATH are removed and reloaded in a
+different sequence.
+
+The NDOS /U command line option is reported to be compatible with
+Netware, but the /E:nnnnU and /E:nnnnS options are not.
+
+
+Novell MENU (Novell):
+
+The Novell MENU system distributed with Netware uses Interrupt 2E to
+execute menu options, and therefore requires the use of the NDOS2E
+program to work properly. NDOS2E is included with NDOS; see the
+general section above on INT 2E and the NDOS2E documentation in the
+manual for more information.
+
+When using MENU with NDOS2E, remember that a secondary NDOS shell
+will be started to execute each command in the menu file. This can
+be quite slow if you execute many commands for each menu option, and
+it won't work if you use SET commands whose results are used later in
+the command sequence. However if you put the commands in a batch file
+and put the name of the batch file as the command to be executed for
+each menu option then there should be no performance problems, and
+the results of SET commands will be available to commands that occur
+later in the batch file.
+
+
+OmniMouse Software Drivers: [**]
+
+The OmniMouse TSR driver, MSCMOUSE.COM, works correctly with NDOS.
+The CONFIG.SYS driver, MSCMOUSE.SYS, may not. If you have trouble
+with MSCMOUSE.SYS use MSCMOUSE.COM instead.
+
+
+QEMM and QRAM (Quarterdeck):
+
+The information below was obtained from tests with QEMM versions 4
+and 5, and beta tester reports on QRAM.
+
+Both QEMM 5.0 and QRAM are compatible with NDOS, and will allow you
+to load the NDOS resident code and the master environment into high
+DOS memory (UMBs) via the /U and /E:nnnnU switches respectively. For
+/U and /E:nnnnU to work with QRAM you must have QEXT loaded also
+(this is the normal method of loading QRAM). See general information
+on these switches above as well.
+
+QEMM version 5 allocates both XMS and EMS memory from the same memory
+area. Therefore it always reports the exact same amount of free XMS
+and EMS memory. You will see this in the free EMS and free XMS values
+displayed by the NDOS MEMORY command -- they will be exactly the same
+under QEMM 5. Just remember that if both values are (say) 512K, that
+means you have 512K of free memory which can be allocated either way
+-- not 1024K!
+
+If you use FILES.COM to load part of the DOS file handle table into
+high memory, you must follow Quarterdeck's recommendations and keep a
+minimum of FILES=8 in CONFIG.SYS. Lower values may cause NDOS to
+hang during boot, especially if disk swapping is used.
+
+If you use QEMM's OPTIMIZE and your AUTOEXEC has NDOS-specific
+commands like GLOBAL, IFF, aliases, etc., OPTIMIZE will not recognize
+them as DOS commands. Instead, it will act as if these commands are
+actually programs being invoked and attempt to see whether they
+should be loaded high. This can confuse OPTIMIZE and make it either
+fail, or run much too long. To address this, run OPTIMIZE with the
+switch /LOADHIONLY and then place a LOADHI command before each entry
+in AUTOEXEC that you actually want OPTIMIZE to examine.
+
+
+SideKick 2.0 (Borland):
+
+If you use NDOS disk swapping with the initial release of SideKick
+2.0 you may receive swap file seek errors when unloading SideKick
+from memory. This is because on unload Sidekick erroneously closes
+some files which do not belong to it, including the NDOS swap file.
+This is a bug in SideKick which is being addressed by Borland. In the
+meantime, you can unload SideKick with no trouble using a TSR manager.
+
+SideKick 2.0 can also cause NDOS to hang if it is popped up over a
+secondary NDOS shell (for example, when shelled out of your word
+processor or communications program). The problem only occurs when
+popping SideKick up in a secondary shell with a relatively small
+amount of memory available. We are working with Borland to determine
+the cause of this problem and resolve it. To work around the problem,
+run a small application program and pop SideKick up over that
+program, or return to the original application from which you shelled
+to DOS and pop SideKick up there.
+
+
+SigmaPlot (Sigma Designs): [**]
+
+The batch file PLOT.BAT used to start SigmaPlot uses an
+outdated method of determining DOS version which will fail
+under NDOS, reporting that "SigmaPlot requires DOS 2.0 or
+later." You can fix this batch file easily. At the beginning
+of the file, look for the group of lines which reads:
+
+    dosver
+    for %%v in (1,2,3,4) do if errorlevel %%v goto DosVer%%v
+    echo Error! Can't determine DOS version.
+
+Replace these three lines with the following single line:
+
+    goto DosVerX
+
+where "X" is the version of DOS you are running (DosVer3,
+DosVer4, and so on).
+
+
+Software Carousel (SoftLogic Solutions):
+
+Please see the section on multitaskers under General Information
+above before reading this section.
+
+The information below was obtained from tests with Software Carousel
+version 3, and discussions with SoftLogic technical support. It is
+reported to apply to all versions of Software Carousel through 5.0.
+
+Neither Software Carousel nor DoubleDOS will work properly with NDOS
+loaded as the primary shell. Both programs are written with the
+assumption that COMMAND.COM is the system command processor, and both
+contain logic which specifically depends on COMMAND.COM and the way
+it is written, and which actually modifies the copy of COMMAND.COM in
+memory. This makes it impossible to write a program which works
+properly as an alternate command processor loaded underneath (i.e.,
+before) these products.
+
+However, NDOS can be run without difficulty inside a Software
+Carousel partition, and should work properly as a program to be run
+under DoubleDOS.
+
+When loading NDOS into a Carousel partition, the best method is to
+leave the COMSPEC set to COMMAND.COM when Carousel is loaded. NDOS
+should then be set up in the Carousel options file just like any
+other program. For example, to load NDOS into partition 1:
+
+          d:\path\NDOS.COM [parameters] [filename]
+
+     where:
+
+         d:\path        is the drive and path where NDOS.COM is
+                        located
+
+         [parameters]   is the NDOS command line parameters
+                        (/S, /E, etc.; do NOT use /P here)
+
+         [filename]     is the name of a batch file to be executed
+                        when the partition is started
+
+Because NDOS can only be loaded in a partition when running Software
+Carousel, and not as the primary command processor, using NDOS disk
+swapping in multiple partitions is subject to the cautionary note on
+this subject in the general information section on multitaskers;
+please read it carefully.
+
+
+Telix Communications Software:
+
+Telix will work properly with NDOS. However because Telix uses all
+available EMS memory, this memory will not be available for NDOS
+swapping when you shell to DOS from Telix. As a result, if you have
+set NDOS up to swap secondary shells to EMS (e.g., with SET
+NDSHELL=/S:E) then EMS swapping in a secondary shell from Telix will
+fail, and NDOS will load resident. If you allow NDOS to determine the
+swapping method itself for secondary shells, then it will swap to
+disk (unless XMS is available). This isn't a problem -- it's just
+different from what you may see if you shell to DOS from other
+programs that don't take all available EMS.
+
+
+TSRCOM Utilities (TurboPower Software):
+
+TSRCOM will work properly with NDOS as long as you use TSRCOM version
+2.6 or later. The current release is version 2.9, and is available on
+many bulletin boards and on-line systems.
+
+If you use TSRCOM's MARK and RELEASE to manage your TSRs, NDOS
+swapping (as set with the SWAPPING command) must be in the same state
+when RELEASE is run as it was when MARK (or FMARK) was run. This is
+a characteristic of the design of MARK and RELEASE (or any other such
+products), and not a bug. If you do not observe this rule (for
+example, if you run MARK with SWAPPING OFF in AUTOEXEC and later run
+RELEASE from the prompt with SWAPPING ON), you may receive unusual
+error messages or hang your system.
+
+
+UltraVision (Personics): [**]
+
+When using NDOS and Personics' UltraVision 2.0, you may need to have
+an NSTART.BAT (or .BTM) that contains a SETDOS /S command to set the
+cursor shape, or your cursor may disappear. The proper cursor start
+and end values depend to some extent on the UV line size, but all
+values less than 14 appear to work in all UV line sizes.
+
+The DE program distributed with UltraVision is written specifically
+for COMMAND.COM, and cannot currently be used to set directory colors
+with NDOS.
+
+If you load UltraVision inside a Microsoft Windows 3.0 window which
+was started with NDOS, and don't unload it before EXITing, then when
+you do EXIT Windows will display a message that a popup program has
+been activated. Type Ctrl-C when this message appears to close the
+window and return to Windows.
+
+
+Ventura Publisher (Xerox): [**]
+
+Ventura Publisher 2.0 may issue an Error 0019 if there is more than
+about 180 bytes of space in use in your environment (use the MEMORY
+command to determine the amount of environment space in use). This is
+a bug in Ventura Publisher, and not a problem in NDOS. For Ventura
+2.0 you may need to use a batch file which removes some of your
+environment variables to make the environment small enough. For
+example, the following batch file uses SETLOCAL to preserve the
+current environment, removes some variables, runs Ventura, and then
+restores the environment with ENDLOCAL:
+
+          setlocal
+          unset bpath bflags bpackages wp pcplus
+          [commands to run Ventura publisher]
+          endlocal
+
+
+VTSR (Golden Bow Systems): [**]
+
+Version 2.0 of VTSR will work properly with NDOS. Some earlier
+versions may report (incorrectly) that no TSRs are installed.
+
+
+Windows 3.0 (Microsoft):
+
+When the instructions below are followed NDOS will work properly with
+Windows 3.0 in all modes.
+
+The standard "DOS" icon provided with Windows is set up to run
+COMMAND.COM, regardless of your COMSPEC setting. To run NDOS, either
+go into the Program Manager's File/Properties menu selection for
+the DOS icon and change the command line entry to refer to NDOS; or
+create a new DOS icon (take the File/New menu selection, then
+choose "Program Item") with the name "NDOS" and a command line which
+refers to NDOS. In either case the command line should include the
+full path and filename for NDOS.COM, plus any switches you wish to
+set (swapping, alias and environment size, etc.).
+
+When creating an NDOS icon, you may wish to set up a .PIF file
+instead of simply using the File Properties screen. A .PIF file will
+give you more control over how NDOS is set up and started.
+
+To associate a .PIF file for NDOS with a Program Manager icon set up
+as described in the previous paragraphs, first set up the .PIF file
+itself (using the PIF editor from the Accessories screen), then set
+up the icon as described above, placing the full path and name of the
+.PIF file into the command line field instead of the path and name
+for NDOS.COM.
+
+When running in 386 enhanced mode, you can run NDOS in a window
+that's smaller than the full screen. All NDOS commands, including
+"full screen" commands like LIST and SELECT, will work properly in
+such a window. To invoke this option you must set up a NDOS .PIF
+file, and set the "Windowed" (as opposed to "Full Screen") flag in
+the PIF editor. This flag is visible only when running the PIF editor
+in 386 enhanced mode.
+
+The Windows 3 Setup Applications option, which scans your disk drives
+for applications to be added to Windows program groups, will not work
+properly if your PATH is more than 128 characters long. Since NDOS
+allows you to create a PATH up to 255 characters long this can appear
+to be a conflict between Windows and NDOS. You can solve the problem
+by reducing your PATH length before running Setup Applications. To do
+so you must exit Windows, reduce the PATH length, restart Windows,
+run Setup Applications, exit Windows again, restore the original
+PATH, and restart Windows again.
+
+You can easily set up the Windows File Manager so that it will
+consider BTM files to be "executable." Just open your WIN.INI file
+with any editor, and find the section labeled "[extensions]". Add the
+following line to the end of the section:
+
+          btm=c:\norton\ndos.com /c ^.btm
+
+(adjust this to show the proper path for NDOS.COM on your system).
+It is NOT possible to execute BTM files from the Program Manager by
+modifying the Programs= setting in WIN.INI; in fact, if you try to
+do so, the system will hang when you attempt to actually invoke a
+BTM file.
+
+
+WordPerfect 5.1 (WordPerfect Corp. ): [**]
+
+Early releases of WordPerfect 5.1 had a variety of problems in the
+way they accessed expanded (EMS) memory, and therefore may conflict
+with NDOS's EMS swapping. Symptoms of the conflict include incorrect
+response to keystrokes, and system hangs. If you have a problem with
+WordPerfect 5.1 and NDOS when using NDOS's EMS swapping, try changing
+to disk swapping. If this resolves the problem, you can probably
+solve it permanently by upgrading to a later release of version 5.1.
+
+---------------------------------------------------------------------

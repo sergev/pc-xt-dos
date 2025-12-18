@@ -1,0 +1,63 @@
+aliases Sample aliases for NDOS
+be.exe Batch Enhancer
+calibrat.exe Calibrate
+compat.doc Read this for NDOS compatibility
+diskedit.exe Disk Editor
+de.exe Disk Editor
+diskmon.exe Disk Monitor
+diskreet.exe File encryption/Encrypted disks
+diskreet.ico Windows icon -- DISKREET
+diskreet.sys Encrypted disk driver
+disktool.exe Disk Tools
+ds.exe Directory Sort
+ep.exe Erase Protect
+fa.exe File Attributes
+fd.exe File Date
+filefind.exe FileFind
+ff.exe FileFind
+filefind.ico Windows icon -- FileFind
+filefix.exe FileFix
+filefix.ico Windows icon -- FileFix
+fl.exe File Locate
+fs.exe File Size
+image.exe Image
+norton.cmd Norton Utilities Menu
+norton.ovl Norton Utilities Overlay
+read.me Read this for late-breaking news
+keystack.sys KEYSTACK driver for NDOS
+lp.exe Line Print
+ncache.exe Norton Cache
+ncache.doc Norton Cache additional documentation
+ncc.exe Norton Control Center
+ncd.exe Norton Change Directory
+ncd.ico Windows icon -- Norton Change Directory
+ndd.exe Norton Disk Doctor
+ndos.com NDOS Command Shell
+ndos.hlp NDOS Help
+ndos.ico Windows icon -- NDOS
+ndos.ovl NDOS Command Shell Overlay
+ndos2e.com NDOS Int 2E Driver
+nhelp.exe NDOS Help Engine
+norton.exe Norton Utilities
+norton.ini Norton product configuration
+norton.ico Windows icon -- Norton Utilities
+nu.hlp Norton Utilities Help
+nuconfig.exe Norton Utilities Configuration
+nuconfig.ovl Norton Utilities Configuration Overlay
+pcshadow.sys DISKREET companion for Compaq 386's
+peter.ico Windows icon -- Peter Norton
+sformat.exe Safe Format
+sf.exe Safe Format
+format.exe Safe Format
+sformat.ico Windows icon -- Safe Format
+speedisk.exe Speed Disk
+sd.exe Speed Disk
+sysinfo.exe System Information
+si.exe System Information
+sysinfo.ico Windows icon -- System Information
+trouble.hlp Advise Help
+ts.exe Text Search
+unerase.exe UnErase
+ue.exe UnErase
+unformat.exe UnFormat
+wipeinfo.exe Wipe Information

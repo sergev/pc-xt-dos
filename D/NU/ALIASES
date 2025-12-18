@@ -1,0 +1,200 @@
+:                     ALIASES -- NDOS Sample Alias File
+:
+:
+:     The aliases in this file are designed to give you some examples of
+:     how NDOS aliases can be used and the power they have. It is not
+:     intended to be an exhaustive list, and many of these may not be
+:     appropriate for your needs. But they should give you a feel for how
+:     to use aliases to help get your work done.
+:
+:     CAUTION:  These aliases are EXAMPLES. They may not
+:     work properly when run on your system -- they are simply intended
+:     to show what's possible and give you a feel for how to write your
+:     own set of aliases. You may find some of them useful, but others
+:     may fail or have unintended effects when they are run on a system
+:     other than the one they were designed for.
+:
+:     This file is designed to be loaded with an ALIAS /R command, for
+:     example:
+:
+:               alias /r aliases
+:
+:     You can also load aliases from a batch file, but ALIAS /R is much
+:     faster. See the manual for more details on loading aliases.
+:
+:     We suggest you put your standard aliases are in a self-contained
+:     file like this one which can be invoked from AUTOEXEC. That
+:     way the file can also be re-invoked after it is edited, to 
+:     reinstall the aliases.
+:
+:
+:
+:     The next few aliases set up some directory commands that provide
+:     shorthand ways to view the directory in several different formats
+:     (see the DIR command in the manual for more details).
+:
+:     Note that none of these aliases has any arguments specified (%1,
+:     %2, etc.). This means that all arguments on the actual command line
+:     will be appended to the alias text. For example:
+:
+:             d2 x*
+:
+:     is equivalent to:
+:
+:             dir /2pv x*
+:
+:     and:
+:
+:             d2 x* y* z*
+:
+:     is equivalent to:
+:
+:             dir /2pv x* y* z*
+:
+d2 dir /2pv
+dex dir /o:e
+dir *dir /p
+wh*ereis dir /sp
+:
+:     The last two commands above demonstrate the use of an asterisk to
+:     terminate alias expansion and to shorten the name of an alias.
+:
+:     In the first case, if the command were defined as:
+:
+:             alias dir dir/p
+:
+:     it would generate an alias loop error. The inclusion of the "*"
+:     makes NDOS terminate alias expansion for that command, which
+:     allows the redefinition of a command with specific switch settings. 
+:     In this case "dir" is redefined as "dir/p", which will cause
+:     directories to be displayed with a pause at the end of each page.
+:
+:     The "whereis" command demonstrates truncation of an alias name.
+:     The * is placed after the last required character in the name, so
+:     the "whereis" command can be entered as "wh", "whe", "wher", 
+:     "where", "wherei", or "whereis".
+:
+:
+:     The following aliases are more shorthand:  DD and DU (directory
+:     down and directory up) for pushd and popd, L for list, etc.
+:
+dd pushd
+du popd
+l list
+clr mode mono
+:
+:
+:     Here's what the next few aliases do:
+:
+:             more:   Uses NDOS's LIST /S as a substitute for the DOS MORE
+:                     command. Note the use of the * to allow the command
+:                     to be entered as MO, MOR, or MORE
+:             sdel:   Allows you to select files for deletion from a subset
+:                     of files as specified in the command argument. For
+:                     example:
+:
+:                             sdel *.obj
+:
+:                     will allow you to select files to delete from a list
+:                     of all .obj files. (See the SELECT command in the
+:                     manual for more details).
+:
+:             up:     Moves "up" in the directory tree, that is, to the 
+:                     parent directory.
+:
+:             ov:     Moves "over" in the directory tree, to another 
+:                     subdirectory which has the same parent as the current
+:                     directory.
+:
+mo*re list /s
+sdel select del (%1)
+up cd ..
+ov cd ..\%1
+:
+:     The next alias shows how arguments can be passed to commands.
+:     The arguments given when the alias is invoked are passed to the
+:     program at the appropriate places in its command string.
+:
+ps d:\peri\ps /t:%1 /x:%2 /e:4
+:
+:     The next few aliases demonstrate several things. Some use the
+:     command separator character ^ to include multiple commands in
+:     the alias. The last two (PC and BACK) use the alias called IN
+:     to do their job. In fact IN was designed for "internal" use by
+:     other aliases in this file, though it could be used elsewhere as
+:     well. Note that, while PX is set up before it is referenced in
+:     other aliases, this is not really necessary, because any command
+:     in one alias which refers to another is handled when the alias is
+:     invoked, not when it is set up with the alias command.
+:
+:     Here's what each alias does:
+:
+:             nd:     Creates a new directory below the current directory,
+:                     then changes to it.
+:
+:             w:      Saves the current directory, changes to the wp
+:                     directory on drive c:, runs the wp program using
+:                     the first argument on the command line, and
+:                     restores the original directory when done.
+:
+:             zap:    Deletes all the .bak files in the current directory,
+:                     then does a wide directory listing.
+:
+:             in:     "Pushes" a different directory, executes a command,
+:                     including all of the arguments on the command line,
+:                     and then goes back to the original directory. See
+:                     PUSHD, POPD, and Alias Parameters in the manual for 
+:                     more details.
+:
+:             pc:     Changes to the \comm directory on drive c:, runs
+:                     the program called pcomm, then returns to the
+:                     drive and directory in use when the command was
+:                     executed.
+:
+:             back:   Changes to the \backup directory on drive d:, runs
+:                     the program called tape, then returns to the previous
+:                     drive and directory.
+:
+nd md %1^cd %1
+w pushd c:\wp^wp %1^popd
+zap del *.bak^dir /w
+in pushd %1^%2&^popd
+pc in c:\comm pcomm
+back in d:\backup tape
+:
+:     The following aliases make use of the %& argument. This argument
+:     means "all of the arguments on the command line". For example:
+:
+:             zap2 *.bak *.lst *.bk!
+:
+:     expands to:
+:
+:             erase *.bak *.lst *.bk!^chkdsk^dir /w
+:
+:     The last of the three aliases below uses the %@eval function to
+:     create a command-line calculator, by simply passing all arguments
+:     on the command line to the function.
+:
+zap2 erase %&^chkdsk^dir /w
+ed edit %&^del *.bak
+cal*c echo The answer is:  %@eval[%&]
+:
+:     The following two aliases, taken from the manual, show how 
+:     to combine alias with keystack to invoke a program and pass
+:     parameters to it. See the manual for details on what they do.
+:     Note that the 0s in the keystack strings simulate an empty
+:     keyboard buffer; the 13s are carriage returns.
+:
+321 keystack 0 13 0 13 0 13 0 13 0 13 "/fr" 0 "%1" 13^123
+drpt pushd c:\data^keystack "use times index times" 13 "report form timerep to print" 13 "quit" 13^dbase^popd
+:
+:
+:     The following aliases show the use of IFF in aliases. The first
+:     redefines SET so that it displays the environment variables with a
+:     /P if no parameters are given, or processes the SET if parameters
+:     are specified. The second checks whether the argument is a directory;
+:     if so it deletes the files in the directory and then removes the
+:     directory. If not, it gives an error message.
+:
+set iff "%1"=="" then *set /p ^ else *set %& ^ endiff
+zap iff isdir %1 then ^ *del %1 ^ *rd %1 ^ else ^ beep ^ echo Not a directory! ^ endiff
