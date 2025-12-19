@@ -1,0 +1,56 @@
+                                 NWPATCH1
+                       NetWare Driver Patch Utility
+                              User Document
+     
+     NWPATCH1.EXE is a patch utility for Novell NetWare (*) drivers 
+     that operate with Western Digital (WD) "PLUS" (WD8003) family 
+     LAN adapter boards.  This utility will patch the following files:
+     
+     NetWare v2.0a:  (WD driver versions 3.04)
+             ANET3.COM - WORKSTATION
+             NET$OS.EXE - SERVER
+
+     NetWare v2.1:   (WD driver versions 3.04)
+             IPX.COM - WORKSTATION
+             NET$OS.EXE - SERVER
+             NET$OS.EX1 - SERVER (this file contains hardware configurations)
+             NET$OS.EX2 - SERVER (this file contains StarLAN configuration)
+
+     NetWare ELS     (WD driver versions 3.04)
+             ANET3.COM - WORKSTATION
+             NET$OS.EXE - SERVER 
+
+                               NOTE
+        NetWare drivers for Micro Channel adapters configure
+        themselves automatically and never need to be patched.
+
+     A COPY of the file to be patched should be put in your default
+     drive/directory before the patch program is executed.  It is not
+     safe to patch a driver unless there is a backup copy of the
+     original driver saved on a different disk or directory.
+
+     The patch program can then be started by typing NWPATCH1.  The
+     user should know:
+
+        o whether the driver is for a workstation or server;
+        o which Novell version of NetWare the driver is from;
+        o for a server driver, whether it is to be the primary, 
+          secondary, etc.; 
+        o the name of the file to be patched
+
+     Follow the instructions given by the patch utility to change
+     the:
+             PC INTERRUPT (IRQ)
+             BASE I/O ADDRESS
+             SHARED RAM MEMORY BASE ADDRESS
+             SHARED RAM MEMORY SIZE
+             StarLAN PACKET PROTOCOL
+
+     When the parameters displayed match the values desired,
+     enter 'E' or 'e' to save them in the appropriate driver file.
+
+     To quit the program without making any changes in the driver
+     file, enter 'Q' or 'q'.
+
+     (*) NetWare is a registered trademark of Novell, Inc.
+

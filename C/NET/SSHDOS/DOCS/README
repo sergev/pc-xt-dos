@@ -1,0 +1,159 @@
+SSHDOS v0.93 Copyright (c) 2000-2002 Nagy Daniel
+Release date: 07-20-2002
+
+
+COPYRIGHT 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+	SSHDOS
+	Copyright (c) 2000-2002 Nagy Daniel
+	This program is distributed under the terms of the GNU General
+	Public License. Please read the copying file for details.
+
+	Portions:
+
+	WATTCP library
+	Copyright (c) 1990, 1991, 1992, 1993 Erick Engelke
+	Portions Copyright (c) 1993  Quentin Smart
+	Portions Copyright (c) 1991  University of Waterloo
+	Portions Copyright (c) 1990  National Center for Supercomputer
+				     Applications
+	Portions Copyright (c) 1990  Clarkson University
+	Portions Copyright (c) 1983, 1986, Imagen Corporation
+	The SSHDOS source package contains the unmodified WATTCP
+	code in compiled library format, which is permitted according
+	to the WATTCP license.
+	http://www.wattcp.com
+
+	ZLIB library
+	Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
+	The SSHDOS source package contains the ZLIB library in
+	compiled library format, which is permitted according to
+	the ZLIB license.
+	http://www.gzip.org
+
+	PuTTY
+	Copyright (c) 1997-2002 Simon Tatham
+	PuTTY is distributed under the terms of the MIT licence.
+	http://www.chiark.greenend.org.uk/~sgtatham/putty/
+
+	CVT100
+	Copyright (c) 1988 Jerry Joplin (CVT100)
+	Portions copyright (c) 1981, 1988 Trustees of Columbia University
+					  in the City of New York
+	Permission is granted to any individual or institution
+	to use, copy, or redistribute this program and
+	documentation as long as it is not sold for profit and
+	as long as the Columbia copyright notice is retained.
+	http://www.simtel.net/pub/simtelnet/msdos/commprog/cvt100.zip
+
+
+INTRODUCTION 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+	SSHDOS is an SSH client which provides a telnet-like interactive
+	login shell to remote hosts. It can be used to run commands on
+	remote hosts as well.
+
+	SCPDOS is a secure file transfer utility, which can transfer a
+	file from remote to local or from local to remote machines.
+	Only one file can be transferred at a time.
+
+	TELNET is the good old telnet client.
+
+	These programs can run on low-end machines (8086+) when
+	compiled with real-mode compilers (Turbo or Borland C),
+	so it's an ideal solution to connect from el-cheapo machines
+	or DOS compatible PDAs.
+	The DJGPP version is much faster, but it requires at least
+	a 386 machine.
+
+	SSHDOS currently supports 3DES and blowfish ciphers. Blowfish
+	is a bit faster, so I recommend using it (if the server supports
+	it).
+
+	The implemented SSH protocol version is 1.5.
+
+	SSHDOS and SCPDOS supports RSA and password authentication.
+	RSA authentication is tried first, by using the IDENTITY file
+	in the local directory. If it's not available, password
+	authentication follows.
+
+	SSHDOS is based on the WATTCP TCP/IP library, Putty SSH client
+	for Windows, the ZLIB compression library and the CVT100
+	terminal emulation package.
+
+
+INSTALLATION 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
+
+	Unzip the package with subdirectory support (pkunzip -d).
+
+	If you have the binary package, no installation is needed.
+	Edit the wattcp.cfg and hosts file first, then install a packet
+	driver (or set up your PPP connection if you have a modem).
+
+	The source package contains the WATTCP and ZLIB libraries for
+	Borland C 3.1 and DJGPP 2.03. If you want to use an other
+	compiler, you must download the original WATTCP and ZLIB
+	packages and recompile them too.
+	To build the binaries, modify the makefile (borlandc.mak or
+	djgpp.mak), then run 'make -f filename', where 'filename' is
+	the proper makefile.
+
+	Tested compilers:
+	- Borland C 3.1
+	- Turbo C 2.01
+	- DJGPP 2.03 (GCC 3.04)
+
+	Check out the CONTRIB subdirectory for enhancements from
+	other authors!
+
+
+DOCUMENTATION 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+	To get help for SSHDOS and SCPDOS, please use the /? command
+	line option.
+
+	You can use your own keymap file using the -k command line
+	option. Sample keymap files are included for linux, vt100 and
+	xterm-color terminals (with .kbd extension). The default is
+	xterm emulation. The xterm keymap is hard-wired in SSHDOS, so
+	the keymap files should only contain differences to the original
+	xterm keymap.
+
+	If the connection seems to be broken and no disconnection
+	happens automatically, you may terminate SSHDOS and TELNET by
+	pressing the ALT-X key combination.
+
+	DOS shell can be invoked using the ALT-E key combination.
+
+
+EXAMPLES컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+	Connect to a linux box using blowfish cipher:
+	sshdos -c blowfish -t linux -k linux.kbd username hostname
+
+	Connect to a host using the 386 version and compression:
+	sshd386 -C username hostname
+
+	Connect and run a shell script called 'scriptname':
+	sshdos username hostname nohup scriptname &
+
+	Copy a local file to a remote host:
+	scpdos localfile username@hostname:remotefile
+
+	Copy a remote file to the local machine:
+	scpdos username@hostname:remotefile localfile
+
+	Copy a local directory recursively to a remote host,
+	with time attributes of files preserved:
+	scpdos -p -r localdir\*.* username@hostname:remotedir/
+
+	Create a telnet connection to a POP3 port on a remote host:
+	telnet -p 110 hostname
+
+
+OFFICIAL SITE 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
+
+The official distribution site is http://sshdos.sourceforge.net
+
+The package is available in both executable and source format.
+Contact: nagyd@users.sourceforge.net

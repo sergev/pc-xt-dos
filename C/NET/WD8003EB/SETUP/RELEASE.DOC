@@ -1,0 +1,69 @@
+                       
+                     WESTERN DIGITAL 
+          LOCAL AREA NETWORK ADAPTER SETUP PROGRAM
+
+                    RELEASE INFORMATION
+
+   Version 1.04                            January 8, 1990
+
+
+This directory contains version 1.04 of SETUP, a configuration
+setup program for use with the new generation of Western Digital
+LAN Adapters that are software configurable. In this release, the
+SETUP program operates with:
+- WD8003EB EtherCard PLUS adapter
+- WD8003W  EtherCard PLUS10T adapter
+
+
+MODIFICATION HISTORY
+
+-- Version 1.04 (Current Version, January 8, 1990) --
+
+This version of Setup program has the following changes.
+
+1. Supports EtherCard PLUS10T (WD8003W) adapter.
+
+2. Fixed problem in identifying adapter as intelligent
+   Ethernet adapter.
+
+-- Version 1.03 (September 22, 1989) --
+
+This version of Setup program has the following modifications.
+
+1. Modified to support new boards that use interrupt IRQ5 as
+   well as earlier boards that use IRQ4.
+
+2. Fixed these bugs found in the previous version:
+   - when checking for interrupt conflict. 
+   - unable to change RAM size to 32K on the board with 32K RAM.
+
+-- Version 1.02 (Initial Release, June 1989) --
+
+Through normal use the following error messages may occur.    
+
+1. "SYS$ERR.DAT could not be found" or 
+   "SYS$HLP.DAT could not be found"
+  
+If either of these error messages are displayed, the value of the 
+FILES parameter in the CONFIG.SYS file may be too small.  Try 
+enlarging this value, re-booting, and re-running.  Make sure you 
+do not have any network software drivers, such as those for 
+ViaNet or NetWare, loaded or active when you are using SETUP.   
+
+2. "Cannot find IBM$RUN.OVL"
+
+If you try to run SETUP on a NetWare workstation, you will see 
+this error message.  You should not have the NetWare driver 
+loaded when running the SETUP program. 
+           
+3.  You may encounter problems when chosing the Automatic 
+Configuration if you have installed any network software prior to 
+running SETUP.  To avoid problems of this nature, remove all 
+network drivers and other network software from the system, then 
+re-boot and run SETUP. 
+
+Refer to the User Installation Guide for additional information.
+
+EtherCard PLUS is a registered trademark of Western Digital
+Corporation.
+

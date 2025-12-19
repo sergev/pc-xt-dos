@@ -1,0 +1,389 @@
+                         WESTERN DIGITAL              
+                      DIAGNOSTIC PROGRAM FOR
+                 "PLUS"-FAMILY LAN ADAPTER BOARDS
+
+
+                       SYSTEM REQUIREMENTS
+
+The system must have at least 384 Kbytes of RAM installed.
+
+                      OPERATING INSTRUCTIONS
+
+This document contains the procedures for testing "PLUS" 
+Family LAN adapter boards.
+                
+<< DISK FILES >>
+
+  DIAGNOSE.EXE        Diagnostic Program
+  $RUN.OVL      --
+  SYS$MSG.DAT     |
+  SYS$HELP.DAT    |-- Support FIles
+  SYS$ERR.DAT     |
+  DIAGHLP.HLP   --
+  USER.DOC            User Documentation (this file)
+  RELEASE.DOC         Release Documentation
+
+All Diagnostic Program files must be in the same directory for
+proper operation.
+
+
+<< OVERVIEW >>
+
+The Diagnostic Program is used to verify the correct
+configuration and operation of a Western Digital LAN Adapter
+board before installing the network software.
+
+
+<< BEFORE STARTING THE PROGRAM >>
+
+1. Be sure you know the configuration of any adapters that use
+jumpers to set the configuration.
+
+2. After turning off the PC's power, insert the adapter in the PC.
+
+    ** Ethernet boards must be on a properly terminated cable
+       (use a BNC "T" connector with two 50 Ohm terminators or
+        an AUI loopback connector).
+
+3. Boot the PC to a DOS prompt.
+
+    ** Memory resident (TSR) programs and device drivers should
+       not be loaded while the Diagnostic Program is active, so
+       you may need to temporarily rename your CONFIG.SYS and
+       AUTOEXEC.BAT files.  The Diagnostic Program is always run
+       without loading any network software.
+
+
+<< STARTING THE PROGRAM >>
+
+1. To run the Diagnostic Program change to directory with the
+Diagnostic Program (\DIAGNOSE on the floppy disk,
+\WDPLUS\DIAGNOSE on a hard disk) type DIAGNOSE and press
+Enter.  
+
+2. Read the opening screen and press Enter.
+
+    ** Press F1 any time in this program to get help
+
+3. Press Enter to select a board to test.  More than one board
+may be displayed depending on the number installed in the
+system.
+
+4. If an error message is displayed then a board is not present.
+
+    ** The board type and the Base I/O should appear. If two
+       boards are in the machine both boards should be listed.
+       Every network board in a PC must have a unique IRQ and
+       Base I/O.
+
+    ** If only one board is displayed, and more than one are in
+       the PC, then the Base I/O on the boards is the same.  Turn
+       off the PC and check the Base I/O on all boards.  Change
+       the Base I/O's so that each board has a unique value.
+       Restart the PC and rerun the Diagnostic Program.
+
+5. Select the adapter to test and press Enter.  The board
+configuration is displayed.
+
+    Board Type - Displays the board type
+    Base I/O - found by searching all base I/O's
+    IRQ - defaults to three (3) regardless of what IRQ the
+          board is actually set to (see note 1)
+    RAM size - defaults to most appropriate setting (see note 1)
+    RAM address - always defaults to D0000
+    ROM size - defaults to most appropriate setting (see note 1)
+    ROM status - defaults to most appropriate setting (see
+                 note 1)
+
+NOTE 1:  Adapers that use a SETUP Program for configuration and 
+         Micro Channel adapters can correctly read the config-
+         uration information off the adapter.
+
+    ** Read the file SYSMAP.DOC on SuperDisk Drivers disk
+       for a thorough understanding of the various settings
+       available on Western Digital network adapters.
+
+6. Press any key to continue.
+
+
+<< SET CONFIGURATION >>
+
+1. Go to SET CONFIGURATION by pressing S or using the Up/Down
+arrows if the IRQ, RAM address, RAM Size, or ROM Size and Address
+need to be changed from the displayed value.
+
+2. The board's network address is displayed. 
+
+3. Use the Up/Down arrows to move to the setting that needs to be
+changed.
+
+4. Press Enter and a menu of options is displayed.  Again use
+the Up/Down arrows to position the highlight bar on the proper
+option and press Enter to select a new choice.
+
+    ** The Base I/O and IRQ must match the board settings
+
+    ** The RAM address selected here is only for the purpose of
+       this program and has no effect on any other network
+       software used afterward.
+
+5. If an invalid selection is made the program will not stop the
+user from making that selection.
+
+6. Press F10 to save the changes or ESC to exit without change.
+
+
+<< BASIC ADAPTER TEST >>
+
+1. The BASIC ADAPTER TEST must be run to verify correct
+operation.
+
+2. Press B or move the highlight bar using the Up/Down arrows
+over the BASIC ADAPTER TEST option in the menu and press Enter.
+
+3. This selection tests the basic board functions.  The test
+takes less than a minute and displays "ALL BASIC ADAPTER TESTS
+COMPLETED SUCCESSFULLY" and "PRESS ANY KEY TO CONTINUE" upon
+successful completion.
+
+4. The test has failed if any of these conditions occur:
+
+    A) An error message displays at the bottom of the screen in a
+       RED box; or
+
+    B) The test hangs up at a certain blinking line and never
+       completes.  The blinking line is the test that failed.
+       
+       ** Read the error message or blinking line and write it
+          down!!  Then reboot the PC.
+
+       ** Use the error message or blinking line to find the
+          problem.
+
+Common problems include not terminating an Ethernet board and
+hardware or software conflicts with IRQ, Base I/O, or RAM
+address.
+
+       ** A board may be considered defective if it does not
+          pass this test and an identical board with the same
+          jumper settings does pass.
+
+5. If the board fails recheck the board settings, try a
+different BNC "T" connector and terminator, or remove other
+boards from the PC.
+
+
+<< INITIATE TEST MESSAGE and RESPOND TO TEST MESSAGES >>
+
+1. The best test environment is two PCs directly cabled,
+but this test can be run with any PCs on the network.
+
+2. These two tests must be run together on two different
+machines, both of which must have passed the basic adapter test.
+
+3. In this example we will refer to COMPUTER A and COMPUTER B.
+
+
+Start with COMPUTER A:
+
+    Press R or move the highlight bar using the Up/Down arrows
+    to Respond To Test Messages, and press Enter.
+
+    Press Enter again and a box opens in the middle of the
+    screen with the message:
+            
+              Responding to test messages
+                 Press any key to stop
+
+    COMPUTER A is now ready to respond to test messages and is
+    called the Responder.
+
+Go to COMPUTER B:
+
+    Press I or move the highlight bar using the Up/Down arrows to
+    Initiate Test Messages, and press Enter.  There are two
+    methods to perform the test.
+
+       1. Press Enter to begin the test.  The test will perform
+          1000 iterations after finding the first available
+          responder.
+
+       2. If you have more than one responder on the network
+          press F2 and all active responders are displayed with
+          their network addresses.  Select the desired responder
+          by using the Up/Down arrows and pressing Enter.
+
+          Press Enter and the test will perform 1000 iterations.
+
+       ** If an error message, No Responder Found, is displayed
+          then the two computers cannot communicate across the
+          network.  The normal reason for this test to fail is
+          cabling, "T" connectors, or terminators that are bad.
+
+    When the test is complete press F4 on both computers to find
+    the test results.
+
+       ** A small number of collisions is normal on a live
+          network or one with multiple test initiators, however
+          Alignment or CRC errors might mean that the board that
+          initiated the messages (COMPUTER B) is bad.
+
+    Press F6 to clear the results for the next test, then
+    press ESC.
+
+    At this point the test of the adapters is complete.
+
+There are further options available on the initiating computer
+(COMPUTER B).  The option menu is selected by pressing F6.
+
+    F6 will allow you to set parameters such as the frame
+    length.  The Up/Down arrows are used to select the
+    parameters and the spacebar to change parameter values.
+
+    Set the Iterations to non-stop to run a continuous test.
+
+    To stop the continuous test press any key.
+
+    This concludes this additional options test.  There are
+    other choices available under the additional options test.
+
+
+<< ADVANCED USE >>
+
+The Diagnostic Program is also designed to operate from the
+command line.  This method of operation is especially
+appropriate if your adapter uses a non-factory configuration.
+Using the command line setup, you bypass having to constantly use
+the SET CONFIGURATION portion of the program.
+
+The following lists the command line parameters available:
+
+/base:aaa       Specifies base I/O address.  
+/irq:n          Specifies interrupt level (IRQ).  
+/ram:aaaaa      Specifies base address of the on-board RAM.  
+/rom:aaaaa      Specifies base address of the boot ROM.  
+/adapter:n      Specifies adapter to test, see note 1. 
+/slot:n         Specifies Micro Channel slot adapter to test.  
+/send:xxxxxx    Initiates test messages to network address
+                'xxxxxx'.  Each 'x' is a two digit hex value
+                (e.g. C0).  
+/send           Initiates test messages to all responders.
+/respond        Echoes received test messages.  
+/test           Runs Basic Adapter Test.  
+/v              Displays program version and copyright info.  
+/?              Displays this help screen.
+
+Note 1: Adapter is selected using Base I/O for systems with more
+than one network adapter.  If /ADAPTER:2 was used then the board
+with the second Base I/O (in ascending order) is tested.
+
+These command line parameters can be used in combination in
+batch files.  For example:
+
+diagnose /irq:7 /respond  Initiates program using IRQ 7 and starts
+                          the computer in a responder mode.
+
+diagnose /base:320 /test  Initiates program using a Base I/O of
+                          320h and runs the Basic Test Program.
+
+
+<< ERRORS >>
+
+When using certain command line parameters (i.e. /send, /respond,
+and /test) the batch file can interrogate the return code and
+inform the user of the result.
+
+The meanings of the return codes are described below.  "NIC" 
+refers to the Network Interface Controller chip on the adapter
+board (a DP8390 or WD83C690 device); "CRC" refers to the Cyclic
+Redundancy Check code that is used for error checking in every
+message.
+
+    0x00 - No error.
+    0x01 - Insufficient memory to run program.
+    0x02 - No board appears to be in the machine.
+    0x03 - More than one board is in the machine and the user
+           has not specified which one to Diagnose.
+    0x04 - Command line parameters are out of range.
+    0x05 - No board appears to be at the specified base I/O
+           address.
+    0x06 - LAN address ROM does not produce a valid check sum.
+    0x07 - RAM base address is out of range.
+    0x08 - Other RAM occupies the specified RAM base address.
+    0x09 - ROM occupies the specified RAM base address.
+    0x0A - Program tried to write to RAM while it was disabled.
+    0x0B - RAM test failed.
+    0x0C - Network Interface Controller (NIC) chip is bad.
+    0x0D - ROM base address is out of range.
+    0x0E - RAM occupies the specified ROM base address.
+    0x0F - ROM base address conflicts with RAM base address.
+    0x10 - Unable to find a Boot ROM signature at the specified
+           ROM base address.
+    0x11 - Unable to produce a valid Boot ROM check sum on the ROM
+           at the specified ROM base address.
+  * 0x12 - Loopback FIFO error.  The data received does not compare
+           with that sent.  (used with DP8390 device)
+  * 0x13 - Loopback packet error.  The data received does not 
+           compare with that sent.  (used with WD83C690 device)
+  * 0x14 - A CRC error was expected but was not generated.
+  * 0x15 - The NIC was unable to transmit a packet.  This could be
+           caused by an improperly terminated network.
+  * 0x16 - A good CRC was manually appended to the loopback packet,
+           but the NIC logged a CRC error.
+  * 0x17 - A bad CRC was manually appended to the loopback packet,
+           but the NIC did not log a CRC error.
+  * 0x18 - The NIC accepted a packet whose address did not match 
+           that of the NIC.
+    0x19 - Interrupt not serviced.  Usually caused by wrong IRQ 
+           setting.
+    0x1A - Receive timed out.  Could be normal on a busy network.
+    0x1B - Max retries has been reached waiting for a packet to be 
+           echoed.  No frames are being sent to this node.
+    0x1C - A packet is ready to be taken from the intelligent card.
+           This should never be seen by the batch file.
+    0x1D - The packet received does not match the packet sent.
+    0x1E - A memory contention error has occurred.
+    0x1F - User has struck the keyboard in an attempt to exit the
+           current operation.
+    0x20 - No responders can be found.  Run Diagnose on another 
+           machine on this network.
+    0x21 - No frame has been sent.  May be due to incorrect IRQ 
+           setting.
+    0x22 - No frame has been received.  No responder is present on 
+           the network.
+    0x23 - Tried to transmit a packet, but the NIC was unable to 
+           transmit the previous packet.  Perhaps the cable is not 
+           connected.
+    0x24 - Intelligent card does not respond.
+    0x25 - Error reading the installed Boot ROM
+    0x26 - Specified ROM size does not match the size read from the
+           Boot ROM chip at the specified ROM base address.
+    0x27 - Specified IRQ value is out of range for the adapter being
+           tested.
+    0x28 - The command line parameter '/adapter:n' has been used,
+           however no adapter n can be found.
+    0x29 - The command line parameter '/slot:n' has been used, however
+           the machine running this code is not micro channel.
+    0x2A - The command line parameter '/slot:n' has been used, however
+           no adapter can be found in slot n.
+    0x2B - This is an internal code never to be seen by the OS.
+    0x2C - An invalid command line parameter has been specified.
+
+  * Loopback results may be affected by traffic on a live network.
+    Diagnose retries these tests to gain accurate results, however,
+    these tests should be run with a Loopback connector attached to
+    the LAN controller.
+
+
+<< SUPPORT >>
+
+If you have any additional questions regarding your Diagnostic
+Program contact your dealer or distributor technical support
+department.
+
+
+<< TRADEMARKS >>
+
+Micro Channel is a registered trademark of International
+Business Machines Corporation.
+

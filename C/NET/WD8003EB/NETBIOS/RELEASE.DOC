@@ -1,0 +1,93 @@
+			 WESTERN DIGITAL
+		  NETBIOS/OSI INTERFACE PROGRAM
+			       FOR
+		"PLUS"-FAMILY LAN ADAPTER BOARDS
+
+		       RELEASE INFORMATION
+	  Version 3.1.9 	       05 September 1989
+
+
+The purpose of this document (file RELEASE.DOC) is to briefly
+explain the contents of this diskette.	The file WPLUSNBE.EXE
+is the NETBIOS/OSI Interface Program, intended for use with the
+Western Digital PLUS family LAN adapter boards (WD8003\WD8013).
+
+Refer to the WD8003-NB NETBIOS/OSI Interface Program Installation
+Guide (or file INSTALL.DOC) for an explanation of the command line
+parameters that can be used with this program.
+
+This version of the WD8003-NB NETBIOS/OSI Interface Program is
+intended for use with:
+
+	o IBM PC Local Area Network Program
+	o Microsoft MS-NET
+
+or other NETBIOS compatible software.
+
+
+OPERATIONAL CONSIDERATIONS
+
+Please consider the following when using the NETBIOS/OSI
+Interface Program:
+
+o The ViaNet 3.06 Network Operating System will not function
+  with the NETBIOS/OSI Interface Program loaded.
+
+o The specified frame size includes OSI protocol headers and thus
+  the bytes available for actual data transfer in a datagram are
+  somewhat less than the frame size.
+
+o This version includes parameterized storage allocation.  When
+  used in a network operating system server configuration,
+  especially with the IBM PC LAN Program, the default number of
+  buffers should be increased for optimal performance.
+  (Use /nlb:20, /nsb:60)
+
+
+MODIFICATION HISTORY
+
+<< Version 3.1.9 -- Current Version: September 1989 >>
+
+Added support for WD8013EBT (16-bit high performance Ethernet
+card). Also added logic so that the only command line
+parameter needed is "base:" for boards with interface chip
+(e.g. 8003EB).
+
+<< Version 3.1.7 -- Current Version: November 1988 >>
+
+There is no functional difference in this version.  The
+organization of the code was changed for compatibility with
+a ROM version.
+
+
+<< Version 3.1.6 -- September 1988 >>
+
+This version provides command line parameters for better
+control of the storage allocated by the program.  It also
+saves memory by deallocating initialization code.  Other
+features include the ability to use the full 32K RAM available
+on WD8003EBT and WD8003WT boards, and support for use as a
+second adapter.
+
+
+<< Version 3.1 -- 26 May 1988 >>
+
+This version handles Western Digital adapter boards for
+Micro Channel bus systems as well as the original XT/AT bus
+adapters.  The Program determines on its own which type of
+board is installed and adjusts its operation accordingly.
+Certain command line parameters are no longer used with
+Micro Channel bus adapters (see INSTALL.DOC instructions).
+
+
+<< Version 3.0 -- 1 March 1988>>
+
+This and future versions of the NETBIOS/OSI Interface
+Program use an improved communication protocol that makes
+them incompatible with previous versions (2.1 and earlier)
+of the Program.  Version 3.0 or subsequent versions must
+now be used with every adapter board in the network.
+
+Only 8K of the 32K RAM buffer on WD8003EBT adapter boards
+is supported by this version.
+

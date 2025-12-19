@@ -1,0 +1,107 @@
+                          WESTERN DIGITAL
+           "PLUS"-FAMILY LAN ADAPTER BOARD DRIVER FOR USE WITH 
+                 3COM'S 3+ NETWORK OPERATING SYSTEM
+
+       INSTALLATION GUIDE             January 16, 1990
+
+
+This document contains the information about how to install a
+Western Digital WD8003/WD8013 family LAN adapter board and driver 
+in 3Com's 3+ (*) network.
+
+1. Jumper the adapter according to your system configuration.
+
+The WD.SYS Device Driver is installed at PC boot time according 
+to the command line specified in the DOS CONFIG.SYS file 
+(described below).  The user must verify that the jumper settings 
+on the adapter board correspond to the software settings given on 
+the device driver command line.
+
+Jumper settings for some adapter boards are described in the
+JUMPERS.DOC file.  For more information, refer to the Western 
+Digital "User Installation Guide" that comes with each adapter 
+board.
+
+2. Insert the adapter in your PC.
+
+3. Power up your PC.
+
+4. Install the 3Com 3+ network software as specified in the 3Com
+Installation and Configuration Guide.
+
+5. After the installation is complete, copy the Western Digital 
+driver WD.SYS from this diskette to the root directory of your
+system drive with a new name called ETH.SYS.  For example,
+
+                 CD A:\3PLUS
+                 COPY A:WD.SYS C:\ETH.SYS (XT/AT bus)
+                               C:\ETH523.SYS (Micro Channel)
+
+If 3+NetConnect (*) has been installed and the Western Digital 
+board is being used as a remote (secondary) network adapter, a 
+secondary driver (2WD.SYS) is used.  If necessary, copy that 
+secondary driver to the root directory.  For example,
+
+                 COPY A:2WD.SYS C:\2ETH.SYS (XT/AT bus)
+                                C:\2ETH523.SYS (Micro Channel)
+
+6. If you changed the LAN adapter board's default parameters in 
+step 1, you need to modify the DEVICE=[2]ETH.SYS command line in 
+your CONFIG.SYS file to reflect the jumper selections of step 1.  
+Use the format:
+
+                 DEVICE=ETH.SYS irq base page  (XT/AT bus)
+    	         DEVICE=2ETH.SYS irq base page (XT/AT bus)
+		   
+		 DEVICE=ETH523.SYS irq base page  (Micro Channel)
+		 DEVICE=2ETH523.SYS irq base page (Micro Channel)
+
+where,
+
+   irq  - IRQ level to receive adapter board interrupts      (3)
+
+   base - I/O base address (in hexadecimal)                (280)
+
+   page - 4-digit memory segment byte address of the     (D0000)
+          shared buffer memory (not jumpered on the board)  
+
+The factory jumper settings for the WD8003/WD8013 adapters
+and the WD.SYS default buffer memory base address are given in 
+parentheses.
+
+If these default values conflict with other adapter boards 
+installed in your system, you may need to change the values used  
+by the LAN adapter. For example, if you want to change the IRQ 
+level to 4 and the buffer memory base address to D4000 (segment  
+address D400), then you'll have to change the line
+
+             "DEVICE=ETH.SYS" to "DEVICE=ETH.SYS 4 280 D400"
+
+before rebooting the system.
+
+PLEASE NOTE:  There are a number of PC boards that can conflict 
+with various possible shared memory addresses.  For example, the 
+VGA and EGA graphics adapters seem to use the area of memory in 
+the range of C000 through D400, depending on the type of adapter.  
+We have found D000 to be a good address for users of EGA  
+adapters;  D400 or DE00 work well for systems with the VGA 
+adapters.  If you are seeing any problems in getting the system 
+to function, try moving the shared memory base address.
+
+7. Reboot the system.
+
+For Micro Channel bus systems:
+
+1. Configure the Micro Channel adapter using the .ADF file 
+supplied on the driver disk with your adapter.  Use either the 
+manual or automatic configuration routines, ensuring that the 
+settings do not conflict with other devices in your system.
+
+2. Continue the installation process using steps 2 through 7
+above.
+
+
+
+(*) 3Com and 3+ are registered trademarks and 3+NetConnect is a
+trademark of 3Com Corporation.  Micro Channel is a registered
+trademark of International Business Machines Corporation.

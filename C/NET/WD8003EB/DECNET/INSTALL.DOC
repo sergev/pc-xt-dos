@@ -1,0 +1,183 @@
+                        WESTERN DIGITAL
+               "PLUS"-FAMILY LAN ADAPTER BOARD DRIVER
+              FOR USE WITH DEC's DECnet-DOS and PCSA/PC
+
+                         INSTALLATION GUIDE
+
+   Copyright Western Digital 1988, 1990.  All Rights Reserved.
+
+
+The DLL.EXE driver contained on this diskette is for use with the
+"PLUS"-family (*) LAN adapter boards for Ethernet, StarLAN, and
+Ethernet Twisted-Pair. This driver operates with DEC's DECnet-DOS (*) 
+or PCSA/PC Software.
+
+This document contains the information about how to install a
+Western Digital "PLUS"-family LAN adapter board and the DLL DECnet
+driver on DEC's DECnet network.
+
+1. Jumper the adapter according to your system configuration.
+
+The DLL Device Driver is installed at PC boot time according to
+the command line specified in the AUTOEXEC.BAT file (described
+below).  The user must ensure that the software settings given on
+the device driver command line match the jumper settings on the
+adapter board.
+
+Jumper settings for some adapter boards are described in the
+JUMPERS.DOC file.  For more information, refer to the Western
+Digital "User Installation Guide" that comes with each adapter
+board.
+
+For Micro Channel (*) adapters, the interrupt, I/O base address,
+and RAM base address are established by the system configuration
+procedure when the adapter is installed in the machine.
+
+2. Insert the adapter in your PC.
+
+3. Power up your PC.
+
+4. Install DEC's Software
+
+Follow the appropriate instructions for either DECnet-DOS or
+PCSA/PC from Digital Equipment, selecting the "3COM"* option
+whenever asked to choose an adapter type.  Specifics for the WD
+hardware are defined below.  You may view the options for the
+WD driver with or without having any DEC software or an adapter
+installed by typing:
+
+           dll /?
+
+4A. For DECnet-DOS: Install the DECnet-DOS network software
+using the DIP.EXE installation program supplied on the
+DECnet-DOS diskette.  Select ETHERNET communications during the
+installation.
+
+Next, copy the Western Digital driver DLL.EXE from this diskette
+to the \DECNET directory of your system drive.  For example,
+
+           COPY A:\DECNET\DLL.EXE C:\DECNET\DLL.EXE
+
+Next, edit your AUTOEXEC.BAT file to load the DLL driver as
+described in step 5.
+
+4B. For PCSA/PC: Have your system administrator create a KEY
+diskette for your system.  The KEY diskette should be created
+with your DECnet address and your personal startup files.
+
+Next, copy the Western Digital driver DLL.EXE from this diskette
+to the appropriate directory of your KEY diskette.  For example,
+with your KEY diskette in drive A: and this diskette in drive B:,
+type:
+
+           COPY B:\DECNET\DLL.EXE A:\xxxxxx\DLL.EXE
+
+Next, edit file MSNET.INI on your KEY diskette as described in
+step 5A or 5B.  (Make sure to change ALL occurrences of DLL.)
+
+5A. XT/AT(*) Bus adapters: You need to edit your AUTOEXEC.BAT or
+MSNET.INI files to load the DLL.EXE driver and to reflect the
+jumper selections of step 1.  Use the format:
+
+C:\DECNET\DLL /IRQ:irq /IO:base /SM:page /SIZE:size (AUTOEXEC.BAT)
+
+                          or
+
+DLL /IRQ:irq /IO:base /SM:page /SIZE:size (MSNET.INI)
+
+                          where,
+
+irq- IRQ level to receive adapter board interrupts, jumper W2 (3)
+
+base- I/O base address in hexadecimal, jumper W1 (280)
+
+page- 4-digit memory segment byte address of the shared buffer 
+        memory (not set by jumpers) (D000)
+
+size- size of the shared memory on the adapter board (8, 16 for
+	WD8013EBT)
+
+NOTE:  Figures in parentheses are factory default values for
+most Western Digital adapter boards.
+
+The DLL.EXE defaults are given in parentheses.  Note that the
+DLL.EXE defaults to IRQ3 to match the "PLUS"-Family boards,
+shipped with the jumper set to IRQ3.
+
+For example, the following statement corresponds to the factory
+jumper configuration of the adapter and an 8K buffer memory base
+address of DE000:
+
+           DLL /IRQ:3 /IO:280 /SM:DE00 /SIZE:8
+
+To change the settings from the command line for version 1 of
+DECnet-DOS, you may use the version 1 format using "=" instead of
+the version 2 format using ":" as the delimiter.  For example,
+
+           DLL /IRQ=3 /IO=280 /SM=DE00 /SIZE=8
+  or
+           DLL /IRQ:3 /IO:280 /SM:DE00 /SIZE:8
+
+
+Your "irq" options for the /IRQ Interrupt parameter are: 2, 3, 4,
+5, 6, or 7, or also 10, 11, or 15 for the WD8013EBT.
+
+     Your "base" options for the /IO I/O base address parameter
+are: 3E0, 3C0, 3A0, 380, 360, 340, 320, 300, 2E0, 2C0, 2A0, 280,
+260, 240, 220, or 200.  (Be aware that there may be conflicts
+above 360.)
+
+     Your "page" options for the /SM shared memory parameter
+are: 8000 - F000, on 8K-byte boundaries (increments of 200 hex).
+EGA and VGA can create problems below the D000 and D400 address
+respectively.  (The DLL.EXE driver defaults to D000; there are no
+jumpers for this on the adapter board.)
+
+     Your "size" options for the /SIZE shared memory size
+parameter are: 8, 16, or 32.  (This is the size of the shared
+memory in kilobytes on your adapter board.  The default is 8,
+except for WD8013EBT where the default is 16.)
+
+5B. Micro Channel Bus adapters: You need to edit your AUTOEXEC.BAT or
+MSNET.INI files to load the DLL.EXE driver and to make sure the automated
+installation procedure has not added command line options which are not
+needed for the Micro Channel version.  Use the format:
+
+           C:\DECNET\DLL        (AUTOEXEC.BAT)
+
+                           or
+
+           DLL                  (MSNET.INI)
+
+For Micro Channel adapters, IRQ, IO, SM, and SIZE should not be specified
+(and will be ignored, except an error message will be generated).  The
+actual values used are those set by the system configuration procedure
+for the adapter.
+
+If you have more than one Western Digital Micro Channel LAN adapter installed
+in your system, you must tell DLL which one to use.  The board is referenced
+by the slot in which it is installed, using the /SLOT parameter.  For example,
+if you have an Ethernet adapter in slot 5, and a Starlan adapter in slot 3,
+and you wish to run DECnet using the Ethernet adapter, use:
+
+           DLL /SLOT:5
+
+Although you may specify SLOT when only one adapter is installed, you
+should let SLOT default, so that if you later move the adapter, you will
+not need to change AUTOEXEC.BAT or MSNET.INI.
+
+6. Reboot the system.
+
+
+(*) EtherCard PLUS, EtherCard PLUS TP, EtherCard PLUS/A,
+EtherCard PLUS 10T, EtherCard PLUS 10T/A, StarCard PLUS,
+StarLink PLUS, and StarCard PLUS/A are trademarks of
+Western Digital Corporation.
+
+DEC and DECnet are trademarks of Digital Equipment Corporation.
+
+AT is a registered trademark and Micro Channel is a trademark of
+International Business Machines Corporation.
+
+3Com is a registered trademark of 3Com Corporation.
+

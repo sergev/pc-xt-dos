@@ -1,0 +1,109 @@
+           
+                  WESTERN DIGITAL
+       LOCAL AREA NETWORK ADAPTER SETUP PROGRAM
+
+                   USER DOCUMENTATION
+
+Version 1.04                           January 8, 1990
+
+
+SETUP is a configuration program that operates with the following
+adapters:
+     - Western Digital WD8003EB EtherCard PLUS adapter
+     - Western Digital WD8003W  EtherCard PLUS10T adapter
+These adapters contain EEROM memory that eliminates most of the
+jumper requirements of earlier adapters, thereby allowing you to 
+configure the adapters through software. SETUP is designed to 
+support multiple adapters in the same computer, provided they do 
+not have the same Base I/O address.  
+
+To run SETUP from a floppy disk, you must first change your 
+default drive to the floppy drive (the A drive in the following 
+example).  Then run SETUP as follows:
+
+                             A:
+                             CD \SETUP
+                             SETUP
+
+Or, you can copy the SETUP program files to the system hard disk 
+and run SETUP from there.    
+           
+If you have questions as you use SETUP, HELP screens are 
+available from the <F1> function key. Use ESC to exit HELP.  
+
+SETUP can identify other WD LAN adapters in your system, even 
+those that are not software configurable adapters. Any Base I/O 
+addresses being used by other WD adapters are omitted from the 
+list of available choices for the adapter being configured.  
+
+When more than one software configurable adapter is installed, 
+you should see all listed, in order, by Base I/O address.  If you 
+know you have more than one adapter but only see one listed on 
+the display, all of your adapters are probably configured to the 
+same Base I/O address.  In this case, you must remove all but one 
+adapter from your computer and then change the Base I/O address 
+of the remaining one.  Then, you can add a second one to be 
+configured.  Refer to the User Installation Guide for additional 
+explanation.  
+           
+When the first character of a list of SETUP program menu choices 
+is highlighted, you can type that character to activate that 
+choice instead of using the up and down arrows.  
+           
+The "Automatic Configuration Menu" selects a standard set of 
+values for your adapter if there are no conflicts with other 
+adapters.  If there are conflicts, you must use the "Basic 
+Configuration Menu."
+
+The function key <F8> "Factory setting" sets all the fields on 
+the menu (not just the highlighted one) to the configuration they 
+had when the adapter left the factory, provided the Base I/O 
+address of 240 is not otherwise in use in your machine.  If 240 
+is in use, you will have to take the adapter to another computer 
+or remove the adapter using 240 before the factory setting can be 
+restored.  
+
+
+    The settings are:              FACTORY       AUTOMATIC
+    ------------------------------------------------------
+    
+        Base I/O address               240             280
+        Interrupt Line            Disabled         Enabled
+        IRQ Interrupt                    3               3
+        Adapter RAM Used                8K              8K
+        RAM Base address             D0000           D0000
+        6 MHz AT                        NO              NO
+
+        Size/Disable ROM          Disabled              --
+        ROM Base Address             D8000              --
+
+    NOTE:    The IRQ interrupt must be enabled separately 
+    from selecting its value.  The adapter will not operate 
+    until you run the SETUP program and enable the interrupt. 
+     
+Make sure that the address you select for your network software 
+driver matches what you select in SETUP.  Otherwise, your 
+driver's address choice at run time will override your setting 
+here.  If this happens, the driver might still operate properly, 
+but not at the address chosen by the SETUP program. 
+           
+SETUP attempts to cross check the values you select to look for 
+conflicts with other installed hardware and software.  In an AT 
+or XT, however, not every possible conflict can be detected.  
+SETUP, therefore, provides a Base I/O Address Map in the HELP 
+screens and a "RAM Buffer Base Address" table in the User 
+Installation Guide to assist you in chosing the proper memory 
+locations for your adapter.  
+
+In most cases, if you choose a conflicting value, you need only 
+to run SETUP again and choose a different one.  In a few cases, 
+such as a conflict with a video controller, you may have to 
+remove one of the conflicting adapters.  In this case, moving the 
+LAN adapter temporarily to a PC with a different video adapter is 
+one alternative.  Another alternative is to use the Clear 
+Configuration Jumper as described in Appendix A of the User 
+Installation Guide.
+
+EtherCard PLUS is a registered trademark of Western Digital
+Corporation.
+

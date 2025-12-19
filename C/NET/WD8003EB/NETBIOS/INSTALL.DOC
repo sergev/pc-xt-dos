@@ -1,0 +1,187 @@
+                         WESTERN DIGITAL
+
+                  NETBIOS/OSI INTERFACE PROGRAM
+                               FOR
+          "PLUS"-FAMILY StarLAN/ETHERNET PC ADAPTER BOARDS
+
+                       INSTALLATION GUIDE
+
+ADAPTER BOARDS
+
+    This program is for use with Western Digital "PLUS"
+    (WD8003\WD8013) family LAN adapter boards.
+
+LOADING THE PROGRAM
+
+    After booting DOS, type the following when the DOS prompt 
+    is displayed:
+
+         WPLUSNBE   ... parameter list ...
+
+    "... parameter list ..." is an optional list of parameters 
+    in the form "/parameter_name:value".  These are described
+    in detail in the following section.  The parameters which 
+    may be selected include:
+
+    o    length of the user frame to be transmitted by the 
+         transport layer
+
+    o    LAN address for this node
+
+    o    base I/O address of the LAN adapter board (*)
+
+    o    base address for the on-board shared RAM memory (*)
+
+    o    PC IRQ level to receive LAN adapter board interrupts (*)
+
+    o    Storage allocated for various internal data structures
+
+    o    Select use as a second adapter configuration
+
+          * These parameters are not used with Micro Channel 
+            bus adapter boards because their values are 
+            established during system configuration when
+            you install the adapter board.
+
+    Any one or more of these parameters may be selected in 
+    any order.  Defaults are assigned to each parameter so 
+    that none of them need be specified if the standard 
+    configuration is desired.
+
+    To remove the NETBIOS/OSI Interface Program or change any
+    of its parameters after it has been loaded, DOS must be
+    rebooted.
+
+
+PARAMETER SPECIFICATION
+
+    The format for specifying parameters for WPLUSNBE.EXE is:
+
+         WPLUSNBE /parameter_name:value /parameter_name:value
+
+    where "/" is the DOS switch character, "parameter_name" is the
+    parameter name described below, and "value" is an acceptable
+    value for the parameter as described below.  The command line 
+    may specify none or a combination of parameters.  Each 
+    parameter must be preceded by the switch character "/".  If 
+    the parameter can be assigned a value (all except for "v" and 
+    "?"), the colon (:) delimiter must follow the parameter_name.
+
+    The following parameters may be selected as command line 
+    options:
+
+    /base:n   Specifies the base I/O address (n) of the LAN 
+              adapter board.  (Not used for Micro Channel
+              bus boards.)
+
+              "n" must be a three digit hexadecimal value in the
+              range 200 through 3E0.  Acceptable values are
+              200, 220, 240, 260, 280, 2A0, 2C0, 2E0, 300, 320,
+              340, 360, 380, 3A0, 3C0 and 3E0.
+
+              Default: /base:280
+
+    /frmsiz:n Specifies the maximum Transport Protocol Data Unit
+              size (n).  This is approximately the amount of 
+              application data that is sent out per message frame.
+
+              "n" is a decimal value.  Acceptable values are
+              128, 256 and 512.
+
+              Default: /frmsize:512
+
+    /irq:n    Specifies the interrupt level (IRQ) that the 
+              LAN adapter board will use to notify the PC.
+              (Not used for Micro Channel bus boards.)
+
+              Possible values are 2, 3, 4, 5, 6 and 7.
+
+              Default:  /irq:3
+
+    /page:ppp Page number to be used for the base address of
+              the on-board memory that is shared with the PC.
+              The range of possible base addresses is 80000 
+              to FE000 in steps of 2000.  This corresponds 
+              to 512K to 1M decimal in steps of 8K.
+              (Not used for Micro Channel bus boards.)
+
+              The page number "ppp" must be specified as the
+              first three hexadecimal digits of the base
+              address.  Acceptable values for "ppp" are
+              therefore 800 to FE0 in steps of 20 (hex).
+
+              Certain base addresses are frequently used for
+              other functions in the PC and are therefore
+              not suitable:
+
+                C0000, C8000, CA000 and E0000-FE000 are
+                typically used for BIOS ROMs
+
+                A0000-BE000 are used for graphics RAM.
+
+              Default:  /page:C40
+              
+    /node:a   Specifies the IEEE 802 standard LAN address to
+              be used for this network node if there is a 
+              need to override the hardware address of the
+              LAN adapter board.
+
+              "a" must be a six byte (12 digit) hexadecimal 
+              value entered in ascending byte order.  That is, 
+              the least significant byte of the address must 
+              be the first byte of the parameter value.
+
+              Default:  the node address contained in the LAN 
+              Address ROM on the LAN adapter board.
+
+    /cmd:n    Specifies the number of NCB commands supported.
+              Each NCB command consumes 18 bytes.
+
+              Default: /cmd:32   Max: /cmd:32
+
+    /ses:n    Specifies the number of sessions supported.
+              Each session consumes 249 bytes.
+
+              Default: /ses:32   Max: /ses:32
+
+    /nlb:n    Specifies the number of large buffers supported.
+              Each large buffer consumes 607 bytes.
+
+              Default: /nlb:10   Max: /nlb:40
+
+    /nsb:n    Specifies the number of small buffers supported.
+              Each small buffer consumes 147 bytes.
+
+              Default: /nsb:30   Max: /nsb:60
+
+    /wz:n     Specifies the size of the transport window.  This
+              is the number of packets the protocol will transmit
+              before waiting for an acknowledgement.  Making this
+              number larger improves efficiency but uses more 
+              buffers.
+
+              Default: /wz:4   Max: /wz:4
+
+    /2nd      Tells the driver to operate as the 2nd LAN adapter.
+              This permits it to be used in the same machine as
+              an IBM Token Ring adapter.
+
+    /v        Displays program version and banner information 
+              without permanently loading and running the 
+              program.
+
+              The version and banner information are 
+              automatically displayed whenever the program is 
+              loaded normally.  The "v" parameter does not 
+              take a value.
+
+    /?        Displays HELP information (the list of valid 
+              parameters) without permanently loading and
+              running the program.
+
+              The "?" parameter does not take a value.
+
+    The "v" and "?" parameters can also be invoked when the
+    NETBIOS/OSI Interface Program is already loaded and running.
+
+

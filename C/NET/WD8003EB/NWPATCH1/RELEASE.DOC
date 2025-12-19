@@ -1,0 +1,23 @@
+                              NWPATCH1
+                    NetWare Driver Patch Utility
+
+                        Release Information
+                 Version 1.06       January 17, 1990
+
+
+     VERSION HISTORY
+
+     << Version 1.06 -- Current Version:  January 1990 >>
+
+     This version works only on Novell drivers version 3.04
+     included in this Superdisk version 1.7
+
+     << Version 1.05 -- December 1988 >>
+
+     Changes were made to allow operation with WD Version 2.09
+     of the NetWare v2.0a driver.
+
+     << Version 1.04 -- June 1988 >>
+
+     Original version.
+

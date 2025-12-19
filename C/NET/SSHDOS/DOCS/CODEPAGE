@@ -1,0 +1,53 @@
+This document describes how to use ISO Latin characters
+with SSHDOS.
+
+You'll need SSHDOS v0.9 or later and ISO Latin fonts
+and keymaps which are available here:
+http://www.kostis.net/freeware/isocp101.zip
+
+Download the isocp package and extract it. Read it's
+documentation and be sure which keymap TSR and special
+codepage number you need. Copy the proper keymap TSR
+program and the isolatin.cpi file to your DOS directory.
+
+Add this line to your config.sys:
+
+	device=c:\dos\display.sys con=(ega,xxx,2)
+
+where xxx is the DOS codepage you normally use (850 for Western Europe).
+Add the following lines to your autoexec.bat to prepare the code
+page switch:
+
+	mode con cp prepare=((xxx)c:\dos\yyyy.cpi)
+	mode con cp select=xxx
+	keyb zz
+
+where xxx is the DOS codepage you normally use, yyyy is the proper
+ega, ega2 or ega3 CPI file for your codepage and zz is your
+country code.
+
+Now we switch to the latin codepage by running these commands:
+
+	isokbxxx.com
+	mode con cp prepare=((yyy)c:\dos\isolatin.cpi)
+	mode con cp select=yyy
+	isokbxxx.com /a
+
+where isokbxxx.com is the one you copied to the DOS directory
+from the isocp package and yyy is your special codepage number,
+based on the isocp documentation (819 for ISO latin 1).
+
+Connect to your host with SSHDOS and be sure that 8 bit
+characters are enabled. For example in BASH, you must include
+this in your .inputrc:
+
+	set input-meta On
+	set output-meta On
+	set convert-meta Off
+
+Disconnect, reconnect and have fun :)
+
+Bye,
+
+Daniel
+

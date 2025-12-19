@@ -1,0 +1,152 @@
+                         WESTERN DIGITAL
+             "PLUS"-FAMILY LAN ADAPTER BOARD DRIVERS
+                          FOR USE WITH 
+ NOVELL ADVANCED NetWare, SFT NetWare, AND ELS NetWare LEVEL II
+                     v2.1 AND LATER VERSIONS
+
+                       RELEASE INFORMATION
+
+             Version 3.04         13 December 1989
+
+
+This Western Digital driver for Novell Advanced NetWare, SFT 
+NetWare and ELS NetWare Level II (v2.1 and later versions) 
+has been tested by Western Digital and certified by Novell. 
+
+
+VERSION HISTORY
+
+-- Version 3.04 (Current Version, December 1989) --
+
+With this release of the driver new functions have been added to 
+increase the drivers flexibility and some old problems have been 
+fixed.  This driver supports the entire Star/EtherCard PLUS and 
+EtherCard PLUS16 family of LAN adapters.
+
+        NOTE:  Do not use the NetWare 386 version 3.0 MAP ROOT
+               function with version 3.04 or earlier versions
+               of this driver. 
+
+In this release the driver will read the configuration information
+directly from registers in software configured XT/AT bus adapters
+(currently WD8003EB & WD8003W) in the same fashion that Micro 
+Channel adapters have been configured in the past. This "Auto 
+Configuration" feature will eliminate the need to reconfigure the 
+driver to match different adapter configurations.
+
+When using StarLAN adapters this driver can be configured to use 
+either the Novell StarLAN driver compatible packet format (AT&T 
+StarLAN compatible) or the standard IEEE 802.3 packet format.  
+
+More information about these features as well as tips on how to 
+best utilize them can be found in the file INSTALL.DOC.
+
+This driver contains fixes for two problems which existed in 
+previous drivers, including the Novell certified v2.11.3 driver. 
+Problem 1; A workstation problem, had to do with the IPX call to 
+CancelRequest and occurred only in certain NetBIOS applications 
+which call this IPX function. Problem 2; Occurred only on certain 
+adapter revisions when under high load situations. This problem 
+would cause the server to "lock up" or get a GPI interrupt.
+ 
+-- Version 3.02 (September 1989) --
+
+This release provides support for the EtherCard PLUS16 adapter.
+It contains a completely new driver configuration table to support 
+adapters with 8, 16, and 32 Kbytes of RAM. The default configur-
+ation has changed to IRQ 3, Base I/O 280, RAM at CA00:0 for 8K.
+
+There is one known problem with this driver, Configuration 12 
+(IRQ=2, I/O Base=220, RAM at C000:0 for 32K) will NOT function 
+with Ethercard PLUS16 in the file server.  
+
+NOTE: This driver has been tested by Western Digital and distri-
+buted on a limited basis. 
+
+-- Version 2.11.3 (February 1989) --
+
+The driver files were moved to the root directory to comply
+with new NetWare v2.15 installation procedures, and the
+WD8003.LAN file was changed to specify floppy disk volume label 
+LAN_DRV_200 instead of LAN_DRV_002.  No software changes to the 
+actual driver were made.
+
+Two additional versions of 2.11.3 are available.  These are not
+Novell certified drivers.  They are slight alterations of the
+certified driver designed to meet specific Novell network
+installation requirements.
+
+2.11.3b is designed to allow intermixing of Western Digital
+Ethernet and StarLan boards in a Novell bridge.  Without 2.11.3
+the two segments of the network will not see each other.
+
+2.11.3c is designed to operate with Tandy 1000SL series
+computers.  If you do not use the c version with Tandy 1000SL
+the driver does not determine the bus type (Micro Channel or
+XT/AT) and the driver will not operate.
+
+NOTE:  Versions b and c work with no apparant problems, however
+they are not certified by Novell and cannot be distributed on
+the SuperDisk.  If you require these versions contact LAN
+Technical Support at 714-852-4900.
+
+
+-- Version 2.11.3 (November 1988) --
+
+Changes were made to meet Novell certification requirements.
+There were no problems reported by any users with the previous
+version.
+
+
+-- Version 2.11.2 (August 1988) --
+
+Problems were fixed that
+
+     o prevented interoperation with Ethernet adapters
+       from certain other manufacturers
+
+     o caused workstations to stop when receiving certain
+       queries from Novell Diagnostic Utilities
+
+
+-- Version 2.11.1 (July 1988) --
+
+The following problems having to do with differences between
+NetWare v2.1 and v2.11 were corrected:
+
+     o StarLAN adapters would not operate on any NetWare v2.11
+
+     o No adapters would operate on Non-Dedicated NetWare v2.11
+
+
+-- Version 2.11.0 (June 1988) --
+
+Operation with Ethernet and StarLAN Micro Channel adapter boards
+has been added to both the shell and server drivers.  The same 
+drivers also operate with XT/AT bus boards.
+
+
+-- Version 2.10.0  (May 1988) --
+
+Two problems that were present in previous versions of this
+driver have been corrected:
+
+     o A server or workstation would occasionally stop
+       functioning when the network was under extremely
+       heavy load.
+
+     o Certain application programs that used the Novell
+       NETBIOS interface would not operate properly.
+
+This version and subsequent versions have the following 
+characteristics:
+
+     o accommodates LAN adapter boards with 32 Kbyte RAM buffers
+       as well as those with the original 8 Kbyte RAM buffers
+
+     o has improved workstation transmit speeds
+
+     o the RAM buffer base address in the workstation shell is 
+       changed from C4000 (hex) to D0000 to minimize conflicts 
+       with other adapter boards (especially EGA, VGA)
+

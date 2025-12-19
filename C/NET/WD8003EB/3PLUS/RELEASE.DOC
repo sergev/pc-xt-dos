@@ -1,0 +1,65 @@
+                         WESTERN DIGITAL
+             "PLUS"-FAMILY LAN ADAPTER BOARD DRIVER
+         FOR USE WITH 3COM'S 3+ NETWORK OPERATING SYSTEM
+
+                           VERSION 2.10 
+
+        RELEASE INFORMATION               January 16, 1990
+
+
+This is the latest release of Western Digital's driver for the 
+3Com 3+ (*) Network Operating System.  It is designed to run on 
+Western Digital "PLUS" (WD8003/WD8013) family LAN adapter boards 
+for XT/AT bus computers and Micro Channel bus computers.
+
+Version 2.10				  January 16, 1990
+
+This version adds support for Western Digital's EtherCard
+PLUS 10T/A Micro Channel adapter boards.
+
+Version 1.32				 
+
+This version updates the routine for identifying Western 
+Digital Micro Channel StarLan adapter boards.
+
+Version 1.31				 
+
+This version updates the routine for identifying different
+EtherCard PLUS family adapter boards.
+
+ 
+Version 1.30				  
+
+This version adds support for Western Digital's EtherCard
+PLUS16 adapter board.  Also the default shared memory 
+address is changed to 0xD0000.
+
+
+Version 1.2                              
+
+This version adds support for the Micro Channel bus and has added
+the patch for Mail Minder.  The Mail Minder problem is outlined
+in the information on version 1.0.
+
+
+Version 1.0
+
+This version did not support the Micro Channel bus.
+
+Mail Minder (mminder) is a program in 3+ MAIL that periodically 
+checks to see if you have mail.  If used with Version 1.0 of 
+this driver, it does not inform you that you have received new 
+mail.  When manually invoked with the hot keys, it returns a 
+"Server Not Responding" error.
+
+The user can manually read any mail that has been received by 
+using the MAIL program.  
+
+A program is available from the Western Digital Technical 
+Support Bulletin Board that solves this problem.
+
+
+(*) 3Com, 3+, and 3+MAIL are registered trademarks of 3Com
+Corporation.  Micro Channel is a registered trademark of
+International Business Machines Corporation.
+

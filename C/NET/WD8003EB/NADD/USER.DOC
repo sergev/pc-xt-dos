@@ -1,0 +1,29 @@
+                         WESTERN DIGITAL
+                 NETWORK ADDRESS DISPLAY PROGRAM
+                               FOR
+                "PLUS"-FAMILY LAN ADAPTER BOARDS
+
+                           USER GUIDE
+
+
+This program (NADD.EXE) displays the I/O base address and
+network address of every "PLUS" (WD8003) family StarLAN,
+Ethernet, and Ethernet Twisted Pair adapter board installed 
+in the computer.  It operates in both XT/AT and Micro Channel 
+bus systems.
+
+To run this program, type
+
+           NADD
+
+and press RETURN.
+
+The I/O base address (200 - 3E0) of every installed LAN adapter 
+will be shown in hexadecimal.  This information may be helpful
+in determining how many adapters are installed, and at what
+I/O base addresses they are located.
+
+The network address of each adapter, which is a 48 bit binary 
+number, will be shown as 12 hexadecimal digits.  Some network 
+programs require this information.
+

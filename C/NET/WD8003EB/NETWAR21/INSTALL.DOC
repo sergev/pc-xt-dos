@@ -1,0 +1,170 @@
+                         WESTERN DIGITAL
+             "PLUS"-FAMILY LAN ADAPTER BOARD DRIVERS
+                          FOR USE WITH 
+ NOVELL ADVANCED NetWare, SFT NetWare, AND ELS NetWare LEVEL II
+                     v2.1 AND LATER VERSIONS
+
+                       INSTALLATION GUIDE
+
+This disk provides a single driver for the entire "PLUS" 
+(WD8003, WD8013) family of Western Digital LAN adapter boards
+for XT/AT and Micro Channel bus systems.
+
+Included in this subdirectory are the following files:
+
+   INSTALL.DOC     This File.
+   RELEASE.DOC     Version number and specific
+                     release information.
+
+Included in the root directory are the actual driver files:
+
+   WDPLUS.LAN                   The LAN driver descriptor file.
+   WDPLUSAD.OBJ                 The Server A-Driver object file.
+   WDPLUSBD.OBJ                 The Server B-Driver object file.
+   WDPLUSCD.OBJ                 The Server C-Driver object file.
+   WDPLUSDD.OBJ                 The Server D-Driver object file.
+   WDPLUSSH.OBJ                 The Shell Driver object file.
+
+                              NOTE
+
+     NetWare installation procedures require the driver files
+     listed above to be located in the root directory of a
+     floppy disk whose volume label is LAN_DRV_200.  If you 
+     copy these files to another floppy disk, be sure that
+     you set the volume label of the new disk to LAN_DRV_200.
+
+Refer to the NetWare Installation manual and follow the instructions 
+for loading a new LAN driver from a floppy disk.  
+
+During software generation, you must choose "Load and Select 
+Item" from the "LAN Driver Options" menu.  At the point in the 
+procedures where you are directed to select the LAN drivers, the
+WDPLUS drivers will appear in the list of choices as follows:
+
+                Western Digital Star/EtherCard PLUS
+
+
+RAM BUFFER SIZE CONFIGURATION INFORMATION
+
+When generating a server or shell for XT or AT bus adapters, there 
+are various configurations that can be selected, one of the parameters 
+is the RAM buffer size. There are configuration selections designating 
+RAM sizes of 8, 16, and 32 Kbytes of RAM. During shell or server 
+initialization the driver adjusts to the adapter once the adapter's 
+type and RAM size are determined.
+
+Adapter's with 8 Kbytes of RAM can be used with configuration 
+selections which specify 8, 16, or 32 Kbytes of RAM.
+
+Adapter's with 32 Kbytes of RAM must be used with configuration 
+selections which specify 32 Kbytes of RAM.
+ 
+WD's AT bus 16 bit adapters can function in two modes, 16 bit mode 
+and 8 bit mode. In 16 bit mode, the adapter performs 16 bit data 
+transfers and utilizes the full 16 Kbytes of RAM. In 8 bit mode,
+the adapter performs 8 bit data transfers and utilizes only 8 
+Kbytes of RAM.
+
+To operate the 16 bit adapter in 16 bit mode, place the adapter in a
+16 bit bus slot and configure the driver to a configuration selection 
+which specifies 16 or 32 Kbytes of RAM.
+
+To operate the 16 bit adapter in 8 bit mode, configure the driver to a
+configuration selection which specifies 8 Kbytes of RAM or place the 
+adapter in an 8 bit bus slot and specify any driver configuration.
+    
+			      NOTE
+
+   The drivers "Default" configuration specifies 8 Kbytes RAM and 
+   therefore will cause the 16 bit adapter to function in 8 bit mode.  
+
+FILE SERVER CONFIGURATION
+
+For adapters that utilize onboard jumpers to select I/O base address, 
+interrupt request level (IRQ) and RAM base address, choose configuration 
+selections which specify hardware settings that meets your needs. Then 
+configure your adapters to match the hardware settings selected.
+
+Software configured adapters include all Micro Channel adapters and 
+XT/AT bus adapters which are configured with the SETUP program. For 
+these adapters, choose driver configuration selections for the "First", 
+"Second", "Third", or "Fourth Software Configured Adapter" based on the 
+number of software configured adapters in your server. The driver will 
+then read the configuration information directly from the adapter. With 
+XT/AT bus adapters the order (first, second, third, fourth) is determined 
+by the adapter's I/O Base Address, from lowest to highest. With Micro 
+Channel adapters order is determined by the Micro Channel bus slot number 
+from lowest to highest. 
+
+                              NOTE
+
+   If your NetWare server contains more than one Micro Channel 
+   LAN adapter board, be sure that you manually select a 
+   different Interrupt Request (IRQ) channel for each adapter
+   before running the Novell NETGEN procedure.  To do this, 
+   you must use the manual configuration option of the Set 
+   Configuration program on your PC system Reference Diskette 
+   when you install the boards.
+
+
+SHELL DRIVER CONFIGURATION
+
+This Western Digital shell driver has been designed to limit the need 
+to reconfigure or regenerate the IPX.COM file even though a variety 
+of WD adapters and adapter configurations may be present in your 
+workstations.   
+
+For adapters that utilize onboard jumpers to select I/O base address, 
+interrupt request level (IRQ) and RAM base address, choose configuration 
+selections which specify hardware settings that meets your needs. Then 
+configure your adapters to match the hardware settings selected.
+
+Software configured adapters include all Micro Channel adapters and 
+XT/AT bus adapters which are configured with the SETUP program. The shell 
+driver automatically detects these adapters and reads the configuration 
+information directly from the adapter, even if the configuration entry 
+selected specified a different I/O base, IRQ, and RAM base. 
+ 
+Therefore, an IPX.COM file generated for a specific hardware configuration
+will function with all adapters set to that particular hardware setting. Plus 
+it will function with all Micro Channel and XT/AT bus software configured 
+adapters because the shell driver reads the configuration information directly 
+from the those adapter.  
+
+To create a driver which will function on software configured adapters
+only, select the configuration entry for "First Software Configured 
+Adapter".
+
+If your workstation has more than one software configured adapter, 
+select "First", "Second", "Third", or "Fourth Software Configured
+Adapter" based on which adapter you want IPX.COM to use. With XT/AT bus 
+adapters the order (first, second, third, fourth) is determined 
+by the adapter's I/O Base Address, from lowest to highest. With Micro 
+Channel adapters order is determined by the Micro Channel bus slot number
+from lowest to highest.
+
+CUSTOM DRIVER CONFIGURATIONS
+
+If an XT/AT bus workstation or server requires some combination of 
+interrupt, I/O Base and RAM address that is not offered in one of 
+the configuration choices, you can use the NWPATCH1 program to create 
+a custom configuration to meet your needs. This patch utility is 
+distributed with this driver.
+
+STARLAN CONFIGURABILITY
+
+This driver (both server and shell) when used with WD StarCard PLUS
+adapter family is default configured to use the same packet protocol used 
+by the Novell StarLAN driver for AT&T StarLAN adapters. This maintains 
+compatibility in a network with AT&T adapters using the Novell driver. 
+This packet protocol limits the maximum packet size to 512 bytes and will 
+not function if packets are routed across a non-Novell bridge.
+
+The drivers may be reconfigured using the NWPATCH1 program, to use the
+standard 802.3 packet protocol with a maximum packet size of 1024 bytes.
+If your network requires that you route packets across a non-Novell 
+bridge you MUST reconfigure your drivers to the 802.3 packet protocol.
+If your network uses only WD StarLAN adapters you can reconfigure your 
+drivers to take advantage of increased driver performance due to the 
+increased maximum packet size. Remember, when changing the packet protocol
+both the server and workstation drivers must be reconfigured.   

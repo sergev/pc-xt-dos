@@ -1,0 +1,279 @@
+                         WESTERN DIGITAL
+                         ** SuperDisk **
+
+               LOCAL AREA NETWORK SOFTWARE DRIVERS
+             FOR "PLUS"-FAMILY StarLAN, ETHERNET AND 
+              ETHERNET TWISTED PAIR ADAPTER BOARDS
+
+                            Version 1.7
+                          January 14, 1990 
+
+ This Disk Copyright Western Digital Corporation 1989, 1990.
+                      All Rights Reserved.
+
+== CURRENT VERSIONS ==
+
+If you are not certain you have the most recent version of the
+SuperDisk or the drivers contained on this SuperDisk call
+714-474-2033 x34700.  This number reaches the Technical Support
+voice mail system.  Select the LAN driver update option for the
+most recent versions of LAN drivers.  This message recording
+will provide you with the most recent version number for all
+LAN drivers as well as information on how to obtain them.
+
+NOTE:
+If you are installing a Western Digital LAN Driver on an IBM PS/2
+MODEL 55 you will need to obtain drivers from the Western Digital
+Technical Support Electronic Bulletin Board (see below).
+
+== CONTENTS ==
+
+The following files are located in the main (root) directory of 
+SuperDisk:
+
+      File                       Contents
+
+   README.DOC      This file.
+   JUMPERS.DOC     Jumper settings for Western Digital LAN 
+                     adapter boards.
+   SYSMAP.DOC      A map showing how computer system resources
+                     are usually used.  This will help you
+                     configure a LAN adapter board.
+   INSTALL.BAT     Batch file to copy this diskette to another
+                     disk.  To avoid possible conflicts, it puts
+                     the contents in a subdirectory named 
+                     "WDPLUS" that it creates.  (See Note 1).
+   @6FC0.ADF       Configuration file for Ethernet Micro 
+                     Channel (*) adapters (on 3-1/2 inch 
+                     diskettes only).
+   @6FC1.ADF       Configuration file for StarLAN Micro Channel
+                     adapters (on 3-1/2 inch diskettes only).
+   @6FC2.ADF       Configuration file for 10BaseT twisted Pair 
+                      Micro Channel adapters (on 3-1/2 inch 		                              
+                      diskettes only).
+   xxx.LAN,        NetWare v2.1 driver files that are required
+   xxx.OBJ           to be in the root directory.
+
+Drivers for each LAN operating system are located in separate
+subdirectories as follows:
+
+      Subdirectory                 Contents
+ 
+     NETWAR20 <DIR>       Novell Advanced NetWare (*) v2.0a 
+     NETWAR21 <DIR>       Novell Advanced NetWare, SFT NetWare,
+                            and ELS NetWare Level II v2.1 and 
+                            later versions
+     NWPATCH1 <DIR>       Patch Utility for NetWare Drivers
+     DECNET   <DIR>       DEC DECnet-DOS (*) and DEC PCSA (*)
+     LANMAN   <DIR>       3Com 3+ Open, Microsoft LAN Manager, 
+                            and NDIS driver (DOS and OS/2)
+     3PLUS <DIR>          3Com 3+ (*)
+
+On 5-1/4 inch diskettes labeled Diagnostics, and all 3-1/2 inch
+diskettes and high density 5-1/4 inch diskettes:
+
+     
+     DIAGNOSE <DIR>       Diagnostic Program and support files
+     NADD <DIR>           Program to display the base I/O of
+                            installed LAN boards
+     NETBIOS  <DIR>       Western Digital NETBIOS/OSI Interface
+                            Program for use with NETBIOS-based
+                            software such as the IBM (*) PC LAN
+                            Program and Microsoft MS-NET (*)
+
+On 5-1/4 inch diskettes labeled Setup and all high density 
+diskettes:
+
+
+    SETUP <DIR>          EtherCard PLUS with Boot ROM Socket,
+                           and EtherCard PLUS10T Setup Program
+
+In addition to the driver itself, each subdirectory contains:
+
+     o an INSTALL.DOC or USER.DOC file that explains how to 
+       install and use the software; and
+
+     o a RELEASE.DOC file that states the current version,
+       release date, and any improvements that were made
+       in this version of the software.
+
+NOTE 1:  The INSTALL program only copies files to the target
+drive.  If you are installing NetWare then you MUST use the
+Driver disk itself.  Novell requires a certain volume label on
+the driver disk, and this label is not copied to the target disk
+(whether it is a floppy or hard disk).  DISKCOPY should be used
+if you need additional Driver disks for Novell installations.
+
+The SuperDisk set includes DIAGNOSE Program, a diagnostic for
+Western Digital PLUS Family LAN adapters.  It is located in
+the directory /DIAGNOSE and its use is described in the file 
+user.doc.  Also included is a network utility called NADD 
+which is used to identify LAN boards in your PC.
+
+The SuperDisk set provided with EtherCard PLUS with ROM Socket
+(WD8003EB) and EtherCard PLUS10T (WD8003W) also includes the 
+SETUP program, used to configure the electrically eraseable ROM 
+(EEROM) on these adapters used to save the configuration information.
+
+All of the drivers on the SuperDisk function with both XT/AT bus
+systems and Micro Channel bus systems:  
+
+    StarLAN:     StarCard PLUS (WD8003S)
+                 StarLink PLUS (WD8003SH)
+                 StarCard PLUS/A For 
+                   Micro Channel (WD8003ST/A)
+
+    Ethernet:    EtherCard PLUS (WD8003E)
+                 EtherCard PLUS With Boot ROM Socket 
+                   (WD8003EBT, WD8003EB)
+                 EtherCard PLUS/A For Micro Channel 
+                   (WD8003ET/A, WD8003E/A)
+                 EtherCard PLUS16 (WD8013EBT) 
+    Ethernet Twisted Pair:
+                 EtherCard PLUSTP (WD8003WT)
+                 EtherCard PLUS10T (WD8003W)
+                 EtherCard PLUS10T/A For 
+                   Micro Channel (WD8003W/A)
+
+
+== DRIVERS AVAILABLE FROM BULLETIN BOARD ==
+
+Western Digital operates a Technical Support Electronic Bulletin
+Board for its resellers and customers.  This Bulletin Board
+contains documentation, diagnostic software, and drivers for use
+with Western Digital products.  You can call it at (714) 756-8176
+using a 1200 or 2400 bps modem.
+
+In addition to the latest versions of drivers and other software
+on SuperDisk, the Bulletin Board contains:
+
+  o A Micro Channel board driver for Western Digital's
+    ViaNet 3.06 LAN Operating System
+  o Sun PC-NFS (*) driver
+  
+
+== OTHER AVAILABLE PRODUCTS ==
+
+Most other LAN operating systems provide drivers to use with 
+Western Digital "PLUS"-family LAN adapters.  Some of these 
+products that are available from Western Digital are:
+
+  Software                   Description
+
+  PC/TCP     A complete set of TCP/IP protocols that allows PCs 
+             to communicate with minicomputers, mainframes, and 
+             engineering workstations using the DoD standard 
+             TCP/IP protocols.  PC/TCP (*) features include file 
+             transfer, remote host login and 3270/VT100 terminal 
+             emulation, remote program execution, electronic 
+             mail, and a NETBIOS interface.
+
+  ViaNet     Western Digital's fully distributed LAN operating 
+             system that lets all PCs be servers as well as work-
+             stations.  It makes all network resources available 
+             to every user, and operates with the DOS 3.1 
+             operating system and file structure on every PC.  
+             ViaNet also allows UNIX and DOS systems to 
+             interoperate on the same network.
+
+
+== TECHNICAL SUPPORT ==
+
+For assistance call your dealer or distributor's technical 
+support department.
+
+
+== VERSION HISTORY ==
+
+-- Version 1.7 (Current Version, January 1990) 
+
+Support added for the EtherCard PLUS 10T (WD8003W) and EtherCard
+PLUS 10T/A (WD8003W/A), the 10BaseT twisted pair Ethernet 
+adapters for XT/AT and Micro Channel bus systems. 
+
+All drivers support the EtherCard PLUS16 (WD8013EBT) 16-bit LAN 
+adapters in both 8 and 16 bit modes.
+
+Drivers support IRQ levels of 2, 3, 4, and 7 or 2, 3, 5 and 7 of 
+the EtherCard PLUS with ROM socket (WD8003EB F200 or WD8003EB 
+F205) depending on which adapter has been installed. 
+
+The UNIX V.3 Streams driver has been removed.
+
+
+-- Version 1.6.2 (October 1989)
+
+Changed NWPATCH program to work with new object files for 
+EtherCard PLUS16 (WD8013EBT).
+
+-- Version 1.6.1 (October 1989)
+
+Drivers updated to support IRQ-5 versions of the EtherCard PLUS
+with ROM Socket (WD8003EB F205).
+
+Support added for the EtherCard PLUS16 (WD8013EBT) 16-bit LAN 
+adapter.
+
+-- Version 1.6 (June 1989) --
+
+DIAG8003 has been removed and replaced with a completly new
+menu-driven Diagnostic Program which is on the Diagnostic disk
+of the SuperDisk set.  NADD, the network address utility, has
+also been moved to the Diagnostic Disk.  The Micro Channel
+SuperDisk remains on one disk and includes the Diagnostic
+Program and NADD.
+
+Both the DECnet DOS and 3Com 3+ drivers have been revised to
+operate with Micro Channel adapters.  LAN Manager drivers for DOS
+and OS/2 have been added.  The UNIX V.3 driver has been placed
+on the 5.25 inch disks again.  It is located on the Diagnostic
+Disk.
+
+Please review the appropriate RELEASE.DOC and INSTALL.DOC files 
+for complete information on all of these changes.
+
+-- Version 1.5 (February 1989) --
+
+Some NetWare v2.1 driver files have been moved to the root 
+directory and the SuperDisk volume label has been changed to 
+LAN_DRV_200 to comply with new Novell requirements.
+
+-- Version 1.4/1.3 (January, 1989) --
+
+The NetWare drivers and NETBIOS/OSI Program have been upgraded.
+The NWPATCH program, NADD program, and SYSMAP.DOC file have 
+been added.  PC-NFS and UNIX drivers would not fit on 5-1/4 inch
+diskettes and have been removed, but are available from the 
+Technical Support Bulletin Board.
+
+-- Version 1.2 (July, 1988) --
+
+NetWare v2.0a drivers have been upgraded from Version 2.06 to
+Version 2.07.  NetWare v2.1/2.11 drivers have been upgraded from
+Version 2.10.0 to 2.11.1.  Improvements have been made to the 
+JUMPERS.DOC file and to the documentation in the DECNET and DIAG 
+subdirectories.
+
+-- Version 1.0 (May, 1988) --
+
+Original version.
+
+
+ViaNet is a registered trademark and StarCard PLUS, StarLink 
+PLUS, EtherCard PLUS, and SuperDisk are trademarks of Western 
+Digital Corporation.
+
+(*) NetWare is a registered trademark of Novell, Inc.
+    3Com and 3+ are registered trademarks of 3Com Corporation.
+    PC-NFS is a trademark of Sun Microsystems, Inc.
+    LANWatch and PC/TCP are trademarks of FTP Software, Inc.
+    UNIX is a registered trademark of AT&T.
+    DEC, DECnet and PCSA are trademarks of Digital Equipment 
+      Corporation.
+    IBM is a registered trademark and Micro Channel and OS/2 are
+      trademarks of International Business Machines Corporation.
+    SCO is a trademark of The Santa Cruz Operation, Inc.
+    Microsoft and MS-NET are trademarks and XENIX is a 
+      registered trademark of Microsoft Corporation.
+    
+

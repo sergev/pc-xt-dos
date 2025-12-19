@@ -1,0 +1,185 @@
+                        WESTERN DIGITAL
+               "PLUS"-FAMILY LAN ADAPTER BOARD DRIVER
+              FOR USE WITH DEC's DECnet-DOS and PCSA/PC
+
+                      RELEASE INFORMATION
+
+        Version 2.06                     January 3, 1990
+
+This directory contains the DECnet-DOS (*) and PCSA/PC driver
+version 2.06 for the "PLUS"-Family (*) LAN adapter boards.
+
+Refer to Installation materials from Digital Equipment 
+Corporation for information on the installation of the DEC 
+software.  Additional information on installation of Western 
+Digital adapters can be found in the file INSTALL.DOC in this 
+disk directory.  Board configuration information can be found in 
+the WD Installation manual for the LAN adapter you are using.
+
+Customers have favorably commented on the price/performance of 
+the Western Digital LAN adapters.  The additional buffer space of the driver and on-board memory coupled with the high performance 
+hardware architecture of the Western Digital LAN adapters is 
+responsible for this increase in performance.
+
+MODIFICATION HISTORY
+
+-- Version 2.06 (Current Version, January 3, 1990)
+
+A problem with using the /O with PCSA has been fixed. Previously,
+only lower case "o" was accepted.  Now, a capital "O" is accepted
+as well.  This is needed because "net start" out of PCSA will 
+change a lower case "o" in "msnet.ini" to uppercase before 
+calling DLL.
+
+This version fixes a problem with using DLL without having a 
+DECPARM.DAT file.  Previously, the source Ethernet address used 
+came out as all 0's if DECPARM.DAT was missing, or if no DECnet 
+node address was set in DECPARM.DAT.  Now, the Ethernet address 
+used defaults to the LAN adapter's 6-byte hardware address.
+
+This version adds support for the Western Digital 16-bit XT/AT 
+Bus Ethernet adapter, the EtherCard PLUS16 (WD8013EBT), the 
+latest Western Digital Ethernet Micro Channel adapter, the 
+WD8003E/A, and the Western Digital 10BaseT Adapters, the Ether-
+Card PLUS10T (WD8003W) and the EtherCard PLUS 10T/A (WD8003W/A).
+
+A new command line option, /u, has been added to allow unloading
+of a previously running copy of DLL.  This is useful where DLL is
+used with other software that allows unloading, and can save the
+user from having to reboot the machine to unload the software.
+
+A problem was reported that on some machines, the DLL would never
+appear to work, even though it appeared to load correctly.  On 
+other machines, it would send packets, but never receive any from 
+the network.  The problem has been found and fixed.
+
+A problem which caused most received packets to be discarded when
+using StarLAN adapters has been fixed.  Due to a problem in the
+network adapters, the length reported in the receive buffer 
+header is often in error, and the packet is discarded.  A soft-
+ware workaround was put in to correct the problem.
+
+A problem with Micro Channel adapters not working at IRQ's other
+than IRQ3 has been fixed.
+
+Code has been added to correctly handle receive ring overwrites
+should they ever occur.
+
+The dll was changed to have an option to not require the 
+scheduler.  As shipped on the SuperDisk, the default option is to 
+require the scheduler, but at runtime, the user can use the /n 
+option to reverse the default and not require the scheduler.  The 
+default option may be changed by use of debug and searching for 
+the following string:
+	
+	Default to Require Scheduler: <Y>
+	
+If the "Y" is changed to an "N", the default with no options will
+be to not require the scheduler.  Then, a /s option will reverse 
+that and cause the scheduler to be required and used.
+
+When no scheduler is required, the dll will not make calls to the
+scheduler using "int 6C" and will set up its own interrupt stack.
+In this case, the memory resident size will be 40 hex paragraphs
+larger due to saving space for the interrupt stack.
+
+For compatibility with DECnet DOS/PCSA 3.0, the installation 
+check function within DLL was changed to return ES:BX pointing to 
+a secondary DLL interrupt handler routine which handles functions
+in the method of release 2.0 and earlier.  This routine expects
+the function code in the AH register instead of in AL with a 
+module ID in AH as used with interrupt 69H.  DEC routines such as 
+the LAST transport layer will get this function address through 
+the installation check call, then make direct calls to the 
+function without going through interrupt 69H.
+
+-- Version 2.05 (June 1989)
+
+The Micro Channel (*) adapters are now supported.  For Micro Channel adapters, the /IRQ, /IO, /SM, and /SIZE parameters are 
+all set based on the configuration of the adapter as set in the 
+Programmable Option Select (POS) Registers.  These values are set 
+when the board is configured or installed using the Reference 
+diskette.
+
+For Micro Channel machines only, a /SLOT parameter is used if 
+multiple Western Digital LAN adapters are installed in the 
+machine to specify which adapter to use.
+
+The same version of the DLL is used for both Micro Channel and 
+XT/AT (*) bus machines.  The driver detects the type of machine,
+and changes options accordingly.
+
+Support is now included for use in machines using VGA adapters.  
+DEC has modified its 2.1 software to use a new software interrupt 
+so as to avoid the known conflict with VGA adapter standards.  
+The WD 2.05 driver has been modified to support both the old and 
+the new interrupt, depending on the version of DEC software you 
+are running.  (Use HELP for description.)
+
+DLL.EXE now works correctly with the executable NETBIOS.EXE.  
+Previously, if NETBIOS.EXE was used as SESSION.EXE, when starting 
+the redirector an error message "Unexpected error in adding local 
+name" would appear, and the redirector was unusable.  The 
+redirector was able to be successfully used with the NETSESS.EXE 
+version of SESSION.EXE, however.  Applications which used 
+NETBIOS.EXE directly would get "Out of Resources" error messages.
+
+The /size parameter was added to allow use of more than the first 
+8K of adapter RAM on boards which have more installed, such as 
+the 32K option on some network adapters.
+
+HELP has been added to DLL.  (dll /?)
+
+The ability to store DECnet database files in a user selectable 
+directory was added through the use of an option on the command 
+line.
+
+-- Version 2.04 (February 1989) --
+
+A reported problem in transferring large files to a PC has been 
+fixed.
+
+This driver has been modified to support DEC 2.1 software.
+
+The release numbering system was changed from 2.n to 2.0nx, where 
+n is a numeral and x, if present, is a letter indicating still in 
+field test and considered a Beta release.
+
+-- Version 2.2 (November 1988) --
+
+Version 2.2 fixes a reported problem on old style XTs in which
+the PC would sometimes hang.
+
+-- Version 2.1 (August 1988) --
+
+Upgraded to support Local Area Disk (LAD).
+
+The problem reported in Multicast handling has been fixed.
+
+The default hardware setting for DLL.EXE is now interrupt level
+3, instead of 2, to match the factory setting.
+
+A problem in release 1.0 has been fixed in the Hello timer
+handling which was causing some systems to hang for no apparent
+reason.
+
+To change the settings from the command line you can use either
+the version 1 format using "=" or the version 2 format using ":"
+as the delimiter.  For example,
+
+           DLL /IRQ=3 /IO=280 /SM=DE00
+  or
+           DLL /IRQ:3 /IO:280 /SM:DE00
+
+-- Version 1.0 (Initial Release, April 1988) --
+
+(*) EtherCard PLUS, EtherCard PLUS TP, EtherCard PLUS/A,
+EtherCard PLUS 10T, EtherCard PLUS 10T/A, StarCard PLUS,
+StarLink PLUS, and StarCard PLUS/A are trademarks of Western 
+Digital Corporation.
+
+DEC and DECnet are trademarks of Digital Equipment Corporation.
+
+AT is a registered trademark and Micro Channel is a trademark of
+International Business Machines Corporation.
+

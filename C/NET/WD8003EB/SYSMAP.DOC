@@ -1,0 +1,194 @@
+                         WESTERN DIGITAL
+
+          COMPUTER SYSTEM MAPS FOR HELP IN CONFIGURING
+          "PLUS" (WD8003 and WD8013) FAMILY LAN ADAPTERS
+
+---------------------------------------------------------------------
+        Copyright Western Digital Corporation 1988, 89, 90.
+                      All Rights Reserved.
+
+
+The Western Digital PLUS family LAN adapters use three resources
+to communicate with the computer system.  These are the IRQ
+(interrupt), I/O Base Address, and RAM buffer area.  The LAN
+adapter board does not have the capability to share these
+resources.  This means that problems can occur if you try to
+share these areas with other add-on boards or other parts of the
+computer that use these resources.
+
+Below is a description of the three resources and what common
+devices use them.  Use this as a guide when installing a Western
+Digital LAN adapter.
+
+You should not change the factory setting of the LAN adapter if
+there are no conflicts with it.  If necessary, it is a simple
+matter to change to a different configuration.
+
+The factory settings are: IRQ = 3; I/O Base Address = 280 (hex);
+RAM Buffer Base Address = D0000 (hex).  Note that the RAM Buffer
+location is determined by the software driver(s) you use, not by
+jumpers or other settings on the board itself.
+
+=====================================================================
+           SYSTEM RESOURCES USED BY LAN ADAPTER BOARDS
+=====================================================================
+(1) IRQ - Interrupt Request Channel
+
+Use the chart below to determine which interrupt is best for the
+LAN adapter board.  If you cannot find any available interrupt, you
+then need to remove or disable something from the system.
+
+Most Western Digital adapters for XT/AT bus systems can select
+interrupt 2, 3, 4, 5, 6, or 7.  Micro Channel bus adapters can select
+interrupt 3, 4, 10, or 15.  Please refer to the User Installation 
+Guide that comes with the adapter to determine which interrupts your
+LAN adapter can select.
+
+ Interrupt   Other Devices That     This IRQ May Not Be Available
+   (IRQ)        Use This IRQ            For LAN Adapter If ...
+---------------------------------------------------------------------
+|    2    | (Usually available)  | if EGA or VGA installed          |
+|    3*   | COM2:, SDLC, BSC     | if 2nd SERIAL PORT installed     |
+|    4    | COM1:, SDLC, BSC     | if 1st SERIAL PORT installed     |
+|    5    | Hard Disk (in XTs)   | in an XT with a hard disk --or-- |
+|         | LPT2:     (in ATs)   | an AT with a 2nd PARALLEL PORT   |
+|    6    | Floppy Disk          | in any system with a floppy drive|
+|    7    | LPT1:                | if 1st PARALLEL PORT installed   |
+|-------------------------------------------------------------------|
+|    IRQ's 2 through 7 are only on XT computer systems and IRQ's    |
+|    2 through 15 are only on AT computer systems.                  |
+|-------------------------------------------------------------------|
+|    8    | Realtime Clock IRQ   | used by computer system          |
+|    9    | INT 0Ah (IRQ 2)      | Software Redirected to IRQ 2     |
+|   10    | (Usually available)  | if other device occupys irq 10   |
+|   11    | (Usually available)  | if other device occupys irq 11   |
+|   12    | (Usually available)  | if other device occupys irq 12   |
+|   13    | used by system       | is the Coprocessor irq           |
+|   14    | used by system       | Fixed Disk Controller            |
+|   15    | (Usually available)  | if other device occupys irq 15   |
+---------------------------------------------------------------------
+  * Factory setting
+
+=====================================================================
+(2) I/O Base Address
+
+This is a special area in memory used by the computer system to
+communicate with devices external to the microprocessor.  These
+addresses are always stated in hexadecimal (hex).
+
+Western Digital LAN adapter boards use 32 decimal (20 hex)
+consecutive I/O addresses starting at any base address between
+200 and 3E0.  If the factory setting of 280 is selected, for
+example, the adapter will use addresses 280-29F.
+
+Below is a map of common devices and the I/O ports that they use.
+
+The numbers in the left column are the possible selections for
+the LAN adapter I/O Base Address.  If there is something using an
+address (for example, if you have a game controller at address
+200), then do not locate the LAN adapter at that address.  Any
+address can be used as long as something else in the system is not
+trying to use the area between that base address and the next one.
+
+
+Possible I/O        Potential Conflicting Devices And Their
+Base Addresses               Typical I/O Addresses
+---------------------------------------------------------------------
+|  [200]   |    Game Controller/Joystick  (200 - 20F)               |
+|          |    Expansion Unit (210 - 217)                          |
+|  [220]   |    Novell NetWare Key Card                             |
+|  [240]   |                                                        |
+|  [260]   |    LPT2: (278 - 27F)                                   |
+|  [280]*  |    LCD display on Wyse 2108 PC                         |
+|  [2A0]   |                                                        |
+|  [2C0]   |                                                        |
+|  [2E0]   |    COM4: (2E8 - 2EF)    GPIB-Adapter 0 (2E1)           |
+|          |    COM2: (2F8 - 2FF)    Data Acquisition (2E2 - 2E3)   |
+|  [300]   |    Prototype Card (300 - 31F)                          |
+|          |    3Com EtherLink factory setting is 300 - 31F         |
+|  [320]   |    XT Hard Disk Interface  (320 - 32F)                 |
+|  [340]   |                                                        |
+|  [360]   |    LPT1: (378 - 37F)                                   |
+|  [380]   |    SLDC/Secondary Bi-sync Interface (380 - 38C)        |
+|  [3A0]   |    Primary Bi-sync Interface (3A0 - 3A9)               |
+|          |    Monochrome Display (3B0 - 3BB)                      |
+|  [3C0]   |    EGA Display Control (3C0 - 3CF)                     |
+|          |    Color/Graphics Display-CGA (3D0 - 3DF)              |
+|  [3E0]   |    COM3: (3E8 - 3EF)                                   |
+|          |    Floppy Disk Controller (3F0 - 3F7)                  |
+|          |    COM1: (3F8 - 3FF)                                   |
+---------------------------------------------------------------------
+  * Factory setting
+
+Any addresses without a description are usually available for use.
+
+Note that computers that have a small built-in LED or LCD display
+(to show disk cylinder data or clock speed, for example) might use
+certain I/O addresses to interface with that display.
+
+=====================================================================
+(3) RAM Buffer - Shared Memory Base Address
+
+RAM buffer memory that resides on Western Digital LAN adapter
+boards is used for passing data to and from the adapter.  You must
+select an area in your system's memory space above the DOS 640K
+boundary where this buffer can reside without conflicting with
+RAM or BIOS ROMs located on other add-on boards in your system.
+
+The RAM buffer on a Western Digital LAN adapter can occupy a space
+of 8, 16 or 32 Kbytes depending on the type of adapter:
+
+When using a board with a ROM installed, space must be allocated
+for both the RAM buffer and the ROM.  Just as with other devices,
+the RAM and ROM areas must not conflict with each other.  ROM sizes
+can be 16, 32, or 64 Kbytes.
+
+The memory locations for the RAM Buffer are always expressed in
+hexadecimal.  640K in hexadecimal is A0000.  This is the first
+available location for the RAM Buffer.
+
+Using a base address of D0000 (the default for most Western
+Digital software drivers) as an example, here are the ranges of
+memory occupied by the LAN adapter RAM buffer:
+
+          8 Kbytes - Would use D0000 through D1FFF
+         16 Kbytes - Would use D0000 through D3FFF
+         32 Kbytes - Would use D0000 through D7FFF
+
+Below is a map of how the memory space above 640K (A0000) is
+used on many computer systems.  Use this as a guide to
+determine where to locate the RAM (or ROM) on the LAN adapter.
+Remember that the RAM Buffer location is determined by the
+software driver(s) you use, not by jumpers or other settings on
+the board itself.
+
+  Possible Memory Spaces    Devices That Use Portions     See
+      For RAM Buffer           Of This Memory Space       Note
+--------------------------------------------------------------
+| A0000-AFFFF (Page A)  | EGA on-board video memory      | 1 |
+| B0000-B7FFF (Page B0) | Mono on-board video memory     | 1 |
+| B8000-BFFFF (Page B8) | RGB and mono video memory      | 1 |
+| C0000-C7FFF (Page C0) | EGA BIOS ROM                   | 1 |
+| C8000-CFFFF (Page C8) | XT hard disk BIOS ROM          | 1 |
+| D0000-DFFFF (Page D)  | Expansion RAM (LIM) area       | 2 |
+| E0000-EFFFF (Page E)  | Expansion RAM area and some    | 2 |
+|                       |   AT system ROM BIOS           |   |
+| F0000-FFFFF (Page F)  | Permanent system ROM BIOS area |   |
+--------------------------------------------------------------
+
+Note 1:  Portions of this memory area are also used by VGA
+video boards, but there is considerable variation depending on
+the manufacturer.  We recommend setting the RAM Buffer Address
+to D0000 or above if an 8-bit VGA is installed.  If you have a 
+16-bit VGA installed, there are two options.  The first option
+is to convert the 16-bit VGA to 8-bit mode operation and use the
+RAM Buffer address of D0000.  The second option is for 16-bit VGA
+mode operation.  This option is only operational if the computer
+system does not occupy E0000.  Set the RAM Buffer address using
+Nwpatch to E0000.  If EGA is installed use the factory setting
+of D0000.
+
+Note 2:  Portions of this memory area are used by most memory
+expansion boards for page swapping.  This memory area is also
+occupy by 16-bit VGA video board, please read note 1.
+

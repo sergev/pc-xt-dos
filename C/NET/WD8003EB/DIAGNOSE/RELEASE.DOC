@@ -1,0 +1,41 @@
+                       WESTERN DIGITAL
+                    DIAGNOSTIC PROGRAM FOR
+              "PLUS" FAMILY LAN ADAPTER BOARDS
+
+          Version 1.11                 December 12, 1989
+
+VERSION HISTORY
+
+-- Version 1.11 (Current Version) --
+
+Version 1.11 supports Twisted Pair boards on both
+AT and Micro Channel busses.
+This version also has fixes for all bugs reported in
+version 1.10. 
+This includes IRQ=10 from the command line using an 
+8013EBT.
+
+-- Version 1.10 --
+
+Version 1.10 supports the EtherCard PLUS16 (WD8013EBT).
+In addition, it provides support for use with batch files.
+This version also has fixes for all bugs reported in
+version 1.00.
+
+A problem exists with fast Micro Channel bus systems with
+clock speeds over 16 MHz.  Diagnose will not be able to 
+properly identify adapters in those machines.
+Also, EtherCard PLUS TP will have some bugs with this
+revision.
+
+-- Version 1.00 --
+
+This is the first version of this program.  Certain errors have
+been encountered using the command line parameters.  When using
+the /SLOT: parameter option on Micro Channel bus systems the
+Diagnostic Program will not always detect the adapter properly.
+Continued use of the Diagnostic Program with menu operation will
+produce accurate results.
+
+Micro Channel is a trademark of International Business Machines
+Corporation.

@@ -1,0 +1,61 @@
+                         WESTERN DIGITAL
+             "PLUS"-FAMILY LAN ADAPTER BOARD DRIVERS
+             FOR USE WITH MICROSOFT OS/2 LAN MANAGER*
+
+                       RELEASE INFORMATION
+
+        Version 1.04                         Jan. 8, 1990
+
+VERSION HISTORY
+
+-- Version 1.04	(Current Version)--
+
+This new release adds support for Western Digital's EtherCard
+PLUS 10T/A Micro Channel 10BaseT adapter card.
+ 
+ 
+-- Version 1.03
+
+This release fixes a bug in the interrupt service routine of 
+the driver.  
+
+-- Version 1.02	
+
+This new release adds support for MICROSOFT OS/2 LAN MANAGER
+Version 1.01.
+
+
+-- Version 1.01 
+
+This new release adds support for Western Digital's EtherCard
+PLUS16 adapter board.
+
+
+--Version 1.00 --
+
+This is the first release of the LAN Manager driver for 3Com's
+3+Open Network Operating System and other varieties of
+Microsoft OS/2 LAN Manager.  
+
+When used with the NETBEUI protocol stack, the DOS drivers
+require updated versions of two of the NETBEUI modules that fix 
+bugs in the original LAN Manager 1.0 and 3+Open 1.0.
+
+The required files are available from the 3Com "Ask 3Com" 
+Bulletin Board (BBS).  The BBS is available through any 3Com 
+dealer with a user ID, or through CompuServ (CompuServ is a 
+fee based information system).  Once on CompuServ type GO 
+THREECOM for access.  The files you must download are:
+
+		MDLC.DOS 
+		MNETB.DOS
+
+The creation date on the files should be March 22, 1989 or later.
+The same updates should also be available from other LAN Manager 
+vendors via their respective technical support facilities.
+
+
+Microsoft OS/2 Lan Manager is a registered trademark of
+Microsoft Corporation.  3Com, 3+ Open, and Ask 3Com are
+registered trademarks of 3Com Corporation.  CompuServ is a
+trademark of CompuServ Information Services.

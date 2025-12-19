@@ -1,0 +1,6 @@
+#
+# File of networks and domains
+#
+# name    number   [alias(es).. ]
+
+loopback  127

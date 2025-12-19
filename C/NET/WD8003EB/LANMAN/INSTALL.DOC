@@ -1,0 +1,379 @@
+                         WESTERN DIGITAL
+             "PLUS"-FAMILY LAN ADAPTER BOARD DRIVERS
+             FOR USE WITH MICROSOFT OS/2 LAN MANAGER
+
+                       INSTALLATION GUIDE
+                            Jan. 8, 1990
+
+These drivers are designed to be used with 3Com 3+Open, the 
+Microsoft OS/2 LAN Manager OEM distribution release 1.0 or later,
+and other compatible OEM versions of LAN Manager.  The drivers
+named MACWD conform to the Network Driver Interface Specification
+(NDIS) defined by Microsoft/3Com.   
+
+This directory provides drivers for the "PLUS" (WD8003/WD8013) 
+family of Western Digital LAN adapter boards.
+
+Included in this directory are the following files:
+
+   INSTALL.DOC              This File.
+   RELEASE.DOC              Version history and release info
+   MACWD.OS2                The OS/2 NDIS MAC driver
+   MACWD.DOS                The DOS NDIS MAC driver
+   PROTOCOL.INI             A sample PROTOCOL.INI file
+
+
+BEGINNING INSTALLATION
+
+1) Install the adapter card.  Proper installation can be verified
+by running the diagnostic program under DOS.  Note that the
+diagnostic will not run properly from the OS/2 compatibility box.
+
+2) Decide what protocol stack will be used.  The supplied drivers
+support the DLC/NETBEUI and JETBEUI protocol stacks supplied by 
+Microsoft and most other LAN Manager vendors.  They also support the
+XNS, NBP protocol stacks supplied by 3Com.  Support for other protocol 
+stacks is in development. Contact WD Communication Technical Support for
+the latest information.
+ 
+3) Install but do not start LAN Manager using the vendor's
+instructions, selecting one of the adapter/drivers supplied with
+the vendor's package.  The adapter selected does not matter
+because the references to it will be replaced once the
+installation is complete.  The examples below assume the 3Com
+EtherLink II has been selected with 3+Open. 
+
+
+
+
+
+INSTALLING ON OS/2
+
+1) Copy the OS/2 driver from this diskette to the driver
+directory used by LAN Manager.  For example, when installing a
+3+Open server using the normal directory structure type:
+
+    COPY A:\LANMAN\MACWD.OS2 C:\3OPEN\SERVER\LANMAN\DRIVERS
+
+When installing a 3+Open OS/2 workstation type:
+
+    COPY A:\LANMAN\MACWD.OS2 C:\3OPEN\OS2WKSTA\LANMAN\DRIVERS
+
+2) Modify the config.sys or config.os2 file to reference this
+adapter rather than the adapter selected during LAN Manager
+installation.  For example, if the 3Com EtherLink II was selected
+during a server installation, use a text editor to change the
+line:
+
+    DEVICE=\3OPEN\SERVER\LANMAN\DRIVERS\ELNNKII.OS2
+
+to the line:
+
+    DEVICE=\3OPEN\SERVER\LANMAN\DRIVERS\MACWD.OS2
+
+   
+If the 3Com EtherLink II was selected during a workstation 
+installation, use a text editor to change the line:  
+
+
+    DEVICE=\3OPEN\OS2WKSTA\LANMAN\DRIVERS\ELNNKII.OS2
+
+to the line:
+
+    DEVICE=\3OPEN\OS2WKSTA\LANMAN\DRIVERS\MACWD.OS2
+
+Note that other varieties of LAN Manager will keep their drivers
+in different directories.  The point is to get the CONFIG.SYS to
+reference the Western Digital driver in place of the adapter
+driver selected during installation.  Note also that the LAN
+Manager installation will add several drivers to the CONFIG.SYS
+file.  Only the MAC driver referring to a particular board should
+be replaced. The other drivers such as PROTMAN.OS2 should be left
+unmodifed.
+
+3) Modify the PROTOCOL.INI file to include an entry for this
+driver.  The PROTOCOL.INI file contains sections defining 
+parameters for all the protcol drivers used by LAN Manager.  To
+add a section for this driver, use a text editor to add the
+following lines to the file:
+
+    [WD8003XMAC]
+    drivername = MACWD$
+    irq = 3
+    ramaddress = 0xD000
+    iobase = 0x280
+
+The line containing "[WD8003XMAC]" defines the name for the
+driver and will be used in the bindings command described below.
+The drivername "MACWD$" is used by the protocol manager.  The
+other lines:
+
+    irq =
+    ramaddress =
+    iobase =
+
+define parameters for the driver and should be modified
+appropriately depending on how the adapter and PC are configured. 
+The values shown correspond to the current factory defaults for
+the adapters supported.  A more complete explanation for each of
+these parameters and its appropriate values is given at the end
+of this document.  
+
+Note that on Micro Channel adapters, these values are read from
+the POS registers on the adapter, defined during installation.  
+The values given on these lines are ignored and do not have to
+be added to the PROTOCOL.INI file.
+
+4) Modify the PROTOCOL.INI file to change the bindings of the
+protocol stack to reference this driver in place of the driver 
+selected during installation.  Use a text editor to modify the
+"bindings =" line to reference the "WD8003XMAC" name defined in
+the section added in step 3 rather than the name set during
+installation.
+
+For example: under 3+Open with the XNS protocol stack and 3Com
+EtherLink II selected during installation, in the PROTOCOL.INI
+file section labeled "[XNS_NETBIOS]", the line:
+
+    BINDINGS = ETHERLINKII
+
+must be changed to:
+
+    BINDINGS = WD8003XMAC
+
+If the DLC/NETBEUI protocol stack was selected to be used with
+3+Open, the same lines must be changed in the PROTOCOL.INI file
+section labeled "[DLC]".
+
+5)  The installation is complete.  Reboot and bring up LAN
+Manager using the instructions supplied by the LAN Manager
+vendor.
+
+
+
+
+INSTALLING ON DOS WITH THE FOLLOWING CONFIGURATIONS:
+      DLC/NETBEUI, NBP, XNS PROTOCOL STACKS WITH 3Com 3+ OPEN 
+        VER. 1.1 OR ABOVE 
+      DLC/NETBEUI PROTOCOL STACK WITH 3Com 3+ OPEN VER. 1.0 
+
+The procedure for installing on DOS with the DLC/NETBEUI,
+NBP, XNS protocol stack is very similar to the procedure used
+OS/2.  Only the directory names and file extensions will be
+changed.
+
+1) Copy the DOS macwd.dos driver from this diskette to the driver 
+directory used by LAN Manager.  For example, when installing a
+3+Open DOS workstation using the normal directory structure type:
+
+    COPY A:\LANMAN\MACWD.DOS C:\3OPEN\DOSWKSTA\LANMAN\DRIVERS
+
+2) Modify the config.sys or CONFIG.DOS file to reference this
+adapter rather than the adapter selected during LAN Manager
+installation.  For example, if the 3Com EtherLink II was selected
+during a workstation installation, use a text editor to change
+the line:
+
+    DEVICE=\3OPEN\DOSWKSTA\LANMAN\DRIVERS\ELNNKII.DOS
+
+to the line:
+
+    DEVICE=\3OPEN\DOSWKSTA\LANMAN\DRIVERS\MACWD.DOS
+
+   
+Note that other varieties of LAN Manager will keep their drivers
+in different directories.  The point is to get the CONFIG.SYS to
+reference this driver in place of the adapter driver selected
+during installation.  Note also that the LAN Manager installation
+will add several drivers to the CONFIG.SYS file.  Only the MAC
+driver referring to a particular board should be replaced. The
+other drivers such as PROTMAN.DOS should be left unmodifed.
+
+3) Modify the PROTOCOL.INI file to include an entry for this
+driver.  The PROTOCOL.INI file contains sections defining 
+parameters for all the protcol drivers used by LAN Manager.  To
+add a section for this driver, use a text editor to add the
+following lines to the file:
+
+    [WD8003XMAC]
+    drivername = MACWD$
+    irq = 3
+    ramaddress = 0xD000
+    iobase = 0x280
+
+The line containing "[WD8003XMAC]" defines the name for the
+driver and will be used in the bindings command described below.
+The drivername "MACWD$" is used by the protocol manager.  The
+other lines:
+
+    irq =
+    ramaddress =
+    iobase =
+
+define parameters for the driver and should be modified
+appropriately depending on how the adapter and PC are configured. 
+The values shown correspond to the current factory defaults for
+the supported adaptpers.  A more complete explanation for each of
+these parameters and its appropriate values is given at the end
+of this document.  
+
+Note that on Micro Channel adapters, these values are read from
+the POS registers on the adapter, defined during installation.  
+The values given on these lines are ignored and do not have to
+be added to the PROTOCOL.INI file.
+
+4) Modify the PROTOCOL.INI file to change the bindings of the
+protocol stack to reference this driver in place of the driver 
+selected during installation.  Use a text editor to modify the
+"bindings =" line to reference the "WD8003XMAC" name defined in
+the section added in step 3 rather than the name set during
+installation.
+
+For example: under 3+Open with the DLC/NETBEUI protocol stack and 
+3Com EtherLink II selected during installation, in the
+PROTOCOL.INI file section labeled "[DLC]", the line:
+
+    BINDINGS = ETHERLINKII
+
+must be changed to:
+
+    BINDINGS = WD8003XMAC
+
+5)  The installation is complete.  Reboot and bring up LAN
+Manager using the instructions supplied by the LAN Manager
+vendor.
+
+
+
+
+INSTALLING ON DOS WITH THE FOLLOWING CONFIGURATION:
+      XNS PROTOCOL STACK WITH 3+ OPEN VER. 1.0
+
+This procedure is somewhat different from the ones above because
+the protocol manager and PROTOCOL.INI file are not used.  The
+adapter driver used is the 3Com 3+ driver from the Western
+Digital SuperDisk.  Additional information about this driver can
+be found in the documenation supplied with the driver on the
+SuperDisk diskette, which is supplied with retail versions of the
+adapters.
+
+Begin the installation the same way by installing LAN Manager on
+the workstation and selecting one of the adapters supplied by
+3Com such as EtherLink II.  Insert the SuperDisk diskette into
+the A drive, then follow the instructions below:
+
+1) Copy the wd.sys driver from the SuperDisk to the driver 
+directory used by LAN Manager.  For example, when installing a
+3+Open DOS workstation using the normal directory structure type:
+
+    COPY A:\3PLUS\WD.SYS C:\3OPEN\DOSWKSTA\LANMAN\DRIVERS
+
+2) Modify the config.sys or CONFIG.DOS file to reference this
+adapter rather than the adapter selected during LAN Manager
+installation.  For example, if the 3Com EtherLink II was selected
+during a workstation installation, use a text editor to change
+the line:
+
+    DEVICE=\3OPEN\DOSWKSTA\LANMAN\DRIVERS\ETH503.SYS 3 300 1
+
+to the line:
+
+    DEVICE=\3OPEN\DOSWKSTA\LANMAN\DRIVERS\WD.SYS 3 280 D000
+
+The final parameters on this line "3 280 D000" must be modified
+if the adapter is not installed in its factory configuration of: 
+
+   IRQ = 3
+   I/O Base Address = 0x280
+   RAM Address = 0xD0000
+
+For example, if the adapter was installed with IRQ = 2, I/O
+Address = 0x300 and RAM Address = 0xC8000, then the line in
+CONFIG.SYS must be modified:
+
+    DEVICE=\3OPEN\DOSWKSTA\LANMAN\DRIVERS\WD.SYS 2 300 C800
+
+3) The installation is complete.  Reboot and bring up LAN Manager
+using the instructions supplied by the LAN Manager vendor. 
+
+
+
+
+PROTOCOL.INI PARAMETERS
+
+Several parameters are typically specified in the MACWD section
+of the PROTOCOL.INI file.  The only parameter that must be
+specified is the "drivername".  All the others have default
+values supplied by the driver and can be left out of the
+PROTOCOL.INI file if the installed adapter matches the default
+configuration.  Micro Channel adapters will ignore the values of
+IRQ, IOBASE and RAMADDRESS and instead use the values in the POS
+registers set up when the card was installed.
+
+irq         Specifies the interrupt used by the adapter.  The
+            default is 3.  The interrupt is selected
+            with a jumper on the adapter or on some boards via 
+            the SETUP program supplied with the adapter.  Consult 
+            the installation guide for information on how to  
+            determine or modify the interrupt. This parameter
+            will always be a decimal number in the range of 
+            2 - 15.  Not all values are supported by all 
+            adapters.
+
+iobase      Specifies the base I/O address used by the adapter. 
+            The default is 0x280.  This address is 
+            selected with a jumper on the adapter or on some 
+            boards via the SETUP program supplied with the
+            adapter.  Consult the installation guide for
+            information on how to determine or modify the address.
+            This parameter will always be a hex number in the 
+            range of 0x200 - 0x3E0.  Note that hex numbers must be 
+            preceded by "0x" to distinguish from decimal numbers.
+            Not all values are supported by all adapters.
+
+ramaddress  Specifies the Shared RAM segment address used by the 
+            adapter.  This value is established under software 
+            control by the driver.  If this line is not present 
+            in the PROTOCOL.INI file, the driver will use the 
+            value 0xD000 which corresponds to address 0xD0000.  
+            This address is recommended unless some other device 
+            in the PC conflicts.  Consult the adapter       
+            installation guide or print the file SYSMAP.DOC on 
+            the SuperDisk for more information on how to select a 
+            shared RAM address.  The driver will accept hex  
+            values in the range of 0xA000 - 0xEC00.
+
+maxrequests
+	    Specifies the number of general request queue entries.
+	    The default is 8.  This parameter will always
+	    be a decimal number in the ranage of 6 - 64.
+
+maxtransmits
+	    Specifies the number of transmit queue entries.
+	    The default is 12.  This parameter will always
+	    be a decimal number in the range of 6 - 64.
+
+receivebuffers
+	    Specifies the number of receive buffer queue entries.
+	    The default value is 12.  This parameter will     
+	    always be a decimal number in the range of 6 - 96.
+
+receivebufsize
+	    Specifies the size in bytes of a receive buffer.
+	    The default value is 256.  This parameter will
+	    always be a decimal in the ragne of 256 - 1536
+
+receivechains
+	    Specifies the number of receive chain header queue
+	    entries.  The default is 12.  This parameter will
+	    always be a decimal number in the range of 6 - 96.
+
+
+Trademarks:
+
+Microsoft OS/2 LAN Manager is a trademark of Microsoft 
+Corporation.  3Com, 3+, 3+Open and EtherLink II are registered
+trademarks of 3Com Corporation.  EtherCard PLUS, EtherCard PLUS16
+StarCard PLUS, StarLink PLUS and SuperDisk are trademarks of
+Western Digital Corporation.
+
